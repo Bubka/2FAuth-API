@@ -42,6 +42,8 @@ paths:
         '200':
           description: OK
       description: Create a Twofaccount
+      tags:
+        - twofaccounts
     delete:
       summary: Batch delete Twofaccounts
       operationId: delete-twofaccounts
@@ -49,6 +51,8 @@ paths:
         '200':
           description: OK
       description: Delete twofaccounts with provided IDs
+      tags:
+        - twofaccounts
   '/twofaccounts/{id}':
     parameters:
       - schema:
@@ -70,6 +74,8 @@ paths:
         '200':
           description: OK
       description: Update the twofaccount
+      tags:
+        - twofaccounts
     delete:
       summary: Delete Twofaccount
       operationId: delete-twofaccounts-id
@@ -77,6 +83,8 @@ paths:
         '200':
           description: OK
       description: Delete the twofaccount
+      tags:
+        - twofaccounts
     patch:
       summary: Update Twofaccount
       operationId: patch-twofaccounts-id
@@ -84,6 +92,8 @@ paths:
         '200':
           description: OK
       description: Update the twofaccount
+      tags:
+        - twofaccounts
   '/twofaccounts/{id}/token':
     parameters:
       - schema:
