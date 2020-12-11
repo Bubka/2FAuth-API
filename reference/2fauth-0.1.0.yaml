@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: 2FAuth API
+  version: '1.0'
+  license:
+    name: AGPL-3.0
+    url: 'https://www.gnu.org/licenses/agpl-3.0.html'
+  contact:
+    name: Bubka
+  description: Official 2FAuth API
+servers:
+  - url: 'https://demo.2fauth.app/v1'
+    description: Demo
+paths:
+  /twofaccounts:
+    get:
+      summary: Get TwoFAccounts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TwofaccountArray'
+              examples:
+                example-1:
+                  value:
+                    - id: 10
+                      group_id: 5
+                      service: Twitter
+                      account: john.doe@example.com
+                      icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+                      isConsistent: true
+      operationId: get-twofaccounts
+      description: List all twofaccounts stored in database without any OTP sensitive data.
+      tags:
+        - twofaccounts
+components:
+  schemas:
+    twofaccount:
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          id: 10
+          group_id: 5
+          service: Twitter
+          account: john.doe@example.com
+          icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+          order_column: 2
+          isConsistent: true
+          otpType: totp
+          digits: 6
+          totpPeriod: 30
+          totpTimestamp: 0
+          hotpCounter: 5
+          imageLink: 'https://www.example.com/image.png'
+      title: Twofaccount
+      properties:
+        id:
+          type: integer
+          example: 10
+          format: int32
+        group_id:
+          type: integer
+          nullable: true
+          example: 5
+          format: int32
+        service:
+          type: string
+          example: Twitter
+        account:
+          type: string
+          example: john.doe@example.com
+        icon:
+          type: string
+          example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+        order_column:
+          type: integer
+          example: 2
+          format: int32
+          minimum: 1
+        isConsistent:
+          type: boolean
+        otpType:
+          type: string
+          enum:
+            - totp
+            - hotp
+          example: totp
+        digits:
+          type: integer
+          format: int32
+          example: 6
+          minimum: 6
+          maximum: 10
+        totpPeriod:
+          type: integer
+          format: int32
+          nullable: true
+          default: 30
+          example: 30
+          minimum: 1
+        totpTimestamp:
+          type: integer
+          nullable: true
+          format: int32
+          example: 1607633975
+        hotpCounter:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          example: 5
+        imageLink:
+          type: string
+          format: uri
+          nullable: true
+          example: 'https://www.example.com/image.png'
+      required:
+        - id
+        - group_id
+        - service
+        - account
+        - icon
+        - order_column
+        - isConsistent
+        - otpType
+        - digits
+        - totpPeriod
+        - totpTimestamp
+        - hotpCounter
+        - imageLink
+    TwofaccountArray:
+      title: TwofaccountArray
+      type: array
+      x-examples:
+        example-1:
+          - id: 10
+            group_id: 5
+            service: Twitter
+            account: john.doe@example.com
+            icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+            order_column: 2
+            isConsistent: true
+            otpType: totp
+            digits: 6
+            totpPeriod: 30
+            totpTimestamp: 1607633975
+            hotpCounter: 5
+            imageLink: 'https://www.example.com/image.png'
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+            format: int32
+          group_id:
+            type: integer
+            nullable: true
+            example: 5
+            format: int32
+          service:
+            type: string
+            example: Twitter
+          account:
+            type: string
+            example: john.doe@example.com
+          icon:
+            type: string
+            example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+          isConsistent:
+            type: boolean
+      description: An ordered list of Twofaccounts without sensitives data
+  securitySchemes: {}
+tags:
+  - name: twofaccounts
