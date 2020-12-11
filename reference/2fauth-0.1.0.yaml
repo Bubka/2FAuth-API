@@ -14,7 +14,7 @@ servers:
 paths:
   /twofaccounts:
     get:
-      summary: Get all TwoFAccounts
+      summary: Get all Twofaccounts
       responses:
         '200':
           description: OK
@@ -39,32 +39,155 @@ paths:
       summary: Create a Twofaccount
       operationId: post-twofaccounts
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
       description: Create a Twofaccount
       tags:
         - twofaccounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                service:
+                  type: string
+                  minLength: 1
+                  example: Mysite
+                account:
+                  type: string
+                  minLength: 1
+                  example: '@john.doe'
+                  pattern: '^[^:]+$'
+                otpType:
+                  type: string
+                  enum:
+                    - totp
+                    - hotp
+                  example: totp
+                uri:
+                  type: string
+                  example: 'otpauth://totp/MySite:@john.doe?secret=fjnkozij2owv5mma&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
+                  pattern: '^otpauth:\/\/[h,t]otp\/'
+                  format: uri
+                icon:
+                  type: string
+                  minLength: 1
+                secret:
+                  type: string
+                  minLength: 1
+                  example: fjnkozij2owv5mma
+                secretIsBase32Encoded:
+                  type: integer
+                  enum:
+                    - 0
+                    - 1
+                  format: int32
+                  description: Wether or not the provided secret is already base32 encoded
+                algorithm:
+                  type: string
+                  enum:
+                    - sha1
+                    - sha256
+                    - sha512
+                    - md5
+                  example: sha1
+                digits:
+                  type: integer
+                  minimum: 6
+                  maximum: 10
+                  format: int32
+                hotpCounter:
+                  type: integer
+                  example: 15
+                  minimum: 0
+                totpPeriod:
+                  type: number
+                  example: 30
+                  minimum: 1
+                imageLink:
+                  type: string
+                  example: 'https://www.example.com/icon.png'
+                  format: uri
+              required:
+                - service
+                - account
+                - otpType
+                - secret
+            examples:
+              example-1:
+                value:
+                  service: Mysite
+                  account: '@john.doe'
+                  otpType: totp
+                  uri: 'otpauth://totp/MySite:@john.doe?secret=fjnkozij2owv5mma&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
+                  icon: string
+                  secret: fjnkozij2owv5mma
+                  secretIsBase32Encoded: 0
+                  algorithm: sha1
+                  digits: 6
+                  hotpCounter: 15
+                  totpPeriod: 30
+                  imageLink: 'https://www.example.com/icon.png'
     delete:
       summary: Batch delete Twofaccounts
       operationId: delete-twofaccounts
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
       description: Delete twofaccounts with provided IDs
       tags:
         - twofaccounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: A list of Twofaccount IDs to delete
+              minItems: 1
+              uniqueItems: true
+              items:
+                type: integer
+                example: 2
+            examples:
+              example-1:
+                value:
+                  - 2
+                  - 8
+                  - 9
   '/twofaccounts/{id}':
     parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
+      - $ref: '#/components/parameters/id'
     get:
       summary: Get light Twofaccount
       tags:
         - twofaccounts
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TwofaccountSafe'
+              examples:
+                example-1:
+                  value:
+                    id: 10
+                    group_id: 5
+                    service: Twitter
+                    account: john.doe@example.com
+                    icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+                    order_column: 2
+                    isConsistent: true
+                    otpType: totp
+                    digits: 6
+                    totpPeriod: 30
+                    totpTimestamp: 1607633975
+                    hotpCounter: 5
+                    imageLink: 'https://www.example.com/image.png'
+        '404':
+          $ref: '#/components/responses/404'
       operationId: get-twofaccounts-id
       description: Get a single twofaccount without any sensitive data
     put:
@@ -76,12 +199,86 @@ paths:
       description: Update the twofaccount
       tags:
         - twofaccounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  type: string
+                  minLength: 1
+                  example: Mysite
+                account:
+                  type: string
+                  minLength: 1
+                  example: '@john.doe'
+                  pattern: '^[^:]+$'
+                otpType:
+                  type: string
+                  enum:
+                    - totp
+                    - hotp
+                  example: totp
+                icon:
+                  type: string
+                  minLength: 1
+                secret:
+                  type: string
+                  minLength: 1
+                  example: fjnkozij2owv5mma
+                secretIsBase32Encoded:
+                  type: integer
+                  enum:
+                    - 0
+                    - 1
+                  format: int32
+                  description: Wether or not the provided secret is already base32 encoded
+                algorithm:
+                  type: string
+                  enum:
+                    - sha1
+                    - sha256
+                    - sha512
+                    - md5
+                  example: sha1
+                digits:
+                  type: integer
+                  minimum: 6
+                  maximum: 10
+                  format: int32
+                hotpCounter:
+                  type: integer
+                  example: 15
+                  minimum: 0
+                totpPeriod:
+                  type: number
+                  example: 30
+                  minimum: 1
+                imageLink:
+                  type: string
+                  example: 'https://www.example.com/icon.png'
+                  format: uri
+            examples:
+              example-1:
+                value:
+                  service: Mysite
+                  account: '@john.doe'
+                  otpType: totp
+                  icon: string
+                  secret: fjnkozij2owv5mma
+                  secretIsBase32Encoded: 0
+                  algorithm: sha1
+                  digits: 6
+                  hotpCounter: 15
+                  totpPeriod: 30
+                  imageLink: 'https://www.example.com/icon.png'
     delete:
       summary: Delete Twofaccount
       operationId: delete-twofaccounts-id
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
       description: Delete the twofaccount
       tags:
         - twofaccounts
@@ -96,30 +293,34 @@ paths:
         - twofaccounts
   '/twofaccounts/{id}/token':
     parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
+      - $ref: '#/components/parameters/id'
     get:
       summary: Get a token
       tags:
         - twofaccounts
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
       operationId: get-twofaccounts-id-token
       description: Get a token for an existing twofaccount
   '/twofaccounts/{id}/withSensitive':
     parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
+      - $ref: '#/components/parameters/id'
     get:
       summary: Get full Twofaccount
       tags:
         - twofaccounts
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TwofaccountFull'
       operationId: get-twofaccounts-id-withSensitive
       description: Get a single twofaccount with all sensitive data
   /twofaccounts/order:
@@ -132,6 +333,32 @@ paths:
       description: Update twofaccounts order
       tags:
         - twofaccounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                orderedIds:
+                  type: array
+                  uniqueItems: true
+                  description: Twofaccount IDs listed in the wanted order
+                  items:
+                    type: integer
+              required:
+                - orderedIds
+            examples:
+              example-1:
+                value:
+                  orderedIds:
+                    - 3
+                    - 1
+                    - 4
+                    - 7
+                    - 2
+                    - 5
+                    - 6
   /twofaccounts/preview:
     post:
       summary: Preview a Twofaccount
@@ -139,9 +366,50 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TwofaccountFull'
+              examples:
+                example-1:
+                  value:
+                    id: 10
+                    group_id: 5
+                    service: Twitter
+                    account: john.doe@example.com
+                    icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+                    order_column: 2
+                    isConsistent: true
+                    otpType: totp
+                    digits: 6
+                    totpPeriod: 30
+                    hotpCounter: 5
+                    imageLink: 'https://www.example.com/image.png'
+                    uri: 'otpauth://totp/Twitter:john.doe@example.com?secret=A3HIETVV5BGY9UIW'
+                    secret: A3HIETVV5BGY9UIW
+                    algorithm: sha256
+        '422':
+          $ref: '#/components/responses/422'
       description: Get the twofaccount described by the provided otpauth URI
       tags:
         - twofaccounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                uri:
+                  type: string
+                  example: 'otpauth://totp/MyWebsite:john.doe?secret=DF5TH790PL3EDD5T&issuer=MyWebsite&period=30&algorithm=sha1&digits=6'
+              required:
+                - uri
+            examples:
+              example-1:
+                value:
+                  uri: string
+        description: ''
   /twofaccounts/token:
     post:
       summary: Get a token
@@ -154,8 +422,8 @@ paths:
         - twofaccounts
 components:
   schemas:
-    twofaccount:
-      description: ''
+    TwofaccountSafe:
+      description: A twofaccount model without any sensitive attributes
       type: object
       x-examples:
         example-1:
@@ -169,10 +437,9 @@ components:
           otpType: totp
           digits: 6
           totpPeriod: 30
-          totpTimestamp: 0
           hotpCounter: 5
           imageLink: 'https://www.example.com/image.png'
-      title: Twofaccount
+      title: ''
       properties:
         id:
           type: integer
@@ -191,7 +458,9 @@ components:
           example: john.doe@example.com
         icon:
           type: string
+          nullable: true
           example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+          description: A filename without path
         order_column:
           type: integer
           example: 2
@@ -218,11 +487,6 @@ components:
           default: 30
           example: 30
           minimum: 1
-        totpTimestamp:
-          type: integer
-          nullable: true
-          format: int32
-          example: 1607633975
         hotpCounter:
           type: integer
           format: int32
@@ -245,7 +509,6 @@ components:
         - otpType
         - digits
         - totpPeriod
-        - totpTimestamp
         - hotpCounter
         - imageLink
     TwofaccountArray:
@@ -258,38 +521,245 @@ components:
             service: Twitter
             account: john.doe@example.com
             icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
-            order_column: 2
             isConsistent: true
             otpType: totp
-            digits: 6
-            totpPeriod: 30
-            totpTimestamp: 1607633975
-            hotpCounter: 5
-            imageLink: 'https://www.example.com/image.png'
+      description: An ordered list of Twofaccounts with basic attributes only
       items:
-        type: object
-        properties:
-          id:
-            type: integer
-            example: 10
-            format: int32
-          group_id:
-            type: integer
-            nullable: true
-            example: 5
-            format: int32
-          service:
-            type: string
-            example: Twitter
-          account:
-            type: string
-            example: john.doe@example.com
-          icon:
-            type: string
-            example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
-          isConsistent:
-            type: boolean
-      description: An ordered list of Twofaccounts without sensitives data
+        $ref: '#/components/schemas/TwofaccountLight'
+    TwofaccountFull:
+      description: A twofaccount model with all attributes
+      type: object
+      x-examples:
+        example-1:
+          id: 10
+          group_id: 5
+          service: Twitter
+          account: john.doe@example.com
+          icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+          order_column: 2
+          isConsistent: true
+          otpType: totp
+          digits: 6
+          totpPeriod: 30
+          hotpCounter: 5
+          imageLink: 'https://www.example.com/image.png'
+          uri: 'otpauth://totp/Twitter:john.doe@example.com?secret=A3HIETVV5BGY9UIW'
+          secret: A3HIETVV5BGY9UIW
+          algorithm: sha256
+      title: ''
+      properties:
+        id:
+          type: integer
+          example: 10
+          format: int32
+        group_id:
+          type: integer
+          nullable: true
+          example: 5
+          format: int32
+        service:
+          type: string
+          example: Twitter
+        account:
+          type: string
+          example: john.doe@example.com
+        icon:
+          type: string
+          nullable: true
+          example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+          description: A filename without path
+        order_column:
+          type: integer
+          example: 2
+          format: int32
+          minimum: 1
+        isConsistent:
+          type: boolean
+        otpType:
+          type: string
+          enum:
+            - totp
+            - hotp
+          example: totp
+        digits:
+          type: integer
+          format: int32
+          example: 6
+          minimum: 6
+          maximum: 10
+        totpPeriod:
+          type: integer
+          format: int32
+          nullable: true
+          default: 30
+          example: 30
+          minimum: 1
+        hotpCounter:
+          type: integer
+          format: int32
+          nullable: true
+          minimum: 0
+          example: 5
+        imageLink:
+          type: string
+          format: uri
+          nullable: true
+          example: 'https://www.example.com/image.png'
+        uri:
+          type: string
+          format: uri
+          pattern: '^otpauth:\/\/(totp|hotp)\/.+'
+          example: 'otpauth://totp/Twitter:john.doe@example.com?secret=A3HIETVV5BGY9UIW'
+        secret:
+          type: string
+          example: A3HIETVV5BGY9UIW
+        algorithm:
+          type: string
+          enum:
+            - sha1
+            - sha256
+            - sha512
+            - md5
+          example: sha256
+      required:
+        - id
+        - group_id
+        - service
+        - account
+        - icon
+        - order_column
+        - isConsistent
+        - otpType
+        - digits
+        - totpPeriod
+        - hotpCounter
+        - imageLink
+        - uri
+        - secret
+        - algorithm
+    TwofaccountLight:
+      title: ''
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+          format: int32
+        group_id:
+          type: integer
+          nullable: true
+          example: 5
+          format: int32
+        service:
+          type: string
+          example: Twitter
+        account:
+          type: string
+          example: john.doe@example.com
+        icon:
+          type: string
+          example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+        isConsistent:
+          type: boolean
+        otpType:
+          type: string
+          enum:
+            - totp
+            - hotp
+          example: totp
+      description: A twofaccount model with basic attributes only
+      x-examples:
+        example-1:
+          id: 10
+          group_id: 5
+          service: Twitter
+          account: john.doe@example.com
+          icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+          isConsistent: true
+          otpType: totp
+    Token:
+      description: A 2FA token
+      type: object
+      x-examples:
+        example-1:
+          token: '536489'
+          totpPeriod: 30
+          totpTimestamp: 1607705370
+      properties:
+        token:
+          type: string
+          minLength: 6
+          pattern: '^[0-9]'
+          example: '536489'
+          maxLength: 10
+        totpPeriod:
+          type: integer
+          example: 30
+          minimum: 1
+          format: int32
+          description: Validity duration of the token
+        totpTimestamp:
+          type: integer
+          example: 1607705370
+          format: int32
+          description: The timestamp at TOTP token generation
+      required:
+        - token
   securitySchemes: {}
+  responses:
+    '404':
+      description: Generic Resource Not Found response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              exception:
+                type: string
+              file:
+                type: string
+              line:
+                type: integer
+          examples:
+            example-1:
+              value:
+                message: 'http://2fauth/api/twofaccounts/5'
+                exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+                file: /vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php
+                line: 222
+    '422':
+      description: Generic Invalid given data response
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            properties:
+              message:
+                type: string
+                minLength: 1
+              errors:
+                type: object
+            required:
+              - message
+          examples:
+            example-1:
+              value:
+                message: string
+                errors:
+                  fieldName:
+                    - 'The [fieldName] format is invalid'
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 2
+      description: The ID of the resource
 tags:
   - name: twofaccounts
