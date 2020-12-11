@@ -14,7 +14,7 @@ servers:
 paths:
   /twofaccounts:
     get:
-      summary: Get TwoFAccounts
+      summary: Get all TwoFAccounts
       responses:
         '200':
           description: OK
@@ -32,7 +32,114 @@ paths:
                       icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
                       isConsistent: true
       operationId: get-twofaccounts
-      description: List all twofaccounts stored in database without any OTP sensitive data.
+      description: List all twofaccounts stored in database without any sensitive data
+      tags:
+        - twofaccounts
+    post:
+      summary: Create a Twofaccount
+      operationId: post-twofaccounts
+      responses:
+        '200':
+          description: OK
+      description: Create a Twofaccount
+    delete:
+      summary: Batch delete Twofaccounts
+      operationId: delete-twofaccounts
+      responses:
+        '200':
+          description: OK
+      description: Delete twofaccounts with provided IDs
+  '/twofaccounts/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get light Twofaccount
+      tags:
+        - twofaccounts
+      responses: {}
+      operationId: get-twofaccounts-id
+      description: Get a single twofaccount without any sensitive data
+    put:
+      summary: Update Twofaccount
+      operationId: put-twofaccounts-id
+      responses:
+        '200':
+          description: OK
+      description: Update the twofaccount
+    delete:
+      summary: Delete Twofaccount
+      operationId: delete-twofaccounts-id
+      responses:
+        '200':
+          description: OK
+      description: Delete the twofaccount
+    patch:
+      summary: Update Twofaccount
+      operationId: patch-twofaccounts-id
+      responses:
+        '200':
+          description: OK
+      description: Update the twofaccount
+  '/twofaccounts/{id}/token':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get a token
+      tags:
+        - twofaccounts
+      responses: {}
+      operationId: get-twofaccounts-id-token
+      description: Get a token for an existing twofaccount
+  '/twofaccounts/{id}/withSensitive':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get full Twofaccount
+      tags:
+        - twofaccounts
+      responses: {}
+      operationId: get-twofaccounts-id-withSensitive
+      description: Get a single twofaccount with all sensitive data
+  /twofaccounts/order:
+    put:
+      summary: Reorder Twofaccounts
+      operationId: put-twofaccounts-order
+      responses:
+        '200':
+          description: OK
+      description: Update twofaccounts order
+      tags:
+        - twofaccounts
+  /twofaccounts/preview:
+    post:
+      summary: Preview a Twofaccount
+      operationId: post-twofaccounts-preview
+      responses:
+        '200':
+          description: OK
+      description: Get the twofaccount described by the provided otpauth URI
+      tags:
+        - twofaccounts
+  /twofaccounts/token:
+    post:
+      summary: Get a token
+      operationId: post-twofaccounts-token
+      responses:
+        '200':
+          description: OK
+      description: Get a token for the provided twofaccount
       tags:
         - twofaccounts
 components:
