@@ -429,7 +429,7 @@ paths:
                   filename:
                     type: string
                     example: GB6CvziMDMwj94WYGhWjiyWewiAyRWFfsRAgEnAn.png
-                    description: The filename of the icon
+                    description: The filename of the icon in storage
               examples:
                 example-1:
                   value:
@@ -439,27 +439,31 @@ paths:
       description: Store an image file to use as Twofaccount icon
       requestBody:
         content:
-          application/json:
-            schema:
-              type: string
-              format: binary
-              description: 'A image file (jpeg, png, bmp, gif, svg, or webp) submited as formData'
-            examples:
-              example-1:
-                value: string
           multipart/form-data:
             schema:
               type: string
               format: binary
               description: 'An image file (jpeg, png, bmp, gif, svg, or webp)'
+        description: ''
+    parameters: []
+  '/icon/{filename}':
+    parameters:
+      - schema:
+          type: string
+          example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+        name: filename
+        in: path
+        required: true
+        description: The filename of the file to delete
     delete:
       summary: ''
-      operationId: delete-icon
+      operationId: delete-icon-filename
       responses:
         '204':
           description: No Content
-      description: Delete an image file
-    parameters: []
+      tags:
+        - icon
+      description: Delete an icon from storage
 components:
   schemas:
     Twofaccount:
