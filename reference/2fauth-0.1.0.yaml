@@ -307,7 +307,7 @@ paths:
     get:
       summary: Get a token
       tags:
-        - twofaccounts
+        - token
       responses:
         '200':
           description: OK
@@ -413,7 +413,7 @@ paths:
           description: OK
       description: Get a token for the provided twofaccount
       tags:
-        - twofaccounts
+        - token
 components:
   schemas:
     Twofaccount:
@@ -539,6 +539,8 @@ components:
         - totpPeriod
         - hotpCounter
         - imageLink
+      x-tags:
+        - twofaccounts
     TwofaccountArray:
       title: TwofaccountArray
       type: array
@@ -583,6 +585,8 @@ components:
               - totp
               - hotp
             example: totp
+      x-tags:
+        - twofaccounts
     Token:
       description: A 2FA token
       type: object
@@ -610,6 +614,8 @@ components:
           format: int32
           description: The timestamp at TOTP token generation
       required:
+        - token
+      x-tags:
         - token
   securitySchemes: {}
   responses:
@@ -669,3 +675,4 @@ components:
       description: The ID of the resource
 tags:
   - name: twofaccounts
+  - name: token
