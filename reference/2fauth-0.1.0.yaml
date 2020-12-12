@@ -468,6 +468,7 @@ components:
           minimum: 1
         isConsistent:
           type: boolean
+          description: Wether or not the twofaccount has been successfully deciphered
         otpType:
           type: string
           enum:
@@ -525,7 +526,36 @@ components:
             otpType: totp
       description: An ordered list of Twofaccounts with basic attributes only
       items:
-        $ref: '#/components/schemas/TwofaccountLight'
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 10
+            format: int32
+          group_id:
+            type: integer
+            nullable: true
+            example: 5
+            format: int32
+          service:
+            type: string
+            example: Twitter
+          account:
+            type: string
+            example: john.doe@example.com
+          icon:
+            type: string
+            example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+            description: A filename without path
+          isConsistent:
+            type: boolean
+            description: Wether or not the twofaccount has been successfully deciphered
+          otpType:
+            type: string
+            enum:
+              - totp
+              - hotp
+            example: totp
     TwofaccountFull:
       description: A twofaccount model with all attributes
       type: object
@@ -575,6 +605,7 @@ components:
           minimum: 1
         isConsistent:
           type: boolean
+          description: Wether or not the twofaccount has been successfully deciphered
         otpType:
           type: string
           enum:
@@ -637,46 +668,6 @@ components:
         - uri
         - secret
         - algorithm
-    TwofaccountLight:
-      title: ''
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 10
-          format: int32
-        group_id:
-          type: integer
-          nullable: true
-          example: 5
-          format: int32
-        service:
-          type: string
-          example: Twitter
-        account:
-          type: string
-          example: john.doe@example.com
-        icon:
-          type: string
-          example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
-        isConsistent:
-          type: boolean
-        otpType:
-          type: string
-          enum:
-            - totp
-            - hotp
-          example: totp
-      description: A twofaccount model with basic attributes only
-      x-examples:
-        example-1:
-          id: 10
-          group_id: 5
-          service: Twitter
-          account: john.doe@example.com
-          icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
-          isConsistent: true
-          otpType: totp
     Token:
       description: A 2FA token
       type: object
@@ -697,7 +688,7 @@ components:
           example: 30
           minimum: 1
           format: int32
-          description: Validity duration of the token
+          description: 'Validity duration of a TOTP token, in second'
         totpTimestamp:
           type: integer
           example: 1607705370
