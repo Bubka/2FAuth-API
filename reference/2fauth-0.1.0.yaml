@@ -414,6 +414,52 @@ paths:
       description: Get a token for the provided twofaccount
       tags:
         - token
+  /icon:
+    post:
+      summary: ''
+      operationId: post-icon
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                    example: GB6CvziMDMwj94WYGhWjiyWewiAyRWFfsRAgEnAn.png
+                    description: The filename of the icon
+              examples:
+                example-1:
+                  value:
+                    filename: GB6CvziMDMwj94WYGhWjiyWewiAyRWFfsRAgEnAn.png
+      tags:
+        - icon
+      description: Store an image file to use as Twofaccount icon
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: binary
+              description: 'A image file (jpeg, png, bmp, gif, svg, or webp) submited as formData'
+            examples:
+              example-1:
+                value: string
+          multipart/form-data:
+            schema:
+              type: string
+              format: binary
+              description: 'An image file (jpeg, png, bmp, gif, svg, or webp)'
+    delete:
+      summary: ''
+      operationId: delete-icon
+      responses:
+        '204':
+          description: No Content
+      description: Delete an image file
+    parameters: []
 components:
   schemas:
     Twofaccount:
@@ -676,3 +722,4 @@ components:
 tags:
   - name: twofaccounts
   - name: token
+  - name: icon
