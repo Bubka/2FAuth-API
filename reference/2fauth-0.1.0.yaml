@@ -307,6 +307,28 @@ paths:
       description: Update the twofaccount
       tags:
         - twofaccounts
+  '/twofaccounts/{id}/qrcode':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Get a QR code
+      tags:
+        - twofaccounts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  qrcode:
+                    type: string
+                    format: byte
+                    description: A base64 encoded image resource
+              examples: {}
+      operationId: get-twofaccounts-id-qrcode
+      description: Get a QR code that represente the Twofaccount (its encoded URI)
   '/twofaccounts/{id}/token':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -444,7 +466,7 @@ paths:
           $ref: '#/components/responses/ValidationError'
       tags:
         - icon
-      description: Store an image file to use as Twofaccount icon
+      description: Add an image file in storage.
       requestBody:
         content:
           multipart/form-data:
@@ -471,30 +493,7 @@ paths:
           description: No Content
       tags:
         - icon
-      description: Delete an icon from storage
-  '/twofaccounts/{id}/qrcode':
-    parameters:
-      - $ref: '#/components/parameters/id'
-    get:
-      summary: Get a QR code
-      tags:
-        - twofaccounts
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  qrcode:
-                    type: string
-                    format: byte
-                    description: A base64 encoded image resource
-              examples: {}
-      operationId: get-twofaccounts-id-qrcode
-      description: Get a QR code that represente the Twofaccount (its encoded URI)
-      parameters: []
+      description: Delete an image file from storage.
 components:
   schemas:
     Twofaccount:
