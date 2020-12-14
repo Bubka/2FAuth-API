@@ -27,12 +27,13 @@ paths:
                   value:
                     - id: 10
                       group_id: 5
-                      service: Twitter
-                      account: john.doe@example.com
+                      service: MySite
+                      account: john.doe
                       icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
                       isConsistent: true
+                      otpType: totp
       operationId: get-twofaccounts
-      description: List all twofaccounts stored in database without any sensitive data
+      description: List all twofaccounts stored in database with basic attributes only
       tags:
         - twofaccounts
     post:
@@ -53,12 +54,11 @@ paths:
               properties:
                 service:
                   type: string
-                  minLength: 1
                   example: Mysite
                 account:
                   type: string
                   minLength: 1
-                  example: '@john.doe'
+                  example: john.doe
                   pattern: '^[^:]+$'
                 otpType:
                   type: string
@@ -68,16 +68,18 @@ paths:
                   example: totp
                 uri:
                   type: string
-                  example: 'otpauth://totp/MySite:@john.doe?secret=fjnkozij2owv5mma&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
+                  example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
                   pattern: '^otpauth:\/\/[h,t]otp\/'
                   format: uri
                 icon:
                   type: string
                   minLength: 1
+                  example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+                  description: An image resource already in storage
                 secret:
                   type: string
                   minLength: 1
-                  example: fjnkozij2owv5mma
+                  example: A3HIETVV5BGY9UIW
                 secretIsBase32Encoded:
                   type: integer
                   enum:
@@ -98,6 +100,7 @@ paths:
                   minimum: 6
                   maximum: 10
                   format: int32
+                  example: 6
                 hotpCounter:
                   type: integer
                   example: 15
@@ -119,11 +122,11 @@ paths:
               example-1:
                 value:
                   service: Mysite
-                  account: '@john.doe'
+                  account: john.doe
                   otpType: totp
-                  uri: 'otpauth://totp/MySite:@john.doe?secret=fjnkozij2owv5mma&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
-                  icon: string
-                  secret: fjnkozij2owv5mma
+                  uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
+                  icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+                  secret: A3HIETVV5BGY9UIW
                   secretIsBase32Encoded: 0
                   algorithm: sha1
                   digits: 6
@@ -175,8 +178,8 @@ paths:
                   value:
                     id: 10
                     group_id: 5
-                    service: Twitter
-                    account: john.doe@example.com
+                    service: MySite
+                    account: john.doe
                     icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
                     order_column: 2
                     isConsistent: true
@@ -185,14 +188,14 @@ paths:
                     totpPeriod: 30
                     hotpCounter: 5
                     imageLink: 'https://www.example.com/image.png'
-                    uri: 'otpauth://totp/Twitter:john.doe@example.com?secret=A3HIETVV5BGY9UIW'
+                    uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
                     secret: A3HIETVV5BGY9UIW
-                    algorithm: sha256
+                    algorithm: sha1
         '404':
-          $ref: '#/components/responses/404'
+          $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id
       description: |-
-        Get a single twofaccount.
+        Get a single Twofaccount.
         By default only safe attributes are returned. Use the withSensitive query parameter to get OTP sensitive attributes (uri, secret and algorithm)
       parameters:
         - schema:
@@ -222,7 +225,7 @@ paths:
                 account:
                   type: string
                   minLength: 1
-                  example: '@john.doe'
+                  example: john.doe
                   pattern: '^[^:]+$'
                 otpType:
                   type: string
@@ -233,10 +236,11 @@ paths:
                 icon:
                   type: string
                   minLength: 1
+                  example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
                 secret:
                   type: string
                   minLength: 1
-                  example: fjnkozij2owv5mma
+                  example: A3HIETVV5BGY9UIW
                 secretIsBase32Encoded:
                   type: integer
                   enum:
@@ -244,6 +248,7 @@ paths:
                     - 1
                   format: int32
                   description: Wether or not the provided secret is already base32 encoded
+                  example: 1
                 algorithm:
                   type: string
                   enum:
@@ -257,6 +262,7 @@ paths:
                   minimum: 6
                   maximum: 10
                   format: int32
+                  example: 6
                 hotpCounter:
                   type: integer
                   example: 15
@@ -273,11 +279,11 @@ paths:
               example-1:
                 value:
                   service: Mysite
-                  account: '@john.doe'
+                  account: john.doe
                   otpType: totp
-                  icon: string
-                  secret: fjnkozij2owv5mma
-                  secretIsBase32Encoded: 0
+                  icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+                  secret: A3HIETVV5BGY9UIW
+                  secretIsBase32Encoded: 1
                   algorithm: sha1
                   digits: 6
                   hotpCounter: 15
@@ -369,8 +375,8 @@ paths:
                   value:
                     id: 10
                     group_id: 5
-                    service: Twitter
-                    account: john.doe@example.com
+                    service: MySite
+                    account: john.doe
                     icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
                     order_column: 2
                     isConsistent: true
@@ -379,11 +385,11 @@ paths:
                     totpPeriod: 30
                     hotpCounter: 5
                     imageLink: 'https://www.example.com/image.png'
-                    uri: 'otpauth://totp/Twitter:john.doe@example.com?secret=A3HIETVV5BGY9UIW'
+                    uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
                     secret: A3HIETVV5BGY9UIW
-                    algorithm: sha256
+                    algorithm: sha1
         '422':
-          $ref: '#/components/responses/422'
+          $ref: '#/components/responses/ValidationError'
       description: Get the twofaccount described by the provided otpauth URI
       tags:
         - twofaccounts
@@ -396,13 +402,13 @@ paths:
               properties:
                 uri:
                   type: string
-                  example: 'otpauth://totp/MyWebsite:john.doe?secret=DF5TH790PL3EDD5T&issuer=MyWebsite&period=30&algorithm=sha1&digits=6'
+                  example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
               required:
                 - uri
             examples:
               example-1:
                 value:
-                  uri: string
+                  uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/icon.png'
         description: ''
   /twofaccounts/token:
     post:
@@ -428,12 +434,14 @@ paths:
                 properties:
                   filename:
                     type: string
-                    example: GB6CvziMDMwj94WYGhWjiyWewiAyRWFfsRAgEnAn.png
+                    example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
                     description: The filename of the icon in storage
               examples:
                 example-1:
                   value:
-                    filename: GB6CvziMDMwj94WYGhWjiyWewiAyRWFfsRAgEnAn.png
+                    filename: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
+        '422':
+          $ref: '#/components/responses/ValidationError'
       tags:
         - icon
       description: Store an image file to use as Twofaccount icon
@@ -483,8 +491,9 @@ paths:
                     type: string
                     format: byte
                     description: A base64 encoded image resource
+              examples: {}
       operationId: get-twofaccounts-id-qrcode
-      description: Get a QR code that represente the Twofaccount URI
+      description: Get a QR code that represente the Twofaccount (its encoded URI)
       parameters: []
 components:
   schemas:
@@ -495,8 +504,8 @@ components:
         example-1:
           id: 10
           group_id: 5
-          service: Twitter
-          account: john.doe@example.com
+          service: MySite
+          account: john.doe
           icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
           order_column: 2
           isConsistent: true
@@ -505,10 +514,12 @@ components:
           totpPeriod: 30
           hotpCounter: 5
           imageLink: 'https://www.example.com/image.png'
-          uri: 'otpauth://totp/Twitter:john.doe@example.com?secret=A3HIETVV5BGY9UIW&algorithm=sha1&digits=6'
+          uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
           secret: A3HIETVV5BGY9UIW
-          algorithm: sha256
+          algorithm: sha1
       title: ''
+      x-tags:
+        - twofaccounts
       properties:
         id:
           type: integer
@@ -523,11 +534,11 @@ components:
           description: The group ID the twofaccount belongs to
         service:
           type: string
-          example: Twitter
           description: The Issuer of the OTP
+          example: MySite
         account:
           type: string
-          example: john.doe@example.com
+          example: john.doe
           description: The Label of the OTP
         icon:
           type: string
@@ -582,7 +593,7 @@ components:
           type: string
           format: uri
           pattern: '^otpauth:\/\/(totp|hotp)\/.+'
-          example: 'otpauth://totp/Twitter:john.doe@example.com?secret=A3HIETVV5BGY9UIW&algorithm=sha1&digits=6'
+          example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
           description: 'The uri which describe the 2FA account, usually encoded as a QR code'
         secret:
           type: string
@@ -595,7 +606,7 @@ components:
             - sha256
             - sha512
             - md5
-          example: sha256
+          example: sha1
           description: The algorithm used to generate the tokens
           default: sha1
       required:
@@ -611,8 +622,6 @@ components:
         - totpPeriod
         - hotpCounter
         - imageLink
-      x-tags:
-        - twofaccounts
     TwofaccountArray:
       title: TwofaccountArray
       type: array
@@ -620,12 +629,14 @@ components:
         example-1:
           - id: 10
             group_id: 5
-            service: Twitter
-            account: john.doe@example.com
+            service: MySite
+            account: john.doe
             icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
             isConsistent: true
             otpType: totp
       description: An ordered list of 2-Factor-Auth account with basic attributes only
+      x-tags:
+        - twofaccounts
       items:
         type: object
         properties:
@@ -640,10 +651,10 @@ components:
             format: int32
           service:
             type: string
-            example: Twitter
+            example: MySite
           account:
             type: string
-            example: john.doe@example.com
+            example: john.doe
           icon:
             type: string
             example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
@@ -657,8 +668,6 @@ components:
               - totp
               - hotp
             example: totp
-      x-tags:
-        - twofaccounts
     Token:
       description: A 2FA token
       type: object
@@ -667,6 +676,8 @@ components:
           token: '536489'
           totpPeriod: 30
           totpTimestamp: 1607705370
+      x-tags:
+        - token
       properties:
         token:
           type: string
@@ -674,6 +685,7 @@ components:
           pattern: '^[0-9]'
           example: '536489'
           maxLength: 10
+          description: A generated OTP code
         totpPeriod:
           type: integer
           example: 30
@@ -687,15 +699,13 @@ components:
           description: The timestamp at TOTP token generation
       required:
         - token
-      x-tags:
-        - token
   securitySchemes:
     2FAuth_auth:
       name: API Key
       type: apiKey
       in: query
   responses:
-    '404':
+    NotFound:
       description: Generic Resource Not Found response
       content:
         application/json:
@@ -717,8 +727,8 @@ components:
                 exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException
                 file: /vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php
                 line: 222
-    '422':
-      description: Generic Invalid given data response
+    ValidationError:
+      description: Form validation response
       content:
         application/json:
           schema:
@@ -728,17 +738,35 @@ components:
               message:
                 type: string
                 minLength: 1
+                example: The given data was invalid.
               errors:
                 type: object
+                description: An object of fields with their respective errors
+                minProperties: 1
+                properties:
+                  fieldName_A:
+                    type: array
+                    description: All validation errors for fieldName A
+                    items:
+                      type: string
+                      example: The fieldName_A field is required
+                  fieldName_B:
+                    type: array
+                    description: All validation errors for fieldName B
+                    items:
+                      type: string
+                      example: The fieldName_B must not contain number
             required:
               - message
           examples:
             example-1:
               value:
-                message: string
+                message: The given data was invalid.
                 errors:
-                  fieldName:
-                    - 'The [fieldName] format is invalid'
+                  fieldName_A:
+                    - The fieldName_A field is required
+                  fieldName_B:
+                    - The fieldName_B must not contain number
   parameters:
     id:
       name: id
