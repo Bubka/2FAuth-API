@@ -316,7 +316,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
       operationId: get-twofaccounts-id-token
-      description: Get a token for an existing twofaccount
+      description: Get a token for the twofaccount
   /twofaccounts/order:
     put:
       summary: Reorder Twofaccounts
@@ -464,6 +464,28 @@ paths:
       tags:
         - icon
       description: Delete an icon from storage
+  '/twofaccounts/{id}/qrcode':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Get a QR code
+      tags:
+        - twofaccounts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  qrcode:
+                    type: string
+                    format: byte
+                    description: A base64 encoded image resource
+      operationId: get-twofaccounts-id-qrcode
+      description: Get a QR code that represente the Twofaccount URI
+      parameters: []
 components:
   schemas:
     Twofaccount:
@@ -667,7 +689,11 @@ components:
         - token
       x-tags:
         - token
-  securitySchemes: {}
+  securitySchemes:
+    2FAuth_auth:
+      name: API Key
+      type: apiKey
+      in: query
   responses:
     '404':
       description: Generic Resource Not Found response
