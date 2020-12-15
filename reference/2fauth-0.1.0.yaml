@@ -33,7 +33,7 @@ paths:
                       isConsistent: true
                       otpType: totp
       operationId: get-twofaccounts
-      description: List all twofaccounts stored in database with basic attributes only
+      description: List all twofaccounts resources with basic attributes only
       tags:
         - twofaccounts
     post:
@@ -42,7 +42,7 @@ paths:
       responses:
         '201':
           description: Created
-      description: Create a Twofaccount
+      description: Create a Twofaccount resource
       tags:
         - twofaccounts
       requestBody:
@@ -139,7 +139,7 @@ paths:
       responses:
         '204':
           description: No Content
-      description: Delete twofaccounts with provided IDs
+      description: Delete Twofaccount resources matching provided IDs
       tags:
         - twofaccounts
       requestBody:
@@ -195,21 +195,23 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id
       description: |-
-        Get a single Twofaccount.
-        By default only safe attributes are returned. Use the withSensitive query parameter to get OTP sensitive attributes (uri, secret and algorithm)
+        Get a single Twofaccount resource.
+
+        By default only safe attributes are returned. Use the `withSensitive` query parameter to get OTP sensitive attributes (`uri`, `secret` and `algorithm`)
       parameters:
         - schema:
             type: boolean
           in: query
           name: withSensitive
           allowEmptyValue: true
+          description: 'Add sensitives attributes (`uri`, `secret` and `algorithm`) to the response body object'
     put:
       summary: Update Twofaccount
       operationId: put-twofaccounts-id
       responses:
         '200':
           description: OK
-      description: Update the twofaccount
+      description: Update a twofaccount resource
       tags:
         - twofaccounts
       requestBody:
@@ -295,7 +297,7 @@ paths:
       responses:
         '204':
           description: No Content
-      description: Delete the twofaccount
+      description: Delete a twofaccount resource
       tags:
         - twofaccounts
     patch:
@@ -304,7 +306,7 @@ paths:
       responses:
         '200':
           description: OK
-      description: Update the twofaccount
+      description: Update a twofaccount resource
       tags:
         - twofaccounts
   '/twofaccounts/{id}/qrcode':
@@ -336,6 +338,7 @@ paths:
       summary: Get a token
       tags:
         - token
+        - twofaccounts
       responses:
         '200':
           description: OK
@@ -344,7 +347,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
       operationId: get-twofaccounts-id-token
-      description: Get a token for the twofaccount
+      description: Get a token for the Twofaccount
   /twofaccounts/order:
     put:
       summary: Reorder Twofaccounts
@@ -352,7 +355,7 @@ paths:
       responses:
         '200':
           description: OK
-      description: Update twofaccounts order
+      description: Update Twofaccounts order
       tags:
         - twofaccounts
       requestBody:
@@ -412,7 +415,7 @@ paths:
                     algorithm: sha1
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Get the twofaccount described by the provided otpauth URI
+      description: Get the Twofaccount resource described by the provided otpauth URI
       tags:
         - twofaccounts
       requestBody:
@@ -439,9 +442,10 @@ paths:
       responses:
         '200':
           description: OK
-      description: Get a token for the provided twofaccount
+      description: Get a token for the provided Twofaccount
       tags:
         - token
+        - twofaccounts
   /icon:
     post:
       summary: ''
@@ -494,6 +498,94 @@ paths:
       tags:
         - icon
       description: Delete an image file from storage.
+  /groups:
+    get:
+      summary: Get all Groups
+      tags:
+        - groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupArray'
+              examples:
+                example-1:
+                  value:
+                    - name: All
+                      id: 1
+                      twofaccounts_count: 5
+                      isActive: false
+                    - name: MyGroup
+                      id: 2
+                      twofaccounts_count: 3
+                      isActive: true
+      operationId: get-groups
+      description: |-
+        List all Group resources.
+
+        The first group is always a pseudo-group named `All` which fetch all existing Twofaccounts.
+    post:
+      summary: Create a Group
+      operationId: post-groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+              examples:
+                example-1:
+                  value:
+                    name: MyGroup
+                    id: 2
+                    isActive: false
+      description: Create a Group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: MyGroup
+                  description: 'The name of the group, must be unique'
+                  maxLength: 32
+              required:
+                - name
+      tags:
+        - groups
+  '/groups/{id}':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Get a group
+      tags:
+        - groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+      operationId: get-groups-id
+      description: Get a single Group
+    put:
+      summary: Update a group
+      operationId: put-groups-id
+      responses:
+        '200':
+          description: OK
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: Update a Group
+      tags:
+        - groups
 components:
   schemas:
     Twofaccount:
@@ -516,20 +608,18 @@ components:
           uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
           secret: A3HIETVV5BGY9UIW
           algorithm: sha1
-      title: ''
+      title: Twofaccount
       x-tags:
         - twofaccounts
       properties:
         id:
           type: integer
           example: 10
-          format: int32
           description: Id of the twofaccount
         group_id:
           type: integer
           nullable: true
           example: 5
-          format: int32
           description: The group ID the twofaccount belongs to
         service:
           type: string
@@ -547,7 +637,6 @@ components:
         order_column:
           type: integer
           example: 2
-          format: int32
           minimum: 1
           description: Position of the twofaccount in the whole twofaccounts list
         isConsistent:
@@ -562,14 +651,12 @@ components:
           description: The type of OTP
         digits:
           type: integer
-          format: int32
           example: 6
           minimum: 6
           maximum: 10
           description: the number of digits of the generated tokens
         totpPeriod:
           type: integer
-          format: int32
           nullable: true
           default: 30
           example: 30
@@ -577,7 +664,6 @@ components:
           description: The validity duration of generated tokens
         hotpCounter:
           type: integer
-          format: int32
           nullable: true
           minimum: 0
           example: 5
@@ -633,7 +719,7 @@ components:
             icon: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
             isConsistent: true
             otpType: totp
-      description: An ordered list of 2-Factor-Auth account with basic attributes only
+      description: An ordered list of 2-Factor-Auth accounts with basic attributes only
       x-tags:
         - twofaccounts
       items:
@@ -642,18 +728,20 @@ components:
           id:
             type: integer
             example: 10
-            format: int32
+            description: Id of the twofaccount
           group_id:
             type: integer
             nullable: true
             example: 5
-            format: int32
+            description: The group ID the twofaccount belongs to
           service:
             type: string
             example: MySite
+            description: The Issuer of the OTP
           account:
             type: string
             example: john.doe
+            description: The Label of the OTP
           icon:
             type: string
             example: XdPPECCaW6y6ZBLtjxq1NpNb0vUKtuoJcTXMaYmD.png
@@ -667,6 +755,15 @@ components:
               - totp
               - hotp
             example: totp
+            description: The type of OTP
+        required:
+          - id
+          - group_id
+          - service
+          - account
+          - icon
+          - isConsistent
+          - otpType
     Token:
       description: A 2FA token
       type: object
@@ -689,15 +786,61 @@ components:
           type: integer
           example: 30
           minimum: 1
-          format: int32
           description: 'Validity duration of a TOTP token, in second'
         totpTimestamp:
           type: integer
           example: 1607705370
-          format: int32
           description: The timestamp at TOTP token generation
       required:
         - token
+      title: Token
+    Group:
+      description: A single Group
+      type: object
+      x-examples:
+        example-1:
+          name: MyGroup
+          id: 1
+          twofaccounts_count: 5
+          isActive: true
+      title: Group
+      properties:
+        name:
+          type: string
+          example: MyGroup
+          description: the name of the Group
+        id:
+          type: integer
+          example: 1
+          description: the Id of the Group
+        twofaccounts_count:
+          type: integer
+          example: 5
+          description: Number of Twofaccounts associated to the Group
+        isActive:
+          type: boolean
+          description: Whether or not the group is the active one
+      required:
+        - name
+        - id
+        - isActive
+    GroupArray:
+      type: array
+      title: GroupArray
+      description: A list of Groups completed with a pseudo-group named 'All' which contain all Twofaccounts
+      x-examples:
+        example-1:
+          - name: All
+            id: 1
+            twofaccounts_count: 5
+            isActive: false
+          - name: MyGroup
+            id: 2
+            twofaccounts_count: 3
+            isActive: true
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/Group'
   securitySchemes:
     2FAuth_auth:
       name: API Key
@@ -770,13 +913,13 @@ components:
     id:
       name: id
       in: path
-      required: true
       schema:
         type: integer
-        format: int32
         example: 2
       description: The ID of the resource
+      required: true
 tags:
   - name: twofaccounts
   - name: token
   - name: icon
+  - name: groups
