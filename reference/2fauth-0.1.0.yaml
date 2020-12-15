@@ -300,15 +300,6 @@ paths:
       description: Delete a twofaccount resource
       tags:
         - twofaccounts
-    patch:
-      summary: Update Twofaccount
-      operationId: patch-twofaccounts-id
-      responses:
-        '200':
-          description: OK
-      description: Update a twofaccount resource
-      tags:
-        - twofaccounts
   '/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -574,18 +565,146 @@ paths:
               schema:
                 $ref: '#/components/schemas/Group'
       operationId: get-groups-id
-      description: Get a single Group
+      description: Get a single Group resource
     put:
       summary: Update a group
       operationId: put-groups-id
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+              examples:
+                example-1:
+                  value:
+                    name: MyGroup-new-name
+                    id: 2
+                    isActive: true
         '404':
           $ref: '#/components/responses/NotFound'
-      description: Update a Group
+      description: Update a Group resource
       tags:
         - groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: MyGroup
+                  description: 'The new name of the group, must be unique'
+                  maxLength: 32
+              required:
+                - name
+            examples:
+              example-1:
+                value:
+                  name: MyGroup-new-name
+    delete:
+      summary: ''
+      operationId: delete-groups-id
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - groups
+      description: Delete a Group resource
+  '/groups/{id}/accounts':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    patch:
+      summary: ''
+      operationId: patch-groups-id-accounts
+      responses:
+        '200':
+          description: OK
+      tags:
+        - groups
+  /settings/options:
+    get:
+      summary: Get all Settings
+      tags:
+        - settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+              examples: {}
+      operationId: get-settings-options
+      description: List all Settings.
+    post:
+      summary: Save Settings
+      operationId: post-settings-options
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+      description: Save settings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                lang:
+                  type: string
+                  minLength: 1
+                showTokenAsDot:
+                  type: boolean
+                closeTokenOnCopy:
+                  type: boolean
+                useBasicQrcodeReader:
+                  type: boolean
+                showAccountsIcons:
+                  type: boolean
+                displayMode:
+                  type: string
+                  minLength: 1
+                kickUserAfter:
+                  type: string
+                  minLength: 1
+                useEncryption:
+                  type: boolean
+                defaultGroup:
+                  type: string
+                  minLength: 1
+                useDirectCapture:
+                  type: boolean
+                defaultCaptureMode:
+                  type: string
+                  minLength: 1
+                rememberActiveGroup:
+                  type: boolean
+              required:
+                - lang
+                - showTokenAsDot
+                - closeTokenOnCopy
+                - useBasicQrcodeReader
+                - showAccountsIcons
+                - displayMode
+                - kickUserAfter
+                - useEncryption
+                - defaultGroup
+                - useDirectCapture
+                - defaultCaptureMode
+                - rememberActiveGroup
+      tags:
+        - settings
 components:
   schemas:
     Twofaccount:
@@ -841,6 +960,59 @@ components:
       minItems: 1
       items:
         $ref: '#/components/schemas/Group'
+    Settings:
+      description: A list of settings
+      type: object
+      properties:
+        isDemoApp:
+          type: boolean
+        showTokenAsDot:
+          type: boolean
+        closeTokenOnCopy:
+          type: boolean
+        useBasicQrcodeReader:
+          type: boolean
+        displayMode:
+          type: string
+          minLength: 1
+        showAccountsIcons:
+          type: boolean
+        kickUserAfter:
+          type: string
+          minLength: 1
+        activeGroup:
+          type: number
+        rememberActiveGroup:
+          type: boolean
+        defaultGroup:
+          type: string
+          minLength: 1
+        useEncryption:
+          type: boolean
+        defaultCaptureMode:
+          type: string
+          minLength: 1
+        useDirectCapture:
+          type: boolean
+        lang:
+          type: string
+          minLength: 1
+      required:
+        - isDemoApp
+        - showTokenAsDot
+        - closeTokenOnCopy
+        - useBasicQrcodeReader
+        - displayMode
+        - showAccountsIcons
+        - kickUserAfter
+        - activeGroup
+        - rememberActiveGroup
+        - defaultGroup
+        - useEncryption
+        - defaultCaptureMode
+        - useDirectCapture
+        - lang
+      title: Settings
   securitySchemes:
     2FAuth_auth:
       name: API Key
@@ -923,3 +1095,4 @@ tags:
   - name: token
   - name: icon
   - name: groups
+  - name: settings
