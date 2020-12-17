@@ -461,7 +461,10 @@ paths:
           $ref: '#/components/responses/ValidationError'
       tags:
         - icon
-      description: Add an image file in storage.
+      description: |-
+        Add an image file in storage.
+
+        The image stored are used as Twofaccount icons. Store the image first, then use the returned filename to set the `icon` parameter of a Twofaccount.
       requestBody:
         content:
           multipart/form-data:
@@ -705,6 +708,98 @@ paths:
                 - rememberActiveGroup
       tags:
         - settings
+  /settings/account:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: John DOE
+                    description: Name of the user
+                  email:
+                    type: string
+                    format: email
+                    example: john.doe@example.com
+                    description: Email address of the user
+                required:
+                  - name
+                  - email
+              examples:
+                example-1:
+                  value:
+                    name: John DOE
+                    email: john.doe@example.com
+      operationId: get-settings-account
+      description: Get user account
+    put:
+      summary: ''
+      operationId: put-settings-account
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Jane DOE
+                    description: New name of the user
+                  email:
+                    type: string
+                    format: email
+                    example: jane.doe@example.com
+                    description: New email address of the user
+                required:
+                  - name
+                  - email
+              examples:
+                example-1:
+                  value:
+                    name: Jane DOE
+                    email: jane.doe@example.com
+      tags:
+        - settings
+      description: Update user account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: New name of the user
+                  example: Jane DOE
+                email:
+                  type: string
+                  format: email
+                  description: New email address of the user
+                  example: jane.doe@example.com
+                password:
+                  type: string
+                  description: Current password of the user (for security check)
+                  example: X4"fj6&vjs-cv)"5dd_T
+              required:
+                - name
+                - email
+                - password
+            examples:
+              example-1:
+                value:
+                  name: Jane DOE
+                  email: jane.doe@example.com
+                  password: X4"fj6&vjs-cv)"5dd_T
 components:
   schemas:
     Twofaccount:
