@@ -9,8 +9,8 @@ info:
     name: Bubka
   description: Official 2FAuth API
 servers:
-  - url: 'https://demo.2fauth.app/v1'
-    description: Demo
+  - url: 'http://2fauth/api'
+    description: dev
 paths:
   /twofaccounts:
     get:
@@ -192,7 +192,7 @@ paths:
                     secret: A3HIETVV5BGY9UIW
                     algorithm: sha1
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Resource not found
       operationId: get-twofaccounts-id
       description: |-
         Get a single Twofaccount resource.
@@ -211,6 +211,8 @@ paths:
       responses:
         '200':
           description: OK
+        '404':
+          description: Resource not found
       description: Update a twofaccount resource
       tags:
         - twofaccounts
@@ -499,7 +501,7 @@ paths:
         - groups
       responses:
         '200':
-          description: OK
+          description: All Groups
           content:
             application/json:
               schema:
@@ -524,8 +526,8 @@ paths:
       summary: Create a Group
       operationId: post-groups
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Group created
           content:
             application/json:
               schema:
@@ -536,6 +538,8 @@ paths:
                     name: MyGroup
                     id: 2
                     isActive: false
+        '422':
+          $ref: '#/components/responses/ValidationError'
       description: Create a Group
       requestBody:
         content:
@@ -562,11 +566,13 @@ paths:
         - groups
       responses:
         '200':
-          description: OK
+          description: The requested Group
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Group'
+        '404':
+          description: Not Found
       operationId: get-groups-id
       description: Get a single Group resource
     put:
@@ -574,7 +580,7 @@ paths:
       operationId: put-groups-id
       responses:
         '200':
-          description: OK
+          description: Group updated
           content:
             application/json:
               schema:
@@ -586,7 +592,9 @@ paths:
                     id: 2
                     isActive: true
         '404':
-          $ref: '#/components/responses/NotFound'
+          description: Not found
+        '422':
+          $ref: '#/components/responses/ValidationError'
       description: Update a Group resource
       tags:
         - groups
@@ -607,56 +615,103 @@ paths:
               example-1:
                 value:
                   name: MyGroup-new-name
+        description: New Group definition
     delete:
-      summary: ''
+      summary: Delete a Group
       operationId: delete-groups-id
       responses:
         '204':
-          description: No Content
+          description: Group deleted
+        '404':
+          description: Not Found
       tags:
         - groups
       description: Delete a Group resource
   '/groups/{id}/accounts':
     parameters:
-      - schema:
-          type: string
-        name: id
-        in: path
-        required: true
+      - $ref: '#/components/parameters/id'
     patch:
-      summary: ''
+      summary: Update group Twofaccounts
       operationId: patch-groups-id-accounts
       responses:
         '200':
-          description: OK
+          description: Associated Twofaccounts updated
       tags:
         - groups
-  /settings/options:
+      description: Update Twofaccounts associated to a Group
     get:
-      summary: Get all Settings
+      summary: Get the group Twofaccounts
+      operationId: get-groups-id-accounts
+      responses:
+        '200':
+          description: The list of associated Twofaccounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TwofaccountArray'
+      description: Get Twofaccounts associated to a Group
       tags:
-        - settings
+        - twofaccounts
+        - groups
+  /options:
+    get:
+      summary: Get all Options
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Settings'
-              examples: {}
-      operationId: get-settings-options
-      description: List all Settings.
+                $ref: '#/components/schemas/Options'
+              examples:
+                example-1:
+                  value:
+                    isDemoApp: true
+                    showTokenAsDot: true
+                    closeTokenOnCopy: true
+                    useBasicQrcodeReader: true
+                    displayMode: string
+                    showAccountsIcons: true
+                    kickUserAfter: string
+                    activeGroup: 0
+                    rememberActiveGroup: true
+                    defaultGroup: string
+                    useEncryption: true
+                    defaultCaptureMode: string
+                    useDirectCapture: true
+                    lang: string
+      operationId: get-options
+      description: List all Options
+      tags:
+        - options
     post:
       summary: Save Settings
-      operationId: post-settings-options
+      operationId: post-options
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Settings'
-      description: Save settings
+                $ref: '#/components/schemas/Options'
+              examples:
+                example-1:
+                  value:
+                    isDemoApp: true
+                    showTokenAsDot: true
+                    closeTokenOnCopy: true
+                    useBasicQrcodeReader: true
+                    displayMode: string
+                    showAccountsIcons: true
+                    kickUserAfter: string
+                    activeGroup: 0
+                    rememberActiveGroup: true
+                    defaultGroup: string
+                    useEncryption: true
+                    defaultCaptureMode: string
+                    useDirectCapture: true
+                    lang: string
+      description: Save Options
       requestBody:
         content:
           application/json:
@@ -707,15 +762,16 @@ paths:
                 - defaultCaptureMode
                 - rememberActiveGroup
       tags:
-        - settings
-  /settings/account:
+        - options
+    parameters: []
+  /user:
     get:
-      summary: Your GET endpoint
+      summary: Get User
       tags:
-        - settings
+        - user
       responses:
         '200':
-          description: OK
+          description: The registered user
           content:
             application/json:
               schema:
@@ -738,14 +794,19 @@ paths:
                   value:
                     name: John DOE
                     email: john.doe@example.com
-      operationId: get-settings-account
-      description: Get user account
+        '404':
+          description: Resource not found
+      operationId: get-user-infos
+      description: |-
+        Get user infos.
+
+        There is only one possible registered user, so the endpoint is singular.
     put:
       summary: ''
-      operationId: put-settings-account
+      operationId: put-user-infos
       responses:
         '200':
-          description: OK
+          description: User updated
           content:
             application/json:
               schema:
@@ -768,9 +829,12 @@ paths:
                   value:
                     name: Jane DOE
                     email: jane.doe@example.com
-      tags:
-        - settings
-      description: Update user account
+        '404':
+          description: Resource not found
+      description: |-
+        Update user infos.
+
+        There is only one possible registered user, so the endpoint is singular.
       requestBody:
         content:
           application/json:
@@ -789,7 +853,8 @@ paths:
                 password:
                   type: string
                   description: Current password of the user (for security check)
-                  example: X4"fj6&vjs-cv)"5dd_T
+                  example: X4#fj6&vjs-cv)#5dd_T
+                  format: password
               required:
                 - name
                 - email
@@ -799,7 +864,52 @@ paths:
                 value:
                   name: Jane DOE
                   email: jane.doe@example.com
-                  password: X4"fj6&vjs-cv)"5dd_T
+                  password: X4#fj6&vjs-cv)#5dd_T
+        description: New user infos
+      tags:
+        - user
+    parameters: []
+  /user/password:
+    patch:
+      summary: Update password
+      operationId: patch-user-password
+      responses:
+        '200':
+          description: Password updated
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+        - user
+      description: |-
+        Update the user password.
+
+        There is only one possible registered user, so the endpoint is singular.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                  description: The current user password
+                  format: password
+                  example: curr3ntPa$$word
+                password:
+                  type: string
+                  description: The new password
+                  minLength: 8
+                  format: password
+                  example: n3wPa$$word
+              required:
+                - currentPassword
+                - password
+            examples:
+              example-1:
+                value:
+                  currentPassword: curr3ntPa$$word
+                  password: n3wPa$$word
+        description: The current password (for security check) and the new one
 components:
   schemas:
     Twofaccount:
@@ -1041,7 +1151,7 @@ components:
     GroupArray:
       type: array
       title: GroupArray
-      description: A list of Groups completed with a pseudo-group named 'All' which contain all Twofaccounts
+      description: A list of Groups completed with a pseudo-group named 'All' which gather all Twofaccounts
       x-examples:
         example-1:
           - name: All
@@ -1055,8 +1165,8 @@ components:
       minItems: 1
       items:
         $ref: '#/components/schemas/Group'
-    Settings:
-      description: A list of settings
+    Options:
+      description: A list of options
       type: object
       properties:
         isDemoApp:
@@ -1107,37 +1217,18 @@ components:
         - defaultCaptureMode
         - useDirectCapture
         - lang
-      title: Settings
+      title: Options
   securitySchemes:
     2FAuth_auth:
       name: API Key
       type: apiKey
       in: query
   responses:
-    NotFound:
-      description: Generic Resource Not Found response
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-              exception:
-                type: string
-              file:
-                type: string
-              line:
-                type: integer
-          examples:
-            example-1:
-              value:
-                message: 'http://2fauth/api/twofaccounts/5'
-                exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-                file: /vendor/laravel/framework/src/Illuminate/Foundation/Exceptions/Handler.php
-                line: 222
     ValidationError:
-      description: Form validation response
+      description: |-
+        Validation errors
+
+        See `errors` object in body for details.
       content:
         application/json:
           schema:
@@ -1190,4 +1281,5 @@ tags:
   - name: token
   - name: icon
   - name: groups
-  - name: settings
+  - name: options
+  - name: user
