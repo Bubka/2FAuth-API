@@ -85,7 +85,6 @@ paths:
                   enum:
                     - 0
                     - 1
-                  format: int32
                   description: Wether or not the provided secret is already base32 encoded
                 algorithm:
                   type: string
@@ -99,7 +98,6 @@ paths:
                   type: integer
                   minimum: 6
                   maximum: 10
-                  format: int32
                   example: 6
                 hotpCounter:
                   type: integer
@@ -133,6 +131,7 @@ paths:
                   hotpCounter: 15
                   totpPeriod: 30
                   imageLink: 'https://www.example.com/icon.png'
+        description: Request body with all OTP attributes
     delete:
       summary: Batch delete Twofaccounts
       operationId: delete-twofaccounts
@@ -210,9 +209,13 @@ paths:
       operationId: put-twofaccounts-id
       responses:
         '200':
-          description: OK
+          description: Twofaccount updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Twofaccount'
         '404':
-          description: Resource not found
+          description: Not found
       description: Update a twofaccount resource
       tags:
         - twofaccounts
@@ -250,9 +253,8 @@ paths:
                   enum:
                     - 0
                     - 1
-                  format: int32
                   description: Wether or not the provided secret is already base32 encoded
-                  example: 1
+                  example: 0
                 algorithm:
                   type: string
                   enum:
@@ -265,7 +267,6 @@ paths:
                   type: integer
                   minimum: 6
                   maximum: 10
-                  format: int32
                   example: 6
                 hotpCounter:
                   type: integer
