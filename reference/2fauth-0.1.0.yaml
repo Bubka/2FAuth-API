@@ -342,15 +342,14 @@ paths:
       operationId: get-twofaccounts-id-token
       description: Get a token for the Twofaccount
   /twofaccounts/order:
-    put:
+    patch:
       summary: Reorder Twofaccounts
-      operationId: put-twofaccounts-order
+      operationId: patch-twofaccounts-order
       responses:
         '200':
-          description: OK
-      description: Update Twofaccounts order
-      tags:
-        - twofaccounts
+          description: Order saved
+          headers: {}
+      description: Save Twofaccounts order
       requestBody:
         content:
           application/json:
@@ -377,6 +376,8 @@ paths:
                     - 2
                     - 5
                     - 6
+      tags:
+        - twofaccounts
   /twofaccounts/preview:
     post:
       summary: Preview a Twofaccount
