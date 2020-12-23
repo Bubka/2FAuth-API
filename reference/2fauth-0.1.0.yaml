@@ -107,10 +107,6 @@ paths:
                   type: number
                   example: 30
                   minimum: 1
-                imageLink:
-                  type: string
-                  example: 'https://www.example.com/icon.png'
-                  format: uri
               required:
                 - service
                 - account
@@ -276,10 +272,6 @@ paths:
                   type: number
                   example: 30
                   minimum: 1
-                imageLink:
-                  type: string
-                  example: 'https://www.example.com/icon.png'
-                  format: uri
             examples:
               example-1:
                 value:
