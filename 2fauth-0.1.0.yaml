@@ -1,0 +1,684 @@
+openapi: 3.1.0
+info:
+  title: 2fauth-0.1.0
+  version: 0.1.0
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /api/v1/twofaccounts:
+    get:
+      summary: Get all 2FA accounts
+      tags:
+        - twofaccounts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountCollection'
+              examples:
+                Example with Otp:
+                  value:
+                    - id: 1
+                      groupId: 1
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      isDeciphered: true
+                      otpType: totp
+                      otp:
+                        digits: 6
+                        secret: A3HIETVV5BGY9UIW
+                        algorithm: sha1
+                        period: 30
+                    - id: 5
+                      groupId: null
+                      service: My other site
+                      account: john.doe
+                      icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
+                      isDeciphered: true
+                      otpType: hotp
+                      otp:
+                        digits: 6
+                        secret: A3HIETVV5BGY9UIW
+                        algorithm: sha1
+                        counter: 15
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      operationId: get-twofaccounts
+      description: Find all existing 2FA accounts
+      parameters:
+        - $ref: '#/components/parameters/withOtp'
+    parameters: []
+    post:
+      summary: Create a 2FA account
+      tags: []
+      operationId: post-twofaccounts
+      description: Create a new 2FA account
+    delete:
+      summary: Batch delete some 2FA accounts
+      tags: []
+      operationId: delete-twofaccounts
+      description: Delete 2FA accounts matching provided IDs
+  '/api/v1/twofaccounts/{id}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: The ID of the resource
+    get:
+      summary: Find 2FA account by ID
+      tags:
+        - twofaccounts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccount'
+              examples:
+                Example with Otp:
+                  value:
+                    id: 1
+                    groupId: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    isDeciphered: true
+                    otpType: totp
+                    otp:
+                      digits: 6
+                      secret: A3HIETVV5BGY9UIW
+                      algorithm: sha1
+                      period: 30
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-twofaccounts-id
+      description: Returns a single 2FA account
+      parameters:
+        - $ref: '#/components/parameters/withOtp'
+  '/api/v1/twofaccounts/{id}/qrcode':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: The ID of the resource
+    get:
+      summary: Your GET endpoint
+      tags:
+        - twofaccounts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  qrcode:
+                    type: string
+                    minLength: 1
+                required:
+                  - qrcode
+                x-examples:
+                  example-1:
+                    qrcode: 'data:image/png;base64,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'
+              examples:
+                Example:
+                  value:
+                    qrcode: 'data:image/png;base64,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'
+        '404':
+          description: Not Found
+      operationId: get-twofaccounts-id-qrcode
+      description: Returns a QR code that represente the 2FA account
+  /api/v1/auth/login:
+    post:
+      summary: Sign in
+      tags:
+        - auth
+      responses:
+        '200':
+          $ref: '#/components/responses/Authenticated'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                Example:
+                  value:
+                    message: Too many login attempts. Please try again in 30 seconds.
+      operationId: post-login
+      description: Authenticates using the submitted credential
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  email: edouard@ganeau.me
+                  password: '}egjI84(T)v.d''#|x^eI'
+              properties:
+                email:
+                  type: string
+                  description: Email of the registered user
+                  format: email
+                password:
+                  type: string
+                  description: Password of the registered user
+                  format: password
+              required:
+                - email
+                - password
+            examples:
+              Example:
+                value:
+                  email: john.doe@example.com
+                  password: '^13,xgtG$*7js++}Cl#v'
+    parameters: []
+  /api/v1/auth/logout:
+    post:
+      summary: Sign out
+      tags:
+        - auth
+      responses:
+        '200':
+          $ref: '#/components/responses/OK'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      operationId: post-logout
+      description: Terminates the current user session
+    parameters: []
+  /api/v1/auth/register:
+    post:
+      summary: Register a user
+      tags:
+        - auth
+      responses:
+        '200':
+          $ref: '#/components/responses/Authenticated'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: post-register
+      description: Creates a user account
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  name: toto
+                  email: edouard@ganeau.me
+                  password: toto
+                  password_confirmation: toto
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                password_confirmation:
+                  type: string
+                  format: password
+                  minLength: 8
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+            examples:
+              Example:
+                value:
+                  name: john.doe
+                  email: john.doe@example.com
+                  password: '^13,xgtG$*7js++}Cl#v'
+                  password_confirmation: '^13,xgtG$*7js++}Cl#v'
+    parameters: []
+components:
+  schemas:
+    2FAccount:
+      title: 2FAccount
+      type: object
+      description: A single 2-Factor-Auth (2FA) account
+      examples:
+        - id: 1
+          groupId: 1
+          service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          isDeciphered: true
+          otpType: totp
+        - id: 1
+          groupId: 1
+          service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          isDeciphered: true
+          otpType: totp
+          otp:
+            digits: 6
+            secret: A3HIETVV5BGY9UIW
+            algorithm: sha1
+            period: 30
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: ID of the 2FA account
+        groupId:
+          type:
+            - integer
+            - 'null'
+          example: 1
+          description: The ID of the group the 2FA account belongs to
+        service:
+          type: string
+          description: The Issuer of the OTP
+          example: MySite
+        account:
+          type: string
+          description: The Label of the OTP
+          example: john.doe
+        icon:
+          type:
+            - string
+            - 'null'
+          example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          description: The filename of the icon which decorate the 2FA account
+        isDeciphered:
+          type: boolean
+          description: Whether or not the 2FA account has been successfully deciphered
+        otpType:
+          type: string
+          enum:
+            - totp
+            - hotp
+          example: totp
+          description: The type of OTP
+        otp:
+          anyOf:
+            - $ref: '#/components/schemas/Totp'
+            - $ref: '#/components/schemas/Hotp'
+      required:
+        - id
+        - groupId
+        - service
+        - account
+        - icon
+        - isDeciphered
+        - otpType
+    2FAccountCollection:
+      title: OtpCollection
+      type: array
+      description: An ordered collection of 2-Factor-Auth (2FA) accounts
+      examples:
+        - - id: 1
+            groupId: 1
+            service: MySite
+            account: john.doe
+            icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+            isDeciphered: true
+            otpType: totp
+          - id: 5
+            groupId: null
+            service: My other site
+            account: john.doe
+            icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
+            isDeciphered: true
+            otpType: hotp
+        - - id: 1
+            groupId: 1
+            service: MySite
+            account: john.doe
+            icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+            isDeciphered: true
+            otpType: totp
+            otp:
+              digits: 6
+              secret: A3HIETVV5BGY9UIW
+              algorithm: sha1
+              period: 30
+          - id: 5
+            groupId: null
+            service: My other site
+            account: john.doe
+            icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
+            isDeciphered: true
+            otpType: hotp
+            otp:
+              digits: 6
+              secret: A3HIETVV5BGY9UIW
+              algorithm: sha1
+              counter: 15
+      items:
+        $ref: '#/components/schemas/2FAccount'
+    Otp:
+      title: Otp
+      type: object
+      examples:
+        - digits: 6
+          secret: A3HIETVV5BGY9UIW
+          algorithm: sha1
+      description: Base object that lists common properties of One-Time Password
+      properties:
+        digits:
+          type: integer
+          example: 6
+          minimum: 6
+          maximum: 10
+          description: The number of digits of the generated tokens
+        secret:
+          type: string
+          description: The OTP secret (a base32 encoded string) used by the algorithm to generate the tokens
+          example: A3HIETVV5BGY9UIW
+        algorithm:
+          type: string
+          enum:
+            - sha1
+            - sha256
+            - sha512
+            - md5
+          example: sha1
+          description: The algorithm used to generate the tokens
+          default: sha1
+      required:
+        - digits
+        - secret
+        - algorithm
+    Totp:
+      allOf:
+        - $ref: '#/components/schemas/Otp'
+        - type: object
+          properties:
+            period:
+              type: integer
+              default: 30
+              example: 30
+              description: The validity duration of generated tokens
+          required:
+            - period
+      examples:
+        - digits: 6
+          secret: A3HIETVV5BGY9UIW
+          algorithm: sha1
+          period: 30
+      description: An object that lists properties of a Time-based One-Time Password (TOTP)
+      title: Totp
+    Hotp:
+      title: Hotp
+      allOf:
+        - $ref: '#/components/schemas/Otp'
+        - type: object
+          properties:
+            counter:
+              type: integer
+              example: 15
+              description: The value of the counter used to synchronize with HOTP verification servers
+          required:
+            - counter
+      examples:
+        - digits: 6
+          secret: A3HIETVV5BGY9UIW
+          algorithm: sha1
+          counter: 15
+      description: An object that lists properties of a HMAC-based One-Time Password (HOTP)
+    2FAccountWrite:
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          service: TextObject
+          account: edouard@ganeau.me
+          otpType: totp
+          uri: ''
+          icon: 6pA0WsoqTgqSYT49ueNpxVhvL0a510A3NNZUZDLF.png
+          secret: FJNKOZIJ2OWV5MMA
+          secretIsBase32Encoded: 1
+          algorithm: sha1
+          digits: 8
+          hotpCounter: null
+          totpPeriod: 40
+          imageLink: 'https://en.opensuse.org/images/4/44/Button-filled-colour.png'
+      properties:
+        service:
+          type: string
+          description: The Issuer of the OTP
+          example: MySite
+        account:
+          type: string
+          description: The Label of the OTP
+          example: john.doe
+        icon:
+          type:
+            - string
+            - 'null'
+          example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          description: The filename of the icon which decorate the 2FA account
+        uri:
+          type: string
+          format: uri
+          pattern: '^otpauth:\/\/(totp|hotp)\/.+'
+          example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
+          description: 'The uri which describe the 2FA account, usually encoded as a QR code'
+        otpType:
+          type: string
+          enum:
+            - totp
+            - hotp
+          example: totp
+          description: The type of OTP
+        totpPeriod:
+          type: integer
+          default: 30
+          example: 30
+          minimum: 1
+          description: The validity duration of generated tokens
+          nullable: true
+        hotpCounter:
+          type: integer
+          minimum: 0
+          example: 0
+          description: The value of the counter used to synchronize with HOTP verification servers
+          nullable: true
+        digits:
+          type: integer
+          example: 6
+          minimum: 6
+          maximum: 10
+          description: the number of digits of the generated tokens
+        secret:
+          type: string
+          description: A base32 encoded string
+          example: A3HIETVV5BGY9UIW
+        secretIsBase32Encoded:
+          type: number
+        algorithm:
+          type: string
+          enum:
+            - sha1
+            - sha256
+            - sha512
+            - md5
+          example: sha1
+          description: The algorithm used to generate the tokens
+          default: sha1
+        imageLink:
+          type: string
+          format: uri
+          example: 'https://www.example.com/image.png'
+          description: an external image resource
+          nullable: true
+      required:
+        - service
+        - account
+        - icon
+        - uri
+        - otpType
+        - totpPeriod
+        - digits
+        - secret
+        - secretIsBase32Encoded
+        - algorithm
+      examples:
+        - service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
+          otpType: totp
+          totpPeriod: 30
+          hotpCounter: 0
+          digits: 6
+          secret: A3HIETVV5BGY9UIW
+          secretIsBase32Encoded: 0
+          algorithm: sha1
+          imageLink: 'https://www.example.com/image.png'
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The ID of the resource
+    withOtp:
+      name: withOtp
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Set to true (or 1) to append OTP properties to the returned 2FA account
+  responses:
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+          examples:
+            Example:
+              value:
+                message: Model not found
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            required:
+              - message
+          examples:
+            Example:
+              value:
+                message: Unauthenticated.
+    ValidationError:
+      description: Validation errors
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              errors:
+                description: A collection of fields with their respective errors
+                type: object
+                properties:
+                  fieldName:
+                    type: array
+                    items:
+                      type: string
+            required:
+              - message
+              - errors
+          examples:
+            Example:
+              value:
+                message: The given data was invalid.
+                errors:
+                  username:
+                    - The Username field is required.
+                  age:
+                    - The Age field must be a number.
+    OK:
+      description: OK
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            x-examples:
+              example-1:
+                message: success
+            properties:
+              message:
+                type: string
+            required:
+              - message
+          examples:
+            Example:
+              value:
+                message: success
+    Authenticated:
+      description: Authenticated
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            x-examples:
+              example-1:
+                message: authenticated
+                token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMWNiZThmODA3NDk4NDQ4Y2RkZWUwZjI5MGIxNzI4ZDk5MTRjM2JiMGY5YWNiYjZmMTI2YzZhMzk5NzA2NWM4MjgyZWYxYzE1MGE1OWM4OTciLCJpYXQiOiIxNjMwNDQ4MzIzLjI5OTYzOCIsIm5iZiI6IjE2MzA0NDgzMjMuMjk5NjQxIiwiZXhwIjoiMTY2MTk4NDMyMy4yOTI3OTciLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.JiA505HgQPTpzvwY3tPvip7ZEDMlKGyRnTR4Zu1b7xYqY9b9Eff4KL-A6lX2uNMumt8ucg4M5iWwOe4gueXD7vqMhGO5GALl4daECo3-rG1-Jet7F8wlL7XqnhB-U_jiq387BRXwNdiNPNO2kepTTVY1MIXyMGVHBLwVuGXhbqrQSTPegT17Vy9JpnsQBejXUSSjN-3mZxUbn5EFZH6Nv4eYhN_QRTUwkSKV-rgYrzbWrw32AsImBYK-_yEoRZkkr1L61HwG2TBa2Wl0DdCzQeysIYWh5mzCR4ViiUP2J2PNFMP35QPI3ur6UEPJzEVzTGXftA76VijBShB7PLi9_F6VGempW4tTWa1FclB1vl45okO_s_YAIAfzgjJiJGkm2ThqXZAO8wlLWYcvyx2K_rxHtGOOU4NMabMo3omD6UQlETRZec17S7ZT10rhIzpgbZFcg56sEjhED9z3W2xN4NheXq27YrhB7EcJppXN8siIMbvakERe-N1obbVSDFLoId698zEZ68PBs_5t667HLKUH_EoMgCCuyCEIE9RVi41CWcbwgez-Ynz6RksIV9HfGXysHZzEXXfOW25kLmJMN5NUKiygxjG0sJ5F6pyIbVUTi5DmzUDxHdLKOOB3JqqKEtEeNtoSPTAW3XRIVf7sUxD54srGcxumk0TdYBIBerU
+                name: bubka
+            properties:
+              message:
+                type: string
+              token:
+                type: string
+              name:
+                type: string
+            required:
+              - message
+              - token
+              - name
+          examples:
+            Example:
+              value:
+                message: success
+                token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjc1NjhmMTEyMDI4NzMwZDRhZTIyZDM2OTYwZTZlNzhjNzdhNDI2YThhZjZjODQ0MDY4YjM2NDBhM2E0YjI0ZWM5Y2E3ZjIwYzFhZWI3NDQiLCJpYXQiOiIxNjMwNDQzMzUwLjkwNjkwMyIsIm5iZiI6IjE2MzA0NDMzNTAuOTA2OTA2IiwiZXhwIjoiMTY2MTk3OTM1MC45MDA2NDIiLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.NX59UK4gNksId6x3dBD4AD6zZcIwEjPcsFNG2Kko8_t1gxcI-x8UQJDafY61UAckfta5EzFjDNSVTJgHfmHHbegT_GAr5CzlmxRuLEiGKe9aJxCq7dfQgfQINGCS3c9gfmhW8I5tY2h6mKDvqCucjWxxqUdGzmPWb7GtLP0mhiO1mKs5G-FqReO6odU8aCqZG9mpc4mepqBA8KIlCtHdPwUbMlhaKrEaNcD4FtLFZsNtmNGDUku7pz7FKRB0ZRYK3C2WbnxeaYPdxJOdR79dz7pXIhDslvoLrYiE0tiWMBL3gUyj6YLFHldtJ3NbhUVPwjL4NXM-IAwV49vlUpRUOpB6BAl6CKNf6FOtm2bb95kIAVcX-U0l2_L60gevmc4h-BRjzYP9_s6rChwU8g9wCybwhy2qDSgqp_K4RRNr_IHbDMC7bz9cKvFMKDsYe8P9wFYj_0vX-2o3z1y-sJr6Asjz1cX3bdhvFa_UHYMVPju-sI49LaRc1VE2C7tsn4E5sZuiko4W7KjjzyKwmvCN1JeAmwe4G2OQs42NJR_BBhjZ0aDJxvFiefCYfkFuCD6PJPw5lGKowvSmuyRgIIRk0fi6kOYy9dQ9mZEZz5HKUQj2jrogQQbFqKsVbHPH8A7Qvhc2jEQIRWhodTUDfp_TV3iywcS7qU2AYlhTNAoi9zo
+                name: john.doe
+tags:
+  - name: twofaccounts
+  - name: auth
