@@ -18,7 +18,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/2FAccountCollection'
               examples:
-                Example with Otp:
+                Example with Token:
                   value:
                     - id: 1
                       groupId: 1
@@ -27,7 +27,7 @@ paths:
                       icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
                       isDeciphered: true
                       otpType: totp
-                      otp:
+                      token:
                         digits: 6
                         secret: A3HIETVV5BGY9UIW
                         algorithm: sha1
@@ -39,7 +39,7 @@ paths:
                       icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
                       isDeciphered: true
                       otpType: hotp
-                      otp:
+                      token:
                         digits: 6
                         secret: A3HIETVV5BGY9UIW
                         algorithm: sha1
@@ -49,13 +49,19 @@ paths:
       operationId: get-twofaccounts
       description: Find all existing 2FA accounts
       parameters:
-        - $ref: '#/components/parameters/withOtp'
+        - $ref: '#/components/parameters/withToken'
     parameters: []
     post:
-      summary: Create a 2FA account
+      summary: Create 2FA account
       tags: []
       operationId: post-twofaccounts
-      description: Create a new 2FA account
+      description: Creates a new 2FA account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
     delete:
       summary: Batch delete some 2FA accounts
       tags: []
@@ -63,12 +69,7 @@ paths:
       description: Delete 2FA accounts matching provided IDs
   '/api/v1/twofaccounts/{id}':
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-        description: The ID of the resource
+      - $ref: '#/components/parameters/id'
     get:
       summary: Find 2FA account by ID
       tags:
@@ -81,7 +82,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/2FAccount'
               examples:
-                Example with Otp:
+                Example with Token:
                   value:
                     id: 1
                     groupId: 1
@@ -90,27 +91,24 @@ paths:
                     icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
                     isDeciphered: true
                     otpType: totp
-                    otp:
+                    token:
                       digits: 6
                       secret: A3HIETVV5BGY9UIW
                       algorithm: sha1
                       period: 30
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id
       description: Returns a single 2FA account
       parameters:
-        - $ref: '#/components/parameters/withOtp'
+        - $ref: '#/components/parameters/withToken'
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-        description: The ID of the resource
+      - $ref: '#/components/parameters/id'
     get:
-      summary: Your GET endpoint
+      summary: Get as a QR code
       tags:
         - twofaccounts
       responses:
@@ -121,23 +119,68 @@ paths:
               schema:
                 description: ''
                 type: object
+                x-examples:
+                  example-1:
+                    qrcode: 'data:image/png;base64,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'
                 properties:
                   qrcode:
                     type: string
                     minLength: 1
+                    format: binary
                 required:
                   - qrcode
-                x-examples:
-                  example-1:
-                    qrcode: 'data:image/png;base64,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'
               examples:
                 Example:
                   value:
                     qrcode: 'data:image/png;base64,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'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '404':
-          description: Not Found
+          $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
       description: Returns a QR code that represente the 2FA account
+  '/api/v1/twofaccounts/{id}/otp':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Get a One-Time password
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                x-examples:
+                  example-1:
+                    otp: '735787'
+                    period: 30
+                    time: 1630523989
+                properties:
+                  otp:
+                    type: string
+                  period:
+                    type: number
+                  time:
+                    type: number
+                required:
+                  - otp
+                  - period
+                  - time
+              examples:
+                Example:
+                  value:
+                    otp: '735787'
+                    period: 30
+                    time: 1630523989
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-twofaccounts-id-otp
+      description: Returns a fresh One-Time password with related parameters
   /api/v1/auth/login:
     post:
       summary: Sign in
@@ -207,7 +250,7 @@ paths:
     parameters: []
   /api/v1/auth/register:
     post:
-      summary: Register a user
+      summary: Register new user
       tags:
         - auth
       responses:
@@ -216,7 +259,7 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
       operationId: post-register
-      description: Creates a user account
+      description: Creates a new user account
       requestBody:
         content:
           multipart/form-data:
@@ -258,6 +301,58 @@ paths:
                   password: '^13,xgtG$*7js++}Cl#v'
                   password_confirmation: '^13,xgtG$*7js++}Cl#v'
     parameters: []
+  /api/v1/icon:
+    post:
+      summary: Store icon
+      tags: []
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                x-examples:
+                  example-1:
+                    filename: wspRWRSCo62kY76JFquzqq8Y2jJO1iEowZ3JsMCw.png
+                properties:
+                  filename:
+                    type: string
+                required:
+                  - filename
+              examples:
+                Example:
+                  value:
+                    filename: wspRWRSCo62kY76JFquzqq8Y2jJO1iEowZ3JsMCw.png
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: post-icon
+      description: |-
+        Stores an icon (an image file) on the server.
+
+        Store the image first, then use the returned filename to set the `icon` property of a 2FA account.
+    parameters: []
+  '/api/v1/icons/{filename}':
+    parameters:
+      - schema:
+          type: string
+          example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+        name: filename
+        in: path
+        required: true
+        description: Filename (with extension) of the icon file to delete from the server
+    delete:
+      summary: Delete icon
+      operationId: delete-api-v1-icons-filename
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      description: Deletes an icon from the server.
 components:
   schemas:
     2FAccount:
@@ -279,7 +374,7 @@ components:
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           isDeciphered: true
           otpType: totp
-          otp:
+          token:
             digits: 6
             secret: A3HIETVV5BGY9UIW
             algorithm: sha1
@@ -319,7 +414,7 @@ components:
             - hotp
           example: totp
           description: The type of OTP
-        otp:
+        token:
           anyOf:
             - $ref: '#/components/schemas/Totp'
             - $ref: '#/components/schemas/Hotp'
@@ -332,7 +427,7 @@ components:
         - isDeciphered
         - otpType
     2FAccountCollection:
-      title: OtpCollection
+      title: TokenCollection
       type: array
       description: An ordered collection of 2-Factor-Auth (2FA) accounts
       examples:
@@ -357,7 +452,7 @@ components:
             icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
             isDeciphered: true
             otpType: totp
-            otp:
+            token:
               digits: 6
               secret: A3HIETVV5BGY9UIW
               algorithm: sha1
@@ -369,21 +464,21 @@ components:
             icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
             isDeciphered: true
             otpType: hotp
-            otp:
+            token:
               digits: 6
               secret: A3HIETVV5BGY9UIW
               algorithm: sha1
               counter: 15
       items:
         $ref: '#/components/schemas/2FAccount'
-    Otp:
-      title: Otp
+    Token:
+      title: Token
       type: object
       examples:
         - digits: 6
           secret: A3HIETVV5BGY9UIW
           algorithm: sha1
-      description: Base object that lists common properties of One-Time Password
+      description: One-Time Password token common properties
       properties:
         digits:
           type: integer
@@ -411,7 +506,7 @@ components:
         - algorithm
     Totp:
       allOf:
-        - $ref: '#/components/schemas/Otp'
+        - $ref: '#/components/schemas/Token'
         - type: object
           properties:
             period:
@@ -426,12 +521,12 @@ components:
           secret: A3HIETVV5BGY9UIW
           algorithm: sha1
           period: 30
-      description: An object that lists properties of a Time-based One-Time Password (TOTP)
-      title: Totp
+      description: Time-based One-Time Password (TOTP) token
+      title: TOTP token
     Hotp:
-      title: Hotp
+      title: HOTP token
       allOf:
-        - $ref: '#/components/schemas/Otp'
+        - $ref: '#/components/schemas/Token'
         - type: object
           properties:
             counter:
@@ -445,7 +540,7 @@ components:
           secret: A3HIETVV5BGY9UIW
           algorithm: sha1
           counter: 15
-      description: An object that lists properties of a HMAC-based One-Time Password (HOTP)
+      description: HMAC-based One-Time Password (HOTP) token
     2FAccountWrite:
       description: ''
       type: object
@@ -563,9 +658,10 @@ components:
       required: true
       schema:
         type: integer
+        example: 1
       description: The ID of the resource
-    withOtp:
-      name: withOtp
+    withToken:
+      name: withToken
       in: query
       required: false
       schema:
