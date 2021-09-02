@@ -125,8 +125,6 @@ paths:
                 properties:
                   qrcode:
                     type: string
-                    minLength: 1
-                    format: binary
                 required:
                   - qrcode
               examples:
@@ -300,10 +298,11 @@ paths:
                   email: john.doe@example.com
                   password: '^13,xgtG$*7js++}Cl#v'
                   password_confirmation: '^13,xgtG$*7js++}Cl#v'
+        description: ''
     parameters: []
-  /api/v1/icon:
+  /api/v1/icons:
     post:
-      summary: Store icon
+      summary: Upload an icon
       tags: []
       responses:
         '201':
@@ -345,7 +344,7 @@ paths:
         required: true
         description: Filename (with extension) of the icon file to delete from the server
     delete:
-      summary: Delete icon
+      summary: Delete an icon
       operationId: delete-api-v1-icons-filename
       responses:
         '204':
@@ -723,10 +722,10 @@ components:
               value:
                 message: The given data was invalid.
                 errors:
-                  username:
-                    - The Username field is required.
-                  age:
-                    - The Age field must be a number.
+                  field1:
+                    - The field1 is required.
+                  field2:
+                    - The field2 must be a number.
     OK:
       description: OK
       content:
