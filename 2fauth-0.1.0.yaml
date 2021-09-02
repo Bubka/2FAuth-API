@@ -179,6 +179,42 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-otp
       description: Returns a fresh One-Time password with related parameters
+  /api/v1/twofaccounts/sort-order:
+    patch:
+      summary: Update 2FA accounts display order
+      operationId: patch-twofaccounts-sort-order
+      responses:
+        '200':
+          $ref: '#/components/responses/OK'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Saves the order in which the 2FA accounts are sorted when a `2FAccountCollection` is returned by the API.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                orderedIds:
+                  type: array
+                  uniqueItems: true
+                  description: An array of 2FA account IDs ordered in the desired order
+                  items:
+                    type: integer
+              required:
+                - orderedIds
+            examples:
+              Example:
+                value:
+                  orderedIds:
+                    - 3
+                    - 1
+                    - 4
+                    - 2
+        description: ''
   /api/v1/auth/login:
     post:
       summary: Sign in
@@ -328,11 +364,24 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-      operationId: post-icon
-      description: |-
-        Stores an icon (an image file) on the server.
-
-        Store the image first, then use the returned filename to set the `icon` property of a 2FA account.
+      operationId: post-icons
+      description: 'Use this endpoint to upload and store an icon (an image file: jpeg, png, bmp, gif, svg, or webp) on the server.'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              format: binary
+              properties:
+                icon:
+                  type: string
+              required:
+                - icon
+            examples:
+              Example:
+                value:
+                  icon: string
+        description: ''
     parameters: []
   '/api/v1/icons/{filename}':
     parameters:
