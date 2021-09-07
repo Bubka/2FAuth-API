@@ -60,13 +60,56 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties: {}
-    delete:
-      summary: Batch delete some 2FA accounts
-      tags: []
-      operationId: delete-twofaccounts
-      description: Delete 2FA accounts matching provided IDs
+              oneOf:
+                - $ref: '#/components/schemas/2FAccountWrite'
+                - $ref: '#/components/schemas/OtpauthUri'
+            examples: {}
+        description: |-
+          This endpoint accepts 2 different body schemas to create a new 2FA account:
+          - A full JSON object with all properties
+          - An URI based on the otpauth format
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccount'
+              examples:
+                Example with Token:
+                  value:
+                    id: 1
+                    groupId: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    isDeciphered: true
+                    otpType: totp
+                    token:
+                      digits: 6
+                      secret: A3HIETVV5BGY9UIW
+                      algorithm: sha1
+                      period: 30
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: not a valid OTP provisioning URI
+              examples:
+                Example:
+                  value:
+                    message: not a valid OTP provisioning URI
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      parameters:
+        - $ref: '#/components/parameters/withToken'
   '/api/v1/twofaccounts/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -440,11 +483,11 @@ components:
           description: The ID of the group the 2FA account belongs to
         service:
           type: string
-          description: The Issuer of the OTP
+          description: The Issuer of the 2FA account
           example: MySite
         account:
           type: string
-          description: The Label of the OTP
+          description: The Label of the 2FA account
           example: john.doe
         icon:
           type:
@@ -461,7 +504,7 @@ components:
             - totp
             - hotp
           example: totp
-          description: The type of OTP
+          description: The type of 2FA account
         token:
           anyOf:
             - $ref: '#/components/schemas/Totp'
@@ -533,10 +576,10 @@ components:
           example: 6
           minimum: 6
           maximum: 10
-          description: The number of digits of the generated tokens
+          description: The number of digits of the generated One-Time Password
         secret:
           type: string
-          description: The OTP secret (a base32 encoded string) used by the algorithm to generate the tokens
+          description: The base32 encoded secret used by the cryptographic algorithm to generate the One-Time Password
           example: A3HIETVV5BGY9UIW
         algorithm:
           type: string
@@ -546,7 +589,7 @@ components:
             - sha512
             - md5
           example: sha1
-          description: The algorithm used to generate the tokens
+          description: The algorithm used to generate the One-Time Password
           default: sha1
       required:
         - digits
@@ -561,7 +604,7 @@ components:
               type: integer
               default: 30
               example: 30
-              description: The validity duration of generated tokens
+              description: The validity duration of generated One-Time Password
           required:
             - period
       examples:
@@ -594,26 +637,40 @@ components:
       type: object
       x-examples:
         example-1:
-          service: TextObject
-          account: edouard@ganeau.me
+          service: MySite
+          account: john.doe
           otpType: totp
           uri: ''
-          icon: 6pA0WsoqTgqSYT49ueNpxVhvL0a510A3NNZUZDLF.png
-          secret: FJNKOZIJ2OWV5MMA
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          secret: A3HIETVV5BGY9UIW
           secretIsBase32Encoded: 1
           algorithm: sha1
-          digits: 8
+          digits: 6
           hotpCounter: null
-          totpPeriod: 40
-          imageLink: 'https://en.opensuse.org/images/4/44/Button-filled-colour.png'
+          totpPeriod: 30
+          imageLink: 'https://www.example.com/image.png'
+      examples:
+        - service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
+          otpType: totp
+          totpPeriod: 30
+          hotpCounter: 0
+          digits: 6
+          secret: A3HIETVV5BGY9UIW
+          secretIsBase32Encoded: 0
+          algorithm: sha1
+          imageLink: 'https://www.example.com/image.png'
+      title: ''
       properties:
         service:
           type: string
-          description: The Issuer of the OTP
+          description: The Issuer of the 2FA account
           example: MySite
         account:
           type: string
-          description: The Label of the OTP
+          description: The Label of the 2FA account
           example: john.doe
         icon:
           type:
@@ -621,19 +678,13 @@ components:
             - 'null'
           example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           description: The filename of the icon which decorate the 2FA account
-        uri:
-          type: string
-          format: uri
-          pattern: '^otpauth:\/\/(totp|hotp)\/.+'
-          example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
-          description: 'The uri which describe the 2FA account, usually encoded as a QR code'
         otpType:
           type: string
           enum:
             - totp
             - hotp
           example: totp
-          description: The type of OTP
+          description: The type of 2FA account
         totpPeriod:
           type: integer
           default: 30
@@ -652,13 +703,14 @@ components:
           example: 6
           minimum: 6
           maximum: 10
-          description: the number of digits of the generated tokens
+          description: The number of digits of the generated One-Time Password
         secret:
           type: string
-          description: A base32 encoded string
+          description: The secret used by the cryptographic algorithm to generate the One-Time Password
           example: A3HIETVV5BGY9UIW
         secretIsBase32Encoded:
-          type: number
+          type: boolean
+          description: Whether or not the provided secret is Base32 encoded
         algorithm:
           type: string
           enum:
@@ -667,38 +719,38 @@ components:
             - sha512
             - md5
           example: sha1
-          description: The algorithm used to generate the tokens
+          description: The algorithm used to generate the One-Time Password
           default: sha1
         imageLink:
           type: string
           format: uri
           example: 'https://www.example.com/image.png'
-          description: an external image resource
+          description: An external image resource that 2FAuth will try to use as the account's icon
           nullable: true
       required:
         - service
         - account
         - icon
-        - uri
         - otpType
         - totpPeriod
         - digits
         - secret
         - secretIsBase32Encoded
         - algorithm
+    OtpauthUri:
+      title: OtpauthUri
+      type: object
       examples:
-        - service: MySite
-          account: john.doe
-          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
-          otpType: totp
-          totpPeriod: 30
-          hotpCounter: 0
-          digits: 6
-          secret: A3HIETVV5BGY9UIW
-          secretIsBase32Encoded: 0
-          algorithm: sha1
-          imageLink: 'https://www.example.com/image.png'
+        - uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&https://www.example.com/image.png'
+      properties:
+        uri:
+          type: string
+          example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
+          pattern: '^otpauth:\/\/(totp|hotp)\/.+'
+          format: uri
+          description: A URI which describe a 2FA account (usually encoded as a QR code) following the otpauth format
+      required:
+        - uri
   parameters:
     id:
       name: id
@@ -714,7 +766,7 @@ components:
       required: false
       schema:
         type: boolean
-      description: Set to true (or 1) to append OTP properties to the returned 2FA account
+      description: Set to true (or 1) to append the token parameters to the returned 2FA account
   responses:
     NotFound:
       description: Not Found
