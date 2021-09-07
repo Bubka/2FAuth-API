@@ -53,7 +53,8 @@ paths:
     parameters: []
     post:
       summary: Create 2FA account
-      tags: []
+      tags:
+        - twofaccounts
       operationId: post-twofaccounts
       description: Creates a new 2FA account
       requestBody:
@@ -185,7 +186,8 @@ paths:
       - $ref: '#/components/parameters/id'
     get:
       summary: Get a One-Time password
-      tags: []
+      tags:
+        - twofaccounts
       responses:
         '200':
           description: OK
@@ -233,7 +235,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Saves the order in which the 2FA accounts are sorted when a `2FAccountCollection` is returned by the API.
+      description: Saves the order in which the 2FA accounts are sorted when a `2FAccountCollection` is returned by the API
       requestBody:
         content:
           application/json:
@@ -258,6 +260,8 @@ paths:
                     - 4
                     - 2
         description: ''
+      tags:
+        - twofaccounts
   /api/v1/auth/login:
     post:
       summary: Sign in
@@ -382,7 +386,8 @@ paths:
   /api/v1/icons:
     post:
       summary: Upload an icon
-      tags: []
+      tags:
+        - icons
       responses:
         '201':
           description: Created
@@ -408,7 +413,7 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
       operationId: post-icons
-      description: 'Use this endpoint to upload and store an icon (an image file: jpeg, png, bmp, gif, svg, or webp) on the server.'
+      description: 'Use this endpoint to upload and store an icon (an image file: jpeg, png, bmp, gif, svg, or webp) on the server'
       requestBody:
         content:
           multipart/form-data:
@@ -878,3 +883,5 @@ components:
 tags:
   - name: twofaccounts
   - name: auth
+  - name: icons
+  - name: qrcode
