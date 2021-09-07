@@ -757,32 +757,34 @@ components:
             - hotp
           example: totp
           description: The type of 2FA account
-        totpPeriod:
+        period:
           type: integer
           default: 30
           example: 30
           minimum: 1
           description: The validity duration of generated tokens
           nullable: true
-        hotpCounter:
+        counter:
           type: integer
           minimum: 0
           example: 0
           description: The value of the counter used to synchronize with HOTP verification servers
           nullable: true
+          default: 0
         digits:
           type: integer
           example: 6
           minimum: 6
           maximum: 10
           description: The number of digits of the generated One-Time Password
+          default: 6
         secret:
           type: string
           description: The secret used by the cryptographic algorithm to generate the One-Time Password
           example: A3HIETVV5BGY9UIW
         secretIsBase32Encoded:
           type: boolean
-          description: Whether or not the provided secret is Base32 encoded
+          description: Whether or not the provided secret is Base32 encoded. If not 2FAuth will encode it automatically.
         algorithm:
           type: string
           enum:
@@ -804,16 +806,13 @@ components:
         - account
         - icon
         - otpType
-        - totpPeriod
-        - digits
         - secret
         - secretIsBase32Encoded
-        - algorithm
     OtpauthUri:
       title: OtpauthUri
       type: object
       examples:
-        - uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&https://www.example.com/image.png'
+        - uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
       properties:
         uri:
           type: string
