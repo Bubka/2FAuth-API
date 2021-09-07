@@ -448,7 +448,74 @@ paths:
           description: No Content
         '401':
           $ref: '#/components/responses/Unauthorized'
-      description: Deletes an icon from the server.
+      description: Deletes an icon from the server
+      tags:
+        - icons
+  /api/v1/qrcode/decode:
+    post:
+      summary: Decode a QR code
+      operationId: post-qrcode-decode
+      description: 'Use this endpoint to decode a QR code (an image file: jpeg, png, bmp, gif, svg, or webp)'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              format: binary
+              properties:
+                qrcode:
+                  type: string
+              required:
+                - qrcode
+            examples:
+              Example:
+                value:
+                  qrcode: string
+        description: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                x-examples:
+                  example-1:
+                    data: 'otpauth://totp/Mysite:john.doe?issuer=Mysite&secret=J52HAU3FMNZGK5A'
+                properties:
+                  data:
+                    type: string
+                    example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW'
+                required:
+                  - data
+              examples:
+                Example:
+                  value:
+                    data: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                x-examples:
+                  example-1:
+                    message: not a valid QR code
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+              examples:
+                Example:
+                  value:
+                    message: not a valid QR code
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
 components:
   schemas:
     2FAccount:
