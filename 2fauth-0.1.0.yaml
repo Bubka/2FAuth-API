@@ -52,20 +52,7 @@ paths:
                 $ref: '#/components/schemas/2FAccount'
               examples: {}
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: not a valid OTP provisioning URI
-                    description: An information message
-              examples:
-                Example:
-                  value:
-                    message: not a valid OTP provisioning URI
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -144,6 +131,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Otp'
               examples: {}
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -783,6 +772,7 @@ components:
               message:
                 type: string
                 description: An information message
+                example: Model not found
             required:
               - message
           examples:
@@ -799,6 +789,7 @@ components:
               message:
                 type: string
                 description: An information message
+                example: Unauthenticated
             required:
               - message
           examples:
@@ -815,6 +806,7 @@ components:
               message:
                 type: string
                 description: An information message
+                example: The given data was invalid
               errors:
                 description: A collection of fields with their respective errors
                 type: object
@@ -824,6 +816,7 @@ components:
                     description: A field with errors
                     items:
                       type: string
+                      example: The field2 must be a number
             required:
               - message
               - errors
@@ -850,6 +843,7 @@ components:
               message:
                 type: string
                 description: An information message
+                example: success
             required:
               - message
           examples:
@@ -872,12 +866,15 @@ components:
               message:
                 type: string
                 description: An information message
+                example: success
               token:
                 type: string
                 description: An authentication token to set in requests header
+                example: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjc1NjhmMTEyMDI4NzMwZDRhZTIyZDM2OTYwZTZlNzhjNzdhNDI2YThhZjZjODQ0MDY4YjM2NDBhM2E0YjI0ZWM5Y2E3ZjIwYzFhZWI3NDQiLCJpYXQiOiIxNjMwNDQzMzUwLjkwNjkwMyIsIm5iZiI6IjE2MzA0NDMzNTAuOTA2OTA2IiwiZXhwIjoiMTY2MTk3OTM1MC45MDA2NDIiLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.NX59UK4gNksId6x3dBD4AD6zZcIwEjPcsFNG2Kko8_t1gxcI-x8UQJDafY61UAckfta5EzFjDNSVTJgHfmHHbegT_GAr5CzlmxRuLEiGKe9aJxCq7dfQgfQINGCS3c9gfmhW8I5tY2h6mKDvqCucjWxxqUdGzmPWb7GtLP0mhiO1mKs5G-FqReO6odU8aCqZG9mpc4mepqBA8KIlCtHdPwUbMlhaKrEaNcD4FtLFZsNtmNGDUku7pz7FKRB0ZRYK3C2WbnxeaYPdxJOdR79dz7pXIhDslvoLrYiE0tiWMBL3gUyj6YLFHldtJ3NbhUVPwjL4NXM-IAwV49vlUpRUOpB6BAl6CKNf6FOtm2bb95kIAVcX-U0l2_L60gevmc4h-BRjzYP9_s6rChwU8g9wCybwhy2qDSgqp_K4RRNr_IHbDMC7bz9cKvFMKDsYe8P9wFYj_0vX-2o3z1y-sJr6Asjz1cX3bdhvFa_UHYMVPju-sI49LaRc1VE2C7tsn4E5sZuiko4W7KjjzyKwmvCN1JeAmwe4G2OQs42NJR_BBhjZ0aDJxvFiefCYfkFuCD6PJPw5lGKowvSmuyRgIIRk0fi6kOYy9dQ9mZEZz5HKUQj2jrogQQbFqKsVbHPH8A7Qvhc2jEQIRWhodTUDfp_TV3iywcS7qU2AYlhTNAoi9zo
               name:
                 type: string
                 description: The authenticated account username
+                example: john.doe
             required:
               - message
               - token
@@ -888,6 +885,27 @@ components:
                 message: success
                 token: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjc1NjhmMTEyMDI4NzMwZDRhZTIyZDM2OTYwZTZlNzhjNzdhNDI2YThhZjZjODQ0MDY4YjM2NDBhM2E0YjI0ZWM5Y2E3ZjIwYzFhZWI3NDQiLCJpYXQiOiIxNjMwNDQzMzUwLjkwNjkwMyIsIm5iZiI6IjE2MzA0NDMzNTAuOTA2OTA2IiwiZXhwIjoiMTY2MTk3OTM1MC45MDA2NDIiLCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.NX59UK4gNksId6x3dBD4AD6zZcIwEjPcsFNG2Kko8_t1gxcI-x8UQJDafY61UAckfta5EzFjDNSVTJgHfmHHbegT_GAr5CzlmxRuLEiGKe9aJxCq7dfQgfQINGCS3c9gfmhW8I5tY2h6mKDvqCucjWxxqUdGzmPWb7GtLP0mhiO1mKs5G-FqReO6odU8aCqZG9mpc4mepqBA8KIlCtHdPwUbMlhaKrEaNcD4FtLFZsNtmNGDUku7pz7FKRB0ZRYK3C2WbnxeaYPdxJOdR79dz7pXIhDslvoLrYiE0tiWMBL3gUyj6YLFHldtJ3NbhUVPwjL4NXM-IAwV49vlUpRUOpB6BAl6CKNf6FOtm2bb95kIAVcX-U0l2_L60gevmc4h-BRjzYP9_s6rChwU8g9wCybwhy2qDSgqp_K4RRNr_IHbDMC7bz9cKvFMKDsYe8P9wFYj_0vX-2o3z1y-sJr6Asjz1cX3bdhvFa_UHYMVPju-sI49LaRc1VE2C7tsn4E5sZuiko4W7KjjzyKwmvCN1JeAmwe4G2OQs42NJR_BBhjZ0aDJxvFiefCYfkFuCD6PJPw5lGKowvSmuyRgIIRk0fi6kOYy9dQ9mZEZz5HKUQj2jrogQQbFqKsVbHPH8A7Qvhc2jEQIRWhodTUDfp_TV3iywcS7qU2AYlhTNAoi9zo
                 name: john.doe
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            x-examples:
+              example-1:
+                message: success
+            properties:
+              message:
+                type: string
+                description: An information message
+                example: bad request
+            required:
+              - message
+          examples:
+            Example:
+              value:
+                message: bad request
 tags:
   - name: twofaccounts
   - name: auth
