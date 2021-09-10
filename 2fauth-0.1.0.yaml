@@ -17,39 +17,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccountCollection'
-              examples:
-                Example with Token:
-                  value:
-                    - id: 1
-                      groupId: 1
-                      service: MySite
-                      account: john.doe
-                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-                      isDeciphered: true
-                      otpType: totp
-                      token:
-                        digits: 6
-                        secret: A3HIETVV5BGY9UIW
-                        algorithm: sha1
-                        period: 30
-                    - id: 5
-                      groupId: null
-                      service: My other site
-                      account: john.doe
-                      icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
-                      isDeciphered: true
-                      otpType: hotp
-                      token:
-                        digits: 6
-                        secret: A3HIETVV5BGY9UIW
-                        algorithm: sha1
-                        counter: 15
+              examples: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
       operationId: get-twofaccounts
       description: Find all existing 2FA accounts
       parameters:
-        - $ref: '#/components/parameters/withToken'
+        - $ref: '#/components/parameters/withSecret'
     parameters: []
     post:
       summary: Create 2FA account
@@ -76,21 +50,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccount'
-              examples:
-                Example with Token:
-                  value:
-                    id: 1
-                    groupId: 1
-                    service: MySite
-                    account: john.doe
-                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-                    isDeciphered: true
-                    otpType: totp
-                    token:
-                      digits: 6
-                      secret: A3HIETVV5BGY9UIW
-                      algorithm: sha1
-                      period: 30
+              examples: {}
         '400':
           description: Bad Request
           content:
@@ -101,6 +61,7 @@ paths:
                   message:
                     type: string
                     example: not a valid OTP provisioning URI
+                    description: An information message
               examples:
                 Example:
                   value:
@@ -110,7 +71,7 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
       parameters:
-        - $ref: '#/components/parameters/withToken'
+        - $ref: '#/components/parameters/withSecret'
   '/api/v1/twofaccounts/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -125,21 +86,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccount'
-              examples:
-                Example with Token:
-                  value:
-                    id: 1
-                    groupId: 1
-                    service: MySite
-                    account: john.doe
-                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-                    isDeciphered: true
-                    otpType: totp
-                    token:
-                      digits: 6
-                      secret: A3HIETVV5BGY9UIW
-                      algorithm: sha1
-                      period: 30
+              examples: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -147,7 +94,7 @@ paths:
       operationId: get-twofaccounts-id
       description: Returns a single 2FA account
       parameters:
-        - $ref: '#/components/parameters/withToken'
+        - $ref: '#/components/parameters/withSecret'
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -169,6 +116,7 @@ paths:
                 properties:
                   qrcode:
                     type: string
+                    example: 'data:image/png;base64,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'
                 required:
                   - qrcode
               examples:
@@ -180,7 +128,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
-      description: Returns a QR code that represente the 2FA account
+      description: Returns a QR code that represents the 2FA account
   '/api/v1/twofaccounts/{id}/otp':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -194,30 +142,8 @@ paths:
           content:
             application/json:
               schema:
-                description: ''
-                type: object
-                x-examples:
-                  example-1:
-                    otp: '735787'
-                    period: 30
-                    time: 1630523989
-                properties:
-                  otp:
-                    type: string
-                  period:
-                    type: number
-                  time:
-                    type: number
-                required:
-                  - otp
-                  - period
-                  - time
-              examples:
-                Example:
-                  value:
-                    otp: '735787'
-                    period: 30
-                    time: 1630523989
+                $ref: '#/components/schemas/Otp'
+              examples: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -235,7 +161,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Saves the order in which the 2FA accounts are sorted when a `2FAccountCollection` is returned by the API
+      description: Saves the position of 2FA accounts within the collection
       requestBody:
         content:
           application/json:
@@ -246,7 +172,7 @@ paths:
                 orderedIds:
                   type: array
                   uniqueItems: true
-                  description: An array of 2FA account IDs ordered in the desired order
+                  description: An array of 2FA account IDs ordered in the wished order
                   items:
                     type: integer
               required:
@@ -357,18 +283,26 @@ paths:
                 name:
                   type: string
                   maxLength: 255
+                  example: john.doe
+                  description: The account username
                 email:
                   type: string
                   format: email
                   maxLength: 255
+                  example: john.doe@example.com
+                  description: The account email address
                 password:
                   type: string
                   format: password
                   minLength: 8
+                  example: '^13,xgtG$*7js++}Cl#v'
+                  description: The account password
                 password_confirmation:
                   type: string
                   format: password
                   minLength: 8
+                  example: '^13,xgtG$*7js++}Cl#v'
+                  description: The confirmed account username
               required:
                 - name
                 - email
@@ -402,6 +336,8 @@ paths:
                 properties:
                   filename:
                     type: string
+                    example: wspRWRSCo62kY76JFquzqq8Y2jJO1iEowZ3JsMCw.png
+                    description: The icon filename
                 required:
                   - filename
               examples:
@@ -423,6 +359,7 @@ paths:
               properties:
                 icon:
                   type: string
+                  description: An image file
               required:
                 - icon
             examples:
@@ -465,6 +402,7 @@ paths:
               properties:
                 qrcode:
                   type: string
+                  description: A QR code image file
               required:
                 - qrcode
             examples:
@@ -487,6 +425,7 @@ paths:
                   data:
                     type: string
                     example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW'
+                    description: The data encoded in the QR code
                 required:
                   - data
               examples:
@@ -506,6 +445,7 @@ paths:
                 properties:
                   message:
                     type: string
+                    description: An information message
                 required:
                   - message
               examples:
@@ -516,6 +456,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
+      tags:
+        - qrcode
 components:
   schemas:
     2FAccount:
@@ -528,20 +470,23 @@ components:
           service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          isDeciphered: true
-          otpType: totp
+          is_deciphered: true
+          otp_type: hotp
+          digits: 6
+          secret: A3HIETVV5BGY9UIW
+          algorithm: sha1
+          counter: 15
         - id: 1
           groupId: 1
           service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          isDeciphered: true
-          otpType: totp
-          token:
-            digits: 6
-            secret: A3HIETVV5BGY9UIW
-            algorithm: sha1
-            period: 30
+          is_deciphered: true
+          otp_type: totp
+          digits: 8
+          secret: A3HIETVV5BGY9UIW
+          algorithm: sha256
+          period: 30
       properties:
         id:
           type: integer
@@ -557,102 +502,34 @@ components:
           type: string
           description: The Issuer of the 2FA account
           example: MySite
+          pattern: '^[^:]+$'
         account:
           type: string
           description: The Label of the 2FA account
           example: john.doe
+          pattern: '^[^:]+$'
         icon:
           type:
             - string
             - 'null'
           example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           description: The filename of the icon which decorate the 2FA account
-        isDeciphered:
+        is_deciphered:
           type: boolean
-          description: Whether or not the 2FA account has been successfully deciphered
-        otpType:
+          description: Whether or not the 2FA account has been successfully deciphered (when 2FAuth encryption option is On)
+        otp_type:
           type: string
           enum:
             - totp
             - hotp
           example: totp
           description: The type of 2FA account
-        token:
-          anyOf:
-            - $ref: '#/components/schemas/Totp'
-            - $ref: '#/components/schemas/Hotp'
-      required:
-        - id
-        - groupId
-        - service
-        - account
-        - icon
-        - isDeciphered
-        - otpType
-    2FAccountCollection:
-      title: TokenCollection
-      type: array
-      description: An ordered collection of 2-Factor-Auth (2FA) accounts
-      examples:
-        - - id: 1
-            groupId: 1
-            service: MySite
-            account: john.doe
-            icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-            isDeciphered: true
-            otpType: totp
-          - id: 5
-            groupId: null
-            service: My other site
-            account: john.doe
-            icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
-            isDeciphered: true
-            otpType: hotp
-        - - id: 1
-            groupId: 1
-            service: MySite
-            account: john.doe
-            icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-            isDeciphered: true
-            otpType: totp
-            token:
-              digits: 6
-              secret: A3HIETVV5BGY9UIW
-              algorithm: sha1
-              period: 30
-          - id: 5
-            groupId: null
-            service: My other site
-            account: john.doe
-            icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
-            isDeciphered: true
-            otpType: hotp
-            token:
-              digits: 6
-              secret: A3HIETVV5BGY9UIW
-              algorithm: sha1
-              counter: 15
-      items:
-        $ref: '#/components/schemas/2FAccount'
-    Token:
-      title: Token
-      type: object
-      examples:
-        - digits: 6
-          secret: A3HIETVV5BGY9UIW
-          algorithm: sha1
-      description: One-Time Password token common properties
-      properties:
         digits:
           type: integer
           example: 6
           minimum: 6
           maximum: 10
           description: The number of digits of the generated One-Time Password
-        secret:
-          type: string
-          description: The base32 encoded secret used by the cryptographic algorithm to generate the One-Time Password
-          example: A3HIETVV5BGY9UIW
         algorithm:
           type: string
           enum:
@@ -662,48 +539,72 @@ components:
             - md5
           example: sha1
           description: The algorithm used to generate the One-Time Password
-          default: sha1
+        secret:
+          type: string
+          description: The base32 encoded secret used by the cryptographic algorithm to generate the One-Time Password
+          example: A3HIETVV5BGY9UIW
+        period:
+          type: integer
+          default: 30
+          example: 30
+          description: 'TOTP only: The validity duration of One-Time Password generated for the account'
+          minimum: 1
+        counter:
+          type: integer
+          example: 15
+          description: 'HOTP only: The value of the counter used to synchronize the account with its verification servers'
+          minimum: 0
       required:
+        - id
+        - groupId
+        - service
+        - account
+        - icon
+        - is_deciphered
+        - otp_type
         - digits
-        - secret
         - algorithm
-    Totp:
-      allOf:
-        - $ref: '#/components/schemas/Token'
-        - type: object
-          properties:
-            period:
-              type: integer
-              default: 30
-              example: 30
-              description: The validity duration of generated One-Time Password
-          required:
-            - period
+    2FAccountCollection:
+      title: TokenCollection
+      description: A collection of 2-Factor-Auth (2FA) accounts
       examples:
-        - digits: 6
-          secret: A3HIETVV5BGY9UIW
-          algorithm: sha1
-          period: 30
-      description: Time-based One-Time Password (TOTP) token
-      title: TOTP token
-    Hotp:
-      title: HOTP token
-      allOf:
-        - $ref: '#/components/schemas/Token'
-        - type: object
-          properties:
-            counter:
-              type: integer
-              example: 15
-              description: The value of the counter used to synchronize with HOTP verification servers
-          required:
-            - counter
-      examples:
-        - digits: 6
-          secret: A3HIETVV5BGY9UIW
-          algorithm: sha1
-          counter: 15
-      description: HMAC-based One-Time Password (HOTP) token
+        - - id: 1
+            groupId: 1
+            service: MySite
+            account: john.doe
+            icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+            is_deciphered: true
+            otp_type: hotp
+            digits: 6
+            secret: A3HIETVV5BGY9UIW
+            algorithm: sha1
+            counter: 15
+            position: 1
+          - id: 5
+            groupId: null
+            service: My other site
+            account: john.doe
+            icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
+            is_deciphered: true
+            otp_type: totp
+            digits: 8
+            secret: Z3S4GG7UV34TFF78
+            algorithm: sha1
+            period: 30
+            position: 2
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/2FAccount'
+          - type: object
+            properties:
+              position:
+                type: integer
+                description: Position of the account in the collection
+                minimum: 1
+                example: 1
+            required:
+              - position
     2FAccountWrite:
       description: ''
       type: object
@@ -711,7 +612,7 @@ components:
         example-1:
           service: MySite
           account: john.doe
-          otpType: totp
+          otp_type: totp
           uri: ''
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           secret: A3HIETVV5BGY9UIW
@@ -726,7 +627,7 @@ components:
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
-          otpType: totp
+          otp_type: totp
           totpPeriod: 30
           hotpCounter: 0
           digits: 6
@@ -750,7 +651,7 @@ components:
             - 'null'
           example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           description: The filename of the icon which decorate the 2FA account
-        otpType:
+        otp_type:
           type: string
           enum:
             - totp
@@ -805,9 +706,40 @@ components:
         - service
         - account
         - icon
-        - otpType
+        - otp_type
         - secret
         - secretIsBase32Encoded
+    Otp:
+      title: Otp
+      type: object
+      description: One-Time password
+      examples:
+        - password: '225897'
+          generated_at: 1631304659
+          valid_for: 30
+        - password: '225897'
+          counter: 5
+      properties:
+        password:
+          type: string
+          description: the One-Time Password
+          minLength: 6
+          maxLength: 10
+          example: '225897'
+        generated_at:
+          type: integer
+          description: 'TOTP only: The timestamp of the generation time'
+          example: 1631304659
+        valid_for:
+          type: integer
+          description: 'TOTP only: The validity period of the password'
+          example: 30
+        counter:
+          type: integer
+          description: 'HOTP only: The number of password computing iterations'
+          example: 5
+      required:
+        - password
     OtpauthUri:
       title: OtpauthUri
       type: object
@@ -822,6 +754,7 @@ components:
           description: A URI which describe a 2FA account (usually encoded as a QR code) following the otpauth format
       required:
         - uri
+      description: ''
   parameters:
     id:
       name: id
@@ -831,13 +764,13 @@ components:
         type: integer
         example: 1
       description: The ID of the resource
-    withToken:
-      name: withToken
+    withSecret:
+      name: withSecret
       in: query
       required: false
       schema:
         type: boolean
-      description: Set to true (or 1) to append the token parameters to the returned 2FA account
+      description: Set to true (or 1) to append the Secret property to the returned 2FA account
   responses:
     NotFound:
       description: Not Found
@@ -845,9 +778,11 @@ components:
         application/json:
           schema:
             type: object
+            description: ''
             properties:
               message:
                 type: string
+                description: An information message
             required:
               - message
           examples:
@@ -863,6 +798,7 @@ components:
             properties:
               message:
                 type: string
+                description: An information message
             required:
               - message
           examples:
@@ -878,12 +814,14 @@ components:
             properties:
               message:
                 type: string
+                description: An information message
               errors:
                 description: A collection of fields with their respective errors
                 type: object
                 properties:
                   fieldName:
                     type: array
+                    description: A field with errors
                     items:
                       type: string
             required:
@@ -911,6 +849,7 @@ components:
             properties:
               message:
                 type: string
+                description: An information message
             required:
               - message
           examples:
@@ -932,10 +871,13 @@ components:
             properties:
               message:
                 type: string
+                description: An information message
               token:
                 type: string
+                description: An authentication token to set in requests header
               name:
                 type: string
+                description: The authenticated account username
             required:
               - message
               - token
