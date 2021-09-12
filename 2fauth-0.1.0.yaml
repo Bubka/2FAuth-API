@@ -118,11 +118,18 @@ paths:
       description: Returns a QR code that represents the 2FA account
   '/api/v1/twofaccounts/{id}/otp':
     parameters:
-      - $ref: '#/components/parameters/id'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+        description: The ID of the resource
     get:
       summary: Get a One-Time password
       tags:
         - twofaccounts
+        - One-Time Password
       responses:
         '200':
           description: OK
@@ -138,7 +145,42 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-otp
-      description: Returns a fresh One-Time password with related parameters
+      description: Returns a fresh One-Time Password with related parameters for the existing account matching the specified ID
+  /api/v1/twofaccounts/otp:
+    parameters: []
+    post:
+      summary: Get a One-Time password
+      tags:
+        - twofaccounts
+        - One-Time Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/2FAccountWrite'
+                - $ref: '#/components/schemas/OtpauthUri'
+            examples: {}
+        description: |-
+          This endpoint accepts 2 different body schemas to generate a One-Time Password:
+          - A JSON object with all properties to define a 2FA account
+          - An otpauth URI
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Otp'
+              examples: {}
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: post-twofaccounts-otp
+      description: Returns a fresh One-Time password with related parameters for account defined by the provided data
   /api/v1/twofaccounts/sort-order:
     patch:
       summary: Update 2FA accounts display order
@@ -478,7 +520,9 @@ components:
           period: 30
       properties:
         id:
-          type: integer
+          type:
+            - integer
+            - 'null'
           example: 1
           description: ID of the 2FA account
         groupId:
@@ -588,14 +632,15 @@ components:
           - type: object
             properties:
               position:
-                type: integer
+                type:
+                  - integer
+                  - 'null'
                 description: Position of the account in the collection
-                minimum: 1
                 example: 1
             required:
               - position
     2FAccountWrite:
-      description: ''
+      description: Expected informations to set a 2FA account
       type: object
       x-examples:
         example-1:
@@ -647,20 +692,6 @@ components:
             - hotp
           example: totp
           description: The type of 2FA account
-        period:
-          type: integer
-          default: 30
-          example: 30
-          minimum: 1
-          description: The validity duration of generated tokens
-          nullable: true
-        counter:
-          type: integer
-          minimum: 0
-          example: 0
-          description: The value of the counter used to synchronize with HOTP verification servers
-          nullable: true
-          default: 0
         digits:
           type: integer
           example: 6
@@ -668,13 +699,6 @@ components:
           maximum: 10
           description: The number of digits of the generated One-Time Password
           default: 6
-        secret:
-          type: string
-          description: The secret used by the cryptographic algorithm to generate the One-Time Password
-          example: A3HIETVV5BGY9UIW
-        secretIsBase32Encoded:
-          type: boolean
-          description: Whether or not the provided secret is Base32 encoded. If not 2FAuth will encode it automatically.
         algorithm:
           type: string
           enum:
@@ -685,19 +709,48 @@ components:
           example: sha1
           description: The algorithm used to generate the One-Time Password
           default: sha1
-        imageLink:
+        secret:
           type: string
+          description: The secret used by the cryptographic algorithm to generate the One-Time Password
+          example: A3HIETVV5BGY9UIW
+        period:
+          type:
+            - integer
+            - 'null'
+          default: 30
+          example: 30
+          minimum: 1
+          description: The validity duration of generated tokens
+        counter:
+          type:
+            - integer
+            - 'null'
+          minimum: 0
+          example: 0
+          description: The value of the counter used to synchronize with HOTP verification servers
+          default: 0
+        secretIsBase32Encoded:
+          type: boolean
+          description: Whether or not the provided secret is Base32 encoded. If not 2FAuth will encode it automatically.
+        imageLink:
+          type:
+            - string
+            - 'null'
           format: uri
           example: 'https://www.example.com/image.png'
           description: An external image resource that 2FAuth will try to use as the account's icon
-          nullable: true
       required:
         - service
         - account
         - icon
         - otp_type
+        - digits
+        - algorithm
         - secret
+        - period
+        - counter
         - secretIsBase32Encoded
+        - imageLink
     Otp:
       title: Otp
       type: object
@@ -743,7 +796,7 @@ components:
           description: A URI which describe a 2FA account (usually encoded as a QR code) following the otpauth format
       required:
         - uri
-      description: ''
+      description: An otpauth URI
   parameters:
     id:
       name: id
@@ -907,7 +960,8 @@ components:
               value:
                 message: bad request
 tags:
-  - name: twofaccounts
   - name: auth
   - name: icons
+  - name: One-Time Password
   - name: qrcode
+  - name: twofaccounts
