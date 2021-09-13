@@ -36,9 +36,23 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/2FAccountWrite'
+                - $ref: '#/components/schemas/2FAccountStore'
                 - $ref: '#/components/schemas/OtpauthUri'
-            examples: {}
+            examples:
+              Example with properties:
+                value:
+                  service: MySite
+                  account: john.doe
+                  icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                  otp_type: totp
+                  digits: 6
+                  algorithm: sha1
+                  secret: A3HIETVV5BGY9UIW
+                  period: 30
+                  counter: null
+              Example with URI:
+                value:
+                  uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
         description: |-
           This endpoint accepts 2 different body schemas to create a new 2FA account:
           - A full JSON object with all properties
@@ -49,7 +63,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/2FAccount'
+                $ref: '#/components/schemas/2FAccountRead'
               examples: {}
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -72,7 +86,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/2FAccount'
+                $ref: '#/components/schemas/2FAccountRead'
               examples: {}
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -158,7 +172,7 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/2FAccountWrite'
+                - $ref: '#/components/schemas/2FAccountStore'
                 - $ref: '#/components/schemas/OtpauthUri'
             examples: {}
         description: |-
@@ -491,46 +505,30 @@ paths:
         - qrcode
 components:
   schemas:
-    2FAccount:
+    2FAccountStore:
       title: 2FAccount
       type: object
       description: A single 2-Factor-Auth (2FA) account
       examples:
-        - id: 1
-          groupId: 1
-          service: MySite
+        - service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          is_deciphered: true
-          otp_type: hotp
-          digits: 6
-          secret: A3HIETVV5BGY9UIW
-          algorithm: sha1
-          counter: 15
-        - id: 1
-          groupId: 1
-          service: MySite
-          account: john.doe
-          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          is_deciphered: true
           otp_type: totp
-          digits: 8
+          digits: 6
+          algorithm: sha1
           secret: A3HIETVV5BGY9UIW
-          algorithm: sha256
           period: 30
+          counter: null
+        - service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: hotp
+          digits: 8
+          algorithm: sha1
+          secret: A3HIETVV5BGY9UIW
+          period: null
+          counter: 15
       properties:
-        id:
-          type:
-            - integer
-            - 'null'
-          example: 1
-          description: ID of the 2FA account
-        groupId:
-          type:
-            - integer
-            - 'null'
-          example: 1
-          description: The ID of the group the 2FA account belongs to
         service:
           type: string
           description: The Issuer of the 2FA account
@@ -547,9 +545,6 @@ components:
             - 'null'
           example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           description: The filename of the icon which decorate the 2FA account
-        is_deciphered:
-          type: boolean
-          description: Whether or not the 2FA account has been successfully deciphered (when 2FAuth encryption option is On)
         otp_type:
           type: string
           enum:
@@ -574,74 +569,32 @@ components:
           description: The algorithm used to generate the One-Time Password
         secret:
           type: string
-          description: The base32 encoded secret used by the cryptographic algorithm to generate the One-Time Password
+          description: A base32 encoded string used by the cryptographic algorithm to generate the One-Time Password
           example: A3HIETVV5BGY9UIW
         period:
-          type: integer
+          type:
+            - integer
+            - 'null'
           default: 30
           example: 30
-          description: 'TOTP only: The validity duration of One-Time Password generated for the account'
-          minimum: 1
+          description: 'For TOTP only: The validity duration of One-Time Password generated for the account'
         counter:
-          type: integer
+          type:
+            - integer
+            - 'null'
           example: 15
-          description: 'HOTP only: The value of the counter used to synchronize the account with its verification servers'
-          minimum: 0
+          description: 'for HOTP only: The value of the counter used to synchronize the account with its verification servers'
       required:
-        - id
-        - groupId
         - service
         - account
         - icon
-        - is_deciphered
         - otp_type
         - digits
         - algorithm
-    2FAccountCollection:
-      title: TokenCollection
-      description: A collection of 2-Factor-Auth (2FA) accounts
-      examples:
-        - - id: 1
-            groupId: 1
-            service: MySite
-            account: john.doe
-            icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-            is_deciphered: true
-            otp_type: hotp
-            digits: 6
-            secret: A3HIETVV5BGY9UIW
-            algorithm: sha1
-            counter: 15
-            position: 1
-          - id: 5
-            groupId: null
-            service: My other site
-            account: john.doe
-            icon: 9iXjPsFGodfPb7N8aGJFDHGBhIC4eXE126A7EfAf.png
-            is_deciphered: true
-            otp_type: totp
-            digits: 8
-            secret: Z3S4GG7UV34TFF78
-            algorithm: sha1
-            period: 30
-            position: 2
-      type: array
-      items:
-        allOf:
-          - $ref: '#/components/schemas/2FAccount'
-          - type: object
-            properties:
-              position:
-                type:
-                  - integer
-                  - 'null'
-                description: Position of the account in the collection
-                example: 1
-            required:
-              - position
-    2FAccountWrite:
+        - period
+        - counter
+    2FAccountRead:
       description: Expected informations to set a 2FA account
-      type: object
       x-examples:
         example-1:
           service: MySite
@@ -657,100 +610,79 @@ components:
           totpPeriod: 30
           imageLink: 'https://www.example.com/image.png'
       examples:
-        - service: MySite
+        - id: 1
+          group_id: 1
+          service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6'
           otp_type: totp
-          totpPeriod: 30
-          hotpCounter: 0
           digits: 6
-          secret: A3HIETVV5BGY9UIW
-          secretIsBase32Encoded: 0
           algorithm: sha1
-          imageLink: 'https://www.example.com/image.png'
+          secret: A3HIETVV5BGY9UIW
+          period: 30
+          counter: null
       title: ''
-      properties:
-        service:
-          type: string
-          description: The Issuer of the 2FA account
-          example: MySite
-        account:
-          type: string
-          description: The Label of the 2FA account
-          example: john.doe
-        icon:
-          type:
-            - string
-            - 'null'
-          example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          description: The filename of the icon which decorate the 2FA account
-        otp_type:
-          type: string
-          enum:
-            - totp
-            - hotp
-          example: totp
-          description: The type of 2FA account
-        digits:
-          type: integer
-          example: 6
-          minimum: 6
-          maximum: 10
-          description: The number of digits of the generated One-Time Password
-          default: 6
-        algorithm:
-          type: string
-          enum:
-            - sha1
-            - sha256
-            - sha512
-            - md5
-          example: sha1
-          description: The algorithm used to generate the One-Time Password
-          default: sha1
-        secret:
-          type: string
-          description: The secret used by the cryptographic algorithm to generate the One-Time Password
-          example: A3HIETVV5BGY9UIW
-        period:
-          type:
-            - integer
-            - 'null'
-          default: 30
-          example: 30
-          minimum: 1
-          description: The validity duration of generated tokens
-        counter:
-          type:
-            - integer
-            - 'null'
-          minimum: 0
-          example: 0
-          description: The value of the counter used to synchronize with HOTP verification servers
-          default: 0
-        secretIsBase32Encoded:
-          type: boolean
-          description: Whether or not the provided secret is Base32 encoded. If not 2FAuth will encode it automatically.
-        imageLink:
-          type:
-            - string
-            - 'null'
-          format: uri
-          example: 'https://www.example.com/image.png'
-          description: An external image resource that 2FAuth will try to use as the account's icon
-      required:
-        - service
-        - account
-        - icon
-        - otp_type
-        - digits
-        - algorithm
-        - secret
-        - period
-        - counter
-        - secretIsBase32Encoded
-        - imageLink
+      allOf:
+        - type: object
+          properties:
+            id:
+              type:
+                - integer
+                - 'null'
+              example: 1
+              description: ID of the 2FA account
+            group_id:
+              type:
+                - integer
+                - 'null'
+              example: 1
+              description: The ID of the group the 2FA account belongs to
+          required:
+            - id
+            - group_id
+        - $ref: '#/components/schemas/2FAccountStore'
+    2FAccountCollection:
+      title: TokenCollection
+      description: A collection of 2-Factor-Auth (2FA) accounts
+      examples:
+        - - id: 1
+            group_id: 1
+            service: MySite
+            account: john.doe
+            icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+            otp_type: totp
+            digits: 6
+            algorithm: sha1
+            secret: A3HIETVV5BGY9UIW
+            period: 30
+            counter: null
+            position: 1
+          - id: 2
+            group_id: 1
+            service: MyOtherSite
+            account: john.doe
+            icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+            otp_type: hotp
+            digits: 8
+            algorithm: sha1
+            secret: QD5TG6UUJ89F44GV
+            period: null
+            counter: 15
+            position: 2
+      type: array
+      items:
+        allOf:
+          - $ref: '#/components/schemas/2FAccountRead'
+          - type: object
+            properties:
+              position:
+                type:
+                  - integer
+                  - 'null'
+                description: Position of the account in the collection
+                example: 1
+            required:
+              - position
     Otp:
       title: Otp
       type: object
