@@ -218,6 +218,31 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: post-twofaccounts-otp
       description: Returns a fresh One-Time password with related parameters for account defined by the provided data
+  /api/v1/twofaccounts/preview:
+    post:
+      summary: Preview 2FA account
+      operationId: post-twofaccounts-preview
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountRead'
+              examples: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: |-
+        Use this endpoint to preview a 2FA account described by an otpauth URI.
+        It works exactly as if you POSTed an URI to create a 2FA account except it does not save anything in database.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpauthUri'
+        description: ''
   /api/v1/twofaccounts/sort-order:
     patch:
       summary: Update 2FA accounts display order
