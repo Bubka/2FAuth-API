@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /api/v1/twofaccounts:
+  /api/v1/twofaccounts/:
     get:
       summary: Get all 2FA accounts
       tags:
@@ -47,15 +47,15 @@ paths:
                   otp_type: totp
                   digits: 6
                   algorithm: sha1
-                  secret: A3HIETVV5BGY9UIW
+                  secret: GJTGC5LUNA
                   period: 30
                   counter: null
               Example with URI:
                 value:
-                  uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
+                  uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
         description: |-
           This endpoint accepts 2 different body schemas to create a new 2FA account:
-          - A full JSON object with all properties
+          - A full JSON object with some properties
           - An URI based on the otpauth format
       responses:
         '201':
@@ -96,6 +96,29 @@ paths:
       description: Returns a single 2FA account
       parameters:
         - $ref: '#/components/parameters/withSecret'
+    put:
+      summary: Update 2FA account
+      operationId: put-twofaccounts-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountRead'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Creates a 2FA account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/2FAccountUpdate'
+            examples: {}
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -469,14 +492,14 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW'
+                    example: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA'
                     description: The data encoded in the QR code
                 required:
                   - data
               examples:
                 Example:
                   value:
-                    data: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW'
+                    data: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA'
         '400':
           description: Bad Request
           content:
@@ -508,29 +531,33 @@ components:
     2FAccountStore:
       title: 2FAccount
       type: object
-      description: A single 2-Factor-Auth (2FA) account
+      description: Expected informations to create or preview an account
       examples:
         - service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           otp_type: totp
+          secret: GJTGC5LUNA
           digits: 6
           algorithm: sha1
-          secret: A3HIETVV5BGY9UIW
           period: 30
           counter: null
         - service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           otp_type: hotp
-          digits: 8
+          secret: GJTGC5LUNA
+          digits: 6
           algorithm: sha1
-          secret: A3HIETVV5BGY9UIW
           period: null
-          counter: 15
+          counter: 0
+        - account: john.doe
+          otp_type: totp
       properties:
         service:
-          type: string
+          type:
+            - string
+            - 'null'
           description: The Issuer of the 2FA account
           example: MySite
           pattern: '^[^:]+$'
@@ -552,14 +579,22 @@ components:
             - hotp
           example: totp
           description: The type of 2FA account
+        secret:
+          type:
+            - string
+            - 'null'
+          description: A base32 encoded string used by the cryptographic algorithm to generate the One-Time Password.
+          example: GJTGC5LUNA
         digits:
-          type: integer
+          type:
+            - integer
+            - 'null'
           example: 6
-          minimum: 6
-          maximum: 10
           description: The number of digits of the generated One-Time Password
         algorithm:
-          type: string
+          type:
+            - string
+            - 'null'
           enum:
             - sha1
             - sha256
@@ -567,10 +602,7 @@ components:
             - md5
           example: sha1
           description: The algorithm used to generate the One-Time Password
-        secret:
-          type: string
-          description: A base32 encoded string used by the cryptographic algorithm to generate the One-Time Password
-          example: A3HIETVV5BGY9UIW
+          default: sha1
         period:
           type:
             - integer
@@ -584,17 +616,12 @@ components:
             - 'null'
           example: 15
           description: 'for HOTP only: The value of the counter used to synchronize the account with its verification servers'
+          default: 0
       required:
-        - service
         - account
-        - icon
         - otp_type
-        - digits
-        - algorithm
-        - period
-        - counter
     2FAccountRead:
-      description: Expected informations to set a 2FA account
+      description: A single 2-Factor-Auth (2FA) account
       x-examples:
         example-1:
           service: MySite
@@ -602,7 +629,7 @@ components:
           otp_type: totp
           uri: ''
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          secret: A3HIETVV5BGY9UIW
+          secret: GJTGC5LUNA
           secretIsBase32Encoded: 1
           algorithm: sha1
           digits: 6
@@ -616,9 +643,9 @@ components:
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
           otp_type: totp
+          secret: GJTGC5LUNA
           digits: 6
           algorithm: sha1
-          secret: A3HIETVV5BGY9UIW
           period: 30
           counter: null
       title: ''
@@ -631,19 +658,101 @@ components:
                 - 'null'
               example: 1
               description: ID of the 2FA account
+              minimum: 1
             group_id:
               type:
                 - integer
                 - 'null'
               example: 1
               description: The ID of the group the 2FA account belongs to
+              minimum: 1
           required:
             - id
             - group_id
         - $ref: '#/components/schemas/2FAccountStore'
+    2FAccountUpdate:
+      title: 2FAccount
+      type: object
+      description: Expected informations to update a 2FA account
+      examples:
+        - service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: totp
+          secret: GJTGC5LUNA
+          digits: 6
+          algorithm: sha1
+          period: 30
+        - service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: hotp
+          secret: GJTGC5LUNA
+          digits: 6
+          algorithm: sha1
+          counter: 0
+      properties:
+        service:
+          type:
+            - string
+            - 'null'
+          description: The Issuer of the 2FA account
+          example: MySite
+          pattern: '^[^:]+$'
+        account:
+          type: string
+          description: The Label of the 2FA account
+          example: john.doe
+          pattern: '^[^:]+$'
+        icon:
+          type:
+            - string
+            - 'null'
+          example: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          description: The filename of the icon which decorate the 2FA account
+        otp_type:
+          type: string
+          enum:
+            - totp
+            - hotp
+          example: totp
+          description: The type of 2FA account
+        secret:
+          type: string
+          description: A base32 encoded string used by the cryptographic algorithm to generate the One-Time Password
+          example: GJTGC5LUNA
+        digits:
+          type: integer
+          example: 6
+          description: The number of digits of the generated One-Time Password
+        algorithm:
+          type: string
+          enum:
+            - sha1
+            - sha256
+            - sha512
+            - md5
+          example: sha1
+          description: The algorithm used to generate the One-Time Password
+        period:
+          type: integer
+          example: 30
+          description: 'Required for TOTP only: The validity duration of One-Time Password generated for the account'
+        counter:
+          type: integer
+          example: 15
+          description: 'Required for HOTP only: The value of the counter used to synchronize the account with its verification servers'
+      required:
+        - service
+        - account
+        - icon
+        - otp_type
+        - secret
+        - digits
+        - algorithm
     2FAccountCollection:
       title: TokenCollection
-      description: A collection of 2-Factor-Auth (2FA) accounts
+      description: An array of 2FA accounts
       examples:
         - - id: 1
             group_id: 1
@@ -653,7 +762,7 @@ components:
             otp_type: totp
             digits: 6
             algorithm: sha1
-            secret: A3HIETVV5BGY9UIW
+            secret: GJTGC5LUNA
             period: 30
             counter: null
             position: 1
@@ -718,11 +827,11 @@ components:
       title: OtpauthUri
       type: object
       examples:
-        - uri: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
+        - uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
       properties:
         uri:
           type: string
-          example: 'otpauth://totp/MySite:john.doe?secret=A3HIETVV5BGY9UIW&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
+          example: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
           pattern: '^otpauth:\/\/(totp|hotp)\/.+'
           format: uri
           description: A URI which describe a 2FA account (usually encoded as a QR code) following the otpauth format
@@ -737,6 +846,7 @@ components:
       schema:
         type: integer
         example: 1
+        minimum: 1
       description: The ID of the resource
     withSecret:
       name: withSecret
@@ -812,6 +922,7 @@ components:
                 errors:
                   field1:
                     - The field1 is required.
+                    - The field1 must be a string.
                   field2:
                     - The field2 must be a number.
     OK:
@@ -885,12 +996,17 @@ components:
                 type: string
                 description: An information message
                 example: bad request
+              reason:
+                type: string
+                example: the type is not supported
+                description: The reason why the error occured
             required:
               - message
           examples:
             Example:
               value:
                 message: bad request
+                reason: the type is not supported
 tags:
   - name: auth
   - name: icons
