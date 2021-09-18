@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /api/v1/twofaccounts/:
+  /api/v1/twofaccounts:
     get:
       summary: Get all 2FA accounts
       tags:
