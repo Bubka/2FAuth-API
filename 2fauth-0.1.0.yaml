@@ -65,8 +65,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/2FAccountRead'
               examples: {}
-        '400':
-          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -1070,16 +1068,21 @@ components:
                 description: An information message
                 example: bad request
               reason:
-                type: string
-                example: the type is not supported
-                description: The reason why the error occured
+                type: object
+                description: The reasons why the error occured
+                properties:
+                  param1:
+                    type: string
+                    description: A reason
+                    example: This request accept only one parameter
             required:
               - message
           examples:
             Example:
               value:
                 message: bad request
-                reason: the type is not supported
+                reason:
+                  param1: This request accept only one parameter
 tags:
   - name: auth
   - name: groups
