@@ -281,6 +281,14 @@ paths:
         description: ''
       tags:
         - twofaccounts
+  /api/v1/groups:
+    get:
+      summary: Get all 2FA accounts
+      tags:
+        - groups
+      responses: {}
+      operationId: get-groups
+      description: Find all existing 2FA accounts
   /api/v1/auth/login:
     post:
       summary: Sign in
@@ -863,6 +871,46 @@ components:
       required:
         - uri
       description: An otpauth URI
+    Group:
+      title: Group
+      type: object
+      description: A Group resource
+      examples:
+        - id: 1
+          name: Social networks
+          twofaccounts_count: 4
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: ID of the Group
+          minimum: 0
+        name:
+          type: string
+          example: Social networks
+          description: Name of the Group
+        twofaccounts_count:
+          type: integer
+          description: Number of 2FA accounts in the group
+          minimum: 0
+          example: 4
+      required:
+        - id
+        - name
+        - twofaccounts_count
+    GroupCollection:
+      title: GroupCollection
+      type: array
+      items:
+        $ref: '#/components/schemas/Group'
+      description: An array of Groups
+      examples:
+        - - id: 0
+            name: All
+            twofaccounts_count: 9
+          - id: 1
+            name: Social networks
+            twofaccounts_count: 4
   parameters:
     id:
       name: id
@@ -1034,6 +1082,7 @@ components:
                 reason: the type is not supported
 tags:
   - name: auth
+  - name: groups
   - name: icons
   - name: One-Time Password
   - name: qrcode
