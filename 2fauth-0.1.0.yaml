@@ -951,6 +951,7 @@ components:
           type: string
           example: Social networks
           description: Name of the Group
+          maxLength: 32
         twofaccounts_count:
           type: integer
           description: Number of 2FA accounts in the group
