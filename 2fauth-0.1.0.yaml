@@ -281,12 +281,85 @@ paths:
         - twofaccounts
   /api/v1/groups:
     get:
-      summary: Get all 2FA accounts
+      summary: Get all groups
       tags:
         - groups
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
       operationId: get-groups
-      description: Find all existing 2FA accounts
+      description: Find all existing groups
+    post:
+      summary: ''
+      operationId: post-api-v1-groups
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRead'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupStore'
+            examples: {}
+      tags:
+        - groups
+  '/api/v1/groups/{id}':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Find group by ID
+      tags:
+        - groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRead'
+              examples: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-groups-id
+      description: Returns a single group
+    put:
+      summary: ''
+      operationId: put-groups-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRead'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Updates a group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupStore'
   /api/v1/auth/login:
     post:
       summary: Sign in
@@ -869,7 +942,7 @@ components:
       required:
         - uri
       description: An otpauth URI
-    Group:
+    GroupRead:
       title: Group
       type: object
       description: A Group resource
@@ -896,6 +969,20 @@ components:
         - id
         - name
         - twofaccounts_count
+    GroupStore:
+      title: GroupStore
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 32
+          example: Social networks
+          description: The name of the group
+      required:
+        - name
+      examples:
+        - name: Social networks
+      description: Expected informations to create a group
     GroupCollection:
       title: GroupCollection
       type: array
