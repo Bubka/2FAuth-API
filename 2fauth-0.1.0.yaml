@@ -110,7 +110,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Creates a 2FA account
+      description: Updates a 2FA account
       requestBody:
         content:
           application/json:
