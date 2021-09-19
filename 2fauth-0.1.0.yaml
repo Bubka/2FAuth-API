@@ -117,6 +117,8 @@ paths:
             schema:
               $ref: '#/components/schemas/2FAccountUpdate'
             examples: {}
+      tags:
+        - twofaccounts
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -241,8 +243,8 @@ paths:
             schema:
               $ref: '#/components/schemas/OtpauthUri'
         description: ''
-  /api/v1/twofaccounts/sort-order:
-    patch:
+      tags:
+        - twofaccounts
       summary: Update 2FA accounts display order
       operationId: patch-twofaccounts-sort-order
       responses:
