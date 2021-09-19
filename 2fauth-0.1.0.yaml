@@ -245,8 +245,10 @@ paths:
         description: ''
       tags:
         - twofaccounts
-      summary: Update 2FA accounts display order
-      operationId: patch-twofaccounts-sort-order
+  /api/v1/twofaccounts/reorder:
+    post:
+      summary: Save order of the 2FA accounts collection
+      operationId: post-twofaccounts-reorder
       responses:
         '200':
           $ref: '#/components/responses/OK'
@@ -254,7 +256,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Saves the position of 2FA accounts within the collection
+      description: Saves the order of 2FA accounts. This allows to always serve the 2FA accounts collection sorted in a user defined order.
       requestBody:
         content:
           application/json:
@@ -871,7 +873,6 @@ components:
             secret: GJTGC5LUNA
             period: 30
             counter: null
-            position: 1
           - id: 2
             group_id: 1
             service: MyOtherSite
@@ -883,21 +884,9 @@ components:
             secret: QD5TG6UUJ89F44GV
             period: null
             counter: 15
-            position: 2
       type: array
       items:
-        allOf:
-          - $ref: '#/components/schemas/2FAccountRead'
-          - type: object
-            properties:
-              position:
-                type:
-                  - integer
-                  - 'null'
-                description: Position of the account in the collection
-                example: 1
-            required:
-              - position
+        $ref: '#/components/schemas/2FAccountRead'
     Otp:
       title: Otp
       type: object
