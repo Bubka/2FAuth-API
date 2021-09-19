@@ -71,6 +71,32 @@ paths:
           $ref: '#/components/responses/ValidationError'
       parameters:
         - $ref: '#/components/parameters/withSecret'
+    delete:
+      summary: Mass delete 2FA accounts
+      operationId: delete-twofaccounts
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+        - twofaccounts
+      description: |-
+        Mass deletes 2FA accounts matching the IDs passed as query parameter.
+
+        A `204 — No Content` response will be returned even if some resources no longer exist before delete.
+      parameters:
+        - schema:
+            type: string
+            example: '1,5,18'
+            pattern: '^\d([\d,])+[\d]+$'
+          in: query
+          name: ids
+          description: A comma-separated list of IDs. A maximum of 100 IDs may be provided
   '/api/v1/twofaccounts/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -119,6 +145,17 @@ paths:
             examples: {}
       tags:
         - twofaccounts
+    delete:
+      summary: ''
+      operationId: delete-twofaccounts-id
+      responses:
+        '204':
+          description: No Content
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - twofaccounts
+      description: Deletes a 2FA account
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -301,7 +338,7 @@ paths:
       description: Find all existing groups
     post:
       summary: ''
-      operationId: post-api-v1-groups
+      operationId: post-groups
       responses:
         '201':
           description: Created
@@ -343,7 +380,7 @@ paths:
       operationId: get-groups-id
       description: Returns a single group
     put:
-      summary: ''
+      summary: Update group
       operationId: put-groups-id
       responses:
         '200':
@@ -364,6 +401,19 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GroupStore'
+      tags:
+        - groups
+    delete:
+      summary: Delete group
+      operationId: delete-groups-id
+      description: Deletes a group. This will not delete any assigned 2FA accounts.
+      responses:
+        '204':
+          description: No Content
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - groups
   /api/v1/auth/login:
     post:
       summary: Sign in
@@ -555,7 +605,7 @@ paths:
         description: Filename (with extension) of the icon file to delete from the server
     delete:
       summary: Delete an icon
-      operationId: delete-api-v1-icons-filename
+      operationId: delete-icons-filename
       responses:
         '204':
           description: No Content
@@ -978,8 +1028,6 @@ components:
     GroupCollection:
       title: GroupCollection
       type: array
-      items:
-        $ref: '#/components/schemas/Group'
       description: An array of Groups
       examples:
         - - id: 0
@@ -988,6 +1036,8 @@ components:
           - id: 1
             name: Social networks
             twofaccounts_count: 4
+      items:
+        $ref: '#/components/schemas/GroupRead'
   parameters:
     id:
       name: id
