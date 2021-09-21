@@ -90,13 +90,7 @@ paths:
 
         A `204 — No Content` response will be returned even if some resources no longer exist before delete.
       parameters:
-        - schema:
-            type: string
-            example: '1,5,18'
-            pattern: '^\d([\d,])+[\d]+$'
-          in: query
-          name: ids
-          description: A comma-separated list of IDs. A maximum of 100 IDs may be provided
+        - $ref: '#/components/parameters/ids'
   '/api/v1/twofaccounts/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -320,6 +314,28 @@ paths:
         description: ''
       tags:
         - twofaccounts
+  /api/v1/twofaccounts/withdraw:
+    patch:
+      summary: Withdraw accounts from groups
+      operationId: patch-twofaccounts-unassign
+      responses:
+        '200':
+          $ref: '#/components/responses/OK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRead'
+      description: Removes 2FA accounts from any group
+      parameters:
+        - $ref: '#/components/parameters/ids'
+    parameters: []
   /api/v1/groups:
     get:
       summary: Get all groups
@@ -414,6 +430,47 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - groups
+  '/api/v1/groups/{id}/assign':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      summary: Add 2FA accounts to a group
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupRead'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: post-groups-id-assign
+      description: Adds a list of 2FA accounts to a group. An account previously assigned to another group will be removed from its former group.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: An array of 2FA account IDs
+                  items:
+                    type: integer
+              required:
+                - ids
+            examples:
+              Example:
+                value:
+                  ids:
+                    - 1
+                    - 5
+                    - 9
   /api/v1/auth/login:
     post:
       summary: Sign in
@@ -1055,6 +1112,15 @@ components:
       schema:
         type: boolean
       description: Set to true (or 1) to append the Secret property to the returned 2FA account
+    ids:
+      name: ids
+      in: query
+      required: true
+      schema:
+        type: string
+        pattern: '^\d([\d,])+[\d]+$'
+        example: '1,5,18'
+      description: A comma-separated list of IDs. A maximum of 100 IDs may be provided
   responses:
     NotFound:
       description: Not Found
