@@ -471,6 +471,26 @@ paths:
                     - 1
                     - 5
                     - 9
+  '/api/v1/groups/{id}/twofaccounts':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Get all 2FA accounts of a group
+      tags:
+        - groups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-groups-id-twofaccounts
+      description: Finds all existing 2FA accounts assigned to a group
   /api/v1/auth/login:
     post:
       summary: Sign in
