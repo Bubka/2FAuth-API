@@ -335,6 +335,8 @@ paths:
       description: Removes 2FA accounts from any group
       parameters:
         - $ref: '#/components/parameters/ids'
+      tags:
+        - twofaccounts
     parameters: []
   /api/v1/groups:
     get:
@@ -435,7 +437,8 @@ paths:
       - $ref: '#/components/parameters/id'
     post:
       summary: Add 2FA accounts to a group
-      tags: []
+      tags:
+        - groups
       responses:
         '200':
           description: OK
