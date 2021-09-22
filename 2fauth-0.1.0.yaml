@@ -69,8 +69,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-      parameters:
-        - $ref: '#/components/parameters/withSecret'
+      parameters: []
     delete:
       summary: Mass delete 2FA accounts
       operationId: delete-twofaccounts
