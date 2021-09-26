@@ -316,7 +316,7 @@ paths:
   /api/v1/twofaccounts/withdraw:
     patch:
       summary: Withdraw accounts from groups
-      operationId: patch-twofaccounts-unassign
+      operationId: patch-twofaccounts-withdraw
       responses:
         '200':
           $ref: '#/components/responses/OK'
