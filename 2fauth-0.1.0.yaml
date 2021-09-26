@@ -759,6 +759,110 @@ paths:
           $ref: '#/components/responses/ValidationError'
       tags:
         - qrcode
+  /api/v1/settings:
+    get:
+      summary: Get all settings
+      tags:
+        - settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      operationId: get-settings
+      description: List all settings. This includes 2FAuth native settings and possible additional user-defined settings.
+    parameters: []
+    post:
+      summary: Create custom setting
+      operationId: post-settings
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Setting'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Creates a new custom setting. You are free to use this endpoint to store any data you need for your own app.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Setting'
+      tags:
+        - settings
+  '/api/v1/settings/{name}':
+    parameters:
+      - $ref: '#/components/parameters/name'
+    get:
+      summary: Find setting by name
+      tags:
+        - settings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Setting'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-settings-name
+      description: 'Returns a single setting, whether it is a native 2FAuth setting or a custom setting'
+    put:
+      summary: Update setting
+      operationId: put-settings-name
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Setting'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: 'Updates a setting, whether it is a native 2FAuth setting or a custom setting'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: string
+                  description: Value of the setting
+              required:
+                - data
+      tags:
+        - settings
+    delete:
+      summary: Delete custom setting
+      operationId: delete-settings-name
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: Deletes a custom setting
+      tags:
+        - settings
 components:
   schemas:
     2FAccountStore:
@@ -1113,6 +1217,43 @@ components:
             twofaccounts_count: 4
       items:
         $ref: '#/components/schemas/GroupRead'
+    Setting:
+      title: Setting
+      type: object
+      examples:
+        - name: displayMode
+          data: grid
+      description: A setting resource
+      properties:
+        name:
+          type: string
+          description: Name of the setting
+          example: displayMode
+          maxLength: 128
+          pattern: '^[a-zA-Z]+'
+        data:
+          type:
+            - string
+            - boolean
+            - number
+          description: Value of the setting
+          example: grid
+      required:
+        - name
+        - data
+    SettingCollection:
+      title: SettingCollection
+      type: array
+      items:
+        $ref: '#/components/schemas/Setting'
+      description: An array of settings
+      examples:
+        - - name: displayMode
+            data: grid
+          - name: showTokenAsDot
+            data: true
+          - name: kickUserAfter
+            data: 5
   parameters:
     id:
       name: id
@@ -1139,6 +1280,16 @@ components:
         pattern: '^\d([\d,])+[\d]+$'
         example: '1,5,18'
       description: A comma-separated list of IDs. A maximum of 100 IDs may be provided
+    name:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-zA-Z]+'
+        maxLength: 128
+        example: displayMode
+      description: Name of the setting
   responses:
     NotFound:
       description: Not Found
@@ -1302,4 +1453,5 @@ tags:
   - name: icons
   - name: One-Time Password
   - name: qrcode
+  - name: settings
   - name: twofaccounts
