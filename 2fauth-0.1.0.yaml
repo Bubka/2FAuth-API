@@ -326,11 +326,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-        '':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GroupRead'
       description: Removes 2FA accounts from any group
       parameters:
         - $ref: '#/components/parameters/ids'
@@ -354,7 +349,7 @@ paths:
       operationId: get-groups
       description: Find all existing groups
     post:
-      summary: ''
+      summary: Create Group
       operationId: post-groups
       responses:
         '201':
@@ -375,6 +370,7 @@ paths:
             examples: {}
       tags:
         - groups
+      description: Creates a new group
   '/api/v1/groups/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
