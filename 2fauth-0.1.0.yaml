@@ -942,9 +942,9 @@ paths:
 components:
   schemas:
     2FAccountStore:
-      title: 2FAccount
+      title: Store 2FAccount schema
       type: object
-      description: Expected informations to create or preview an account
+      description: Expected informations to create or preview a 2FA account
       examples:
         - service: MySite
           account: john.doe
@@ -1061,7 +1061,7 @@ components:
           algorithm: sha1
           period: 30
           counter: null
-      title: ''
+      title: Read 2FA Account schema
       allOf:
         - type: object
           properties:
@@ -1084,7 +1084,7 @@ components:
             - group_id
         - $ref: '#/components/schemas/2FAccountStore'
     2FAccountUpdate:
-      title: 2FAccount
+      title: Update 2FA Account schema
       type: object
       description: Expected informations to update a 2FA account
       examples:
@@ -1164,7 +1164,7 @@ components:
         - digits
         - algorithm
     2FAccountCollection:
-      title: TokenCollection
+      title: 2FA Accounts Collection schema
       description: An array of 2FA accounts
       examples:
         - - id: 1
@@ -1193,7 +1193,7 @@ components:
       items:
         $ref: '#/components/schemas/2FAccountRead'
     Otp:
-      title: Otp
+      title: Otp schema
       type: object
       description: One-Time password
       examples:
@@ -1224,7 +1224,7 @@ components:
       required:
         - password
     OtpauthUri:
-      title: OtpauthUri
+      title: OtpauthUri schema
       type: object
       examples:
         - uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
@@ -1239,7 +1239,7 @@ components:
         - uri
       description: An otpauth URI
     GroupRead:
-      title: Group
+      title: Read Group schema
       type: object
       description: A Group resource
       examples:
@@ -1267,7 +1267,7 @@ components:
         - name
         - twofaccounts_count
     GroupStore:
-      title: GroupStore
+      title: Store Group schema
       type: object
       properties:
         name:
@@ -1281,7 +1281,7 @@ components:
         - name: Social networks
       description: Expected informations to create a group
     GroupCollection:
-      title: GroupCollection
+      title: Group Collection schema
       type: array
       description: An array of Groups
       examples:
@@ -1294,7 +1294,7 @@ components:
       items:
         $ref: '#/components/schemas/GroupRead'
     Setting:
-      title: Setting
+      title: Setting schema
       type: object
       examples:
         - name: displayMode
@@ -1318,7 +1318,7 @@ components:
         - name
         - data
     SettingCollection:
-      title: SettingCollection
+      title: Setting Collection schema
       type: array
       items:
         $ref: '#/components/schemas/Setting'
@@ -1331,7 +1331,7 @@ components:
           - name: kickUserAfter
             data: 5
     UserRead:
-      title: UserRead
+      title: Read User schema
       type: object
       description: A User resource
       examples:
@@ -1353,7 +1353,7 @@ components:
         - name
         - email
     UserStore:
-      title: UserStore
+      title: Store User schema
       description: Expected informations to create a user
       allOf:
         - $ref: '#/components/schemas/UserRead'
@@ -1380,7 +1380,7 @@ components:
           password: NKji5c2fK9cgtd3
           password_confirmation: NKji5c2fK9cgtd3
     UserUpdate:
-      title: UserUpdate
+      title: Update User schema
       allOf:
         - $ref: '#/components/schemas/UserRead'
         - type: object
