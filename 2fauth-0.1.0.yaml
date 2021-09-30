@@ -8,7 +8,7 @@ info:
     url: 'https://github.com/Bubka'
     email: contact@2fauth.app
   license:
-    name: AGPL 3.0
+    name: AGPL-3.0
     url: 'https://www.gnu.org/licenses/agpl-3.0.en.html'
 servers:
   - url: 'https://demo.2fauth.app/api/v1'
@@ -912,6 +912,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserUpdate'
+            examples: {}
       tags:
         - user
     post:
@@ -1627,6 +1628,7 @@ components:
       type: http
       scheme: bearer
       description: Bearer token flow
+  requestBodies: {}
 tags:
   - name: auth
   - name: groups
