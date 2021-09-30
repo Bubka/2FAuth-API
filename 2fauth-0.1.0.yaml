@@ -938,7 +938,30 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
       description: Sets a new password for the 2FAuth unique user account
-    parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                  format: password
+                  example: NKji5c2fK9cgtd3
+                  description: Current user password for security purpose
+                password:
+                  type: string
+                  example: PD2F0oiEzk3g8stFGZij
+                  minLength: 8
+                  format: password
+                  description: New password
+              required:
+                - currentPassword
+                - password
+            examples: {}
+        description: ''
+      tags:
+        - user
 components:
   schemas:
     2FAccountStore:
