@@ -3,9 +3,10 @@ info:
   title: 2fauth-0.1.0
   version: 0.1.0
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'https://demo.2fauth.app/api/v1'
+    description: demo site
 paths:
-  /api/v1/twofaccounts:
+  /twofaccounts:
     get:
       summary: Get all 2FA accounts
       tags:
@@ -90,7 +91,7 @@ paths:
         A `204 — No Content` response will be returned even if some resources no longer exist before delete.
       parameters:
         - $ref: '#/components/parameters/ids'
-  '/api/v1/twofaccounts/{id}':
+  '/twofaccounts/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -149,7 +150,7 @@ paths:
       tags:
         - twofaccounts
       description: Deletes a 2FA account
-  '/api/v1/twofaccounts/{id}/qrcode':
+  '/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -183,7 +184,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
       description: Returns a QR code that represents the 2FA account
-  '/api/v1/twofaccounts/{id}/otp':
+  '/twofaccounts/{id}/otp':
     parameters:
       - name: id
         in: path
@@ -213,7 +214,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-otp
       description: Returns a fresh One-Time Password with related parameters for the existing account matching the specified ID
-  /api/v1/twofaccounts/otp:
+  /twofaccounts/otp:
     parameters: []
     post:
       summary: Get a One-Time password
@@ -248,7 +249,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: post-twofaccounts-otp
       description: Returns a fresh One-Time password with related parameters for account defined by the provided data
-  /api/v1/twofaccounts/preview:
+  /twofaccounts/preview:
     post:
       summary: Preview 2FA account
       operationId: post-twofaccounts-preview
@@ -275,7 +276,7 @@ paths:
         description: ''
       tags:
         - twofaccounts
-  /api/v1/twofaccounts/reorder:
+  /twofaccounts/reorder:
     post:
       summary: Save order of the 2FA accounts collection
       operationId: post-twofaccounts-reorder
@@ -313,7 +314,7 @@ paths:
         description: ''
       tags:
         - twofaccounts
-  /api/v1/twofaccounts/withdraw:
+  /twofaccounts/withdraw:
     patch:
       summary: Withdraw accounts from groups
       operationId: patch-twofaccounts-withdraw
@@ -332,7 +333,7 @@ paths:
       tags:
         - twofaccounts
     parameters: []
-  /api/v1/groups:
+  /groups:
     get:
       summary: Get all groups
       tags:
@@ -371,7 +372,7 @@ paths:
       tags:
         - groups
       description: Creates a new group
-  '/api/v1/groups/{id}':
+  '/groups/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -427,7 +428,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - groups
-  '/api/v1/groups/{id}/assign':
+  '/groups/{id}/assign':
     parameters:
       - $ref: '#/components/parameters/id'
     post:
@@ -469,7 +470,7 @@ paths:
                     - 1
                     - 5
                     - 9
-  '/api/v1/groups/{id}/twofaccounts':
+  '/groups/{id}/twofaccounts':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -489,7 +490,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-groups-id-twofaccounts
       description: Finds all existing 2FA accounts assigned to a group
-  /api/v1/login:
+  /login:
     post:
       summary: Sign in
       tags:
@@ -544,7 +545,7 @@ paths:
                   password: '^13,xgtG$*7js++}Cl#v'
       security: []
     parameters: []
-  /api/v1/logout:
+  /logout:
     post:
       summary: Sign out
       tags:
@@ -557,7 +558,7 @@ paths:
       operationId: post-logout
       description: Terminates the current user session
     parameters: []
-  /api/v1/auth/register:
+  /auth/register:
     post:
       summary: Register new user
       tags:
@@ -620,7 +621,7 @@ paths:
         description: ''
       security: []
     parameters: []
-  /api/v1/icons:
+  /icons:
     post:
       summary: Upload an icon
       tags:
@@ -671,7 +672,7 @@ paths:
                   icon: string
         description: ''
     parameters: []
-  '/api/v1/icons/{filename}':
+  '/icons/{filename}':
     parameters:
       - schema:
           type: string
@@ -691,7 +692,7 @@ paths:
       description: Deletes an icon from the server
       tags:
         - icons
-  /api/v1/qrcode/decode:
+  /qrcode/decode:
     post:
       summary: Decode a QR code
       operationId: post-qrcode-decode
@@ -761,7 +762,7 @@ paths:
           $ref: '#/components/responses/ValidationError'
       tags:
         - qrcode
-  /api/v1/settings:
+  /settings:
     get:
       summary: Get all settings
       tags:
@@ -800,7 +801,7 @@ paths:
               $ref: '#/components/schemas/Setting'
       tags:
         - settings
-  '/api/v1/settings/{name}':
+  '/settings/{name}':
     parameters:
       - $ref: '#/components/parameters/name'
     get:
@@ -865,7 +866,7 @@ paths:
       description: Deletes a custom setting
       tags:
         - settings
-  /api/v1/user:
+  /user:
     get:
       summary: Get user
       tags:
@@ -923,7 +924,7 @@ paths:
         description: ''
       tags:
         - user
-  /api/v1/user/password:
+  /user/password:
     patch:
       summary: Change password
       operationId: patch-user-pwd
