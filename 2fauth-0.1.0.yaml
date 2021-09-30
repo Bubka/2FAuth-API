@@ -566,69 +566,6 @@ paths:
       operationId: post-logout
       description: Terminates the current user session
     parameters: []
-  /auth/register:
-    post:
-      summary: Register new user
-      tags:
-        - auth
-      responses:
-        '200':
-          $ref: '#/components/responses/Authenticated'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-      operationId: post-register
-      description: Creates a new user account
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              description: ''
-              type: object
-              x-examples:
-                example-1:
-                  name: toto
-                  email: edouard@ganeau.me
-                  password: toto
-                  password_confirmation: toto
-              properties:
-                name:
-                  type: string
-                  maxLength: 255
-                  example: john.doe
-                  description: The account username
-                email:
-                  type: string
-                  format: email
-                  maxLength: 255
-                  example: john.doe@example.com
-                  description: The account email address
-                password:
-                  type: string
-                  format: password
-                  minLength: 8
-                  example: '^13,xgtG$*7js++}Cl#v'
-                  description: The account password
-                password_confirmation:
-                  type: string
-                  format: password
-                  minLength: 8
-                  example: '^13,xgtG$*7js++}Cl#v'
-                  description: The confirmed account username
-              required:
-                - name
-                - email
-                - password
-                - password_confirmation
-            examples:
-              Example:
-                value:
-                  name: john.doe
-                  email: john.doe@example.com
-                  password: '^13,xgtG$*7js++}Cl#v'
-                  password_confirmation: '^13,xgtG$*7js++}Cl#v'
-        description: ''
-      security: []
-    parameters: []
   /icons:
     post:
       summary: Upload an icon
