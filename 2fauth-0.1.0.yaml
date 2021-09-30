@@ -542,6 +542,7 @@ paths:
                 value:
                   email: john.doe@example.com
                   password: '^13,xgtG$*7js++}Cl#v'
+      security: []
     parameters: []
   /api/v1/logout:
     post:
@@ -617,6 +618,7 @@ paths:
                   password: '^13,xgtG$*7js++}Cl#v'
                   password_confirmation: '^13,xgtG$*7js++}Cl#v'
         description: ''
+      security: []
     parameters: []
   /api/v1/icons:
     post:
@@ -1588,6 +1590,11 @@ components:
                 message: bad request
                 reason:
                   param1: This request accept only one parameter
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      description: Bearer token flow
 tags:
   - name: auth
   - name: groups
@@ -1597,3 +1604,5 @@ tags:
   - name: settings
   - name: twofaccounts
   - name: user
+security:
+  - bearer_auth: []
