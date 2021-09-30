@@ -489,7 +489,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-groups-id-twofaccounts
       description: Finds all existing 2FA accounts assigned to a group
-  /api/v1/auth/login:
+  /api/v1/login:
     post:
       summary: Sign in
       tags:
@@ -543,7 +543,7 @@ paths:
                   email: john.doe@example.com
                   password: '^13,xgtG$*7js++}Cl#v'
     parameters: []
-  /api/v1/auth/logout:
+  /api/v1/logout:
     post:
       summary: Sign out
       tags:
@@ -863,6 +863,79 @@ paths:
       description: Deletes a custom setting
       tags:
         - settings
+  /api/v1/user:
+    get:
+      summary: Get user
+      tags:
+        - user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRead'
+        '401':
+          description: Unauthorized
+      operationId: get-user
+      description: Returns information on the 2FAuth unique user account
+    put:
+      summary: Update user
+      operationId: put-user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRead'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Updates information on the 2FAuth unique user account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      tags:
+        - user
+    post:
+      summary: Register user
+      responses:
+        '201':
+          $ref: '#/components/responses/Authenticated'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: post-user
+      description: Creates the 2FAuth unique user account
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStore'
+            examples: {}
+        description: ''
+      tags:
+        - user
+  /api/v1/user/password:
+    patch:
+      summary: Change password
+      operationId: patch-user-pwd
+      responses:
+        '200':
+          $ref: '#/components/responses/OK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Sets a new password for the 2FAuth unique user account
+    parameters: []
 components:
   schemas:
     2FAccountStore:
@@ -1254,6 +1327,74 @@ components:
             data: true
           - name: kickUserAfter
             data: 5
+    UserRead:
+      title: UserRead
+      type: object
+      description: A User resource
+      examples:
+        - name: John
+          email: john.doe@example.com
+      properties:
+        name:
+          type: string
+          example: John
+          maxLength: 255
+          description: Username
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+          maxLength: 255
+          description: Email of the user
+      required:
+        - name
+        - email
+    UserStore:
+      title: UserStore
+      description: Expected informations to create a user
+      allOf:
+        - $ref: '#/components/schemas/UserRead'
+        - type: object
+          properties:
+            password:
+              type: string
+              minLength: 8
+              description: Current user password for security purpose
+              example: NKji5c2fK9cgtd3
+              format: password
+            password_confirmation:
+              type: string
+              minLength: 8
+              description: 'Password confirmation, should match the password'
+              example: NKji5c2fK9cgtd3
+              format: password
+          required:
+            - password
+            - password_confirmation
+      examples:
+        - name: John
+          email: john.doe@example.com
+          password: NKji5c2fK9cgtd3
+          password_confirmation: NKji5c2fK9cgtd3
+    UserUpdate:
+      title: UserUpdate
+      allOf:
+        - $ref: '#/components/schemas/UserRead'
+        - type: object
+          properties:
+            password:
+              type: string
+              minLength: 8
+              description: Current user password for security purpose
+              example: NKji5c2fK9cgtd3
+              format: password
+          required:
+            - password
+      description: Expected informations to create a user
+      examples:
+        - name: John
+          email: john.doe@example.com
+          password: NKji5c2fK9cgtd3
   parameters:
     id:
       name: id
@@ -1455,3 +1596,4 @@ tags:
   - name: qrcode
   - name: settings
   - name: twofaccounts
+  - name: user
