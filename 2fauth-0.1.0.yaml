@@ -908,6 +908,30 @@ paths:
         description: ''
       tags:
         - user
+  /user/name:
+    get:
+      summary: Get user name
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type:
+                      - string
+                      - 'null'
+                    description: Username
+                    example: John
+                required:
+                  - name
+              examples: {}
+      operationId: get-user-name
+      security: []
+      description: 'Use this endpoint to check if a registered user exists by getting its name, false otherwise'
 components:
   schemas:
     2FAccountStore:
