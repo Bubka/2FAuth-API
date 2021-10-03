@@ -778,22 +778,21 @@ paths:
                 $ref: '#/components/schemas/Setting'
         '401':
           $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: 'Updates a setting, whether it is a native 2FAuth setting or a custom setting'
+      description: 'Updates a setting, whether it is a native 2FAuth setting or a custom setting. Will create the setting if it does not exist.'
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                data:
+                value:
                   type: string
                   description: Value of the setting
               required:
-                - data
+                - value
+            examples: {}
       tags:
         - settings
     delete:
@@ -1290,17 +1289,17 @@ components:
       title: Setting schema
       type: object
       examples:
-        - name: displayMode
-          data: grid
+        - key: displayMode
+          value: grid
       description: A setting resource
       properties:
-        name:
+        key:
           type: string
           description: Name of the setting
           example: displayMode
           maxLength: 128
           pattern: '^[a-zA-Z]+'
-        data:
+        value:
           type:
             - string
             - boolean
@@ -1308,8 +1307,8 @@ components:
           description: Value of the setting
           example: grid
       required:
-        - name
-        - data
+        - key
+        - value
     SettingCollection:
       title: Setting Collection schema
       type: array
@@ -1317,12 +1316,12 @@ components:
         $ref: '#/components/schemas/Setting'
       description: An array of settings
       examples:
-        - - name: displayMode
-            data: grid
-          - name: showTokenAsDot
-            data: true
-          - name: kickUserAfter
-            data: 5
+        - - key: displayMode
+            value: grid
+          - key: showTokenAsDot
+            value: true
+          - key: kickUserAfter
+            value: 5
     UserRead:
       title: Read User schema
       type: object
