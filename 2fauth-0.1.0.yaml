@@ -1190,9 +1190,11 @@ components:
       description: One-Time password
       examples:
         - password: '225897'
+          otp_type: totp
           generated_at: 1631304659
           valid_for: 30
         - password: '225897'
+          otp_type: hotp
           counter: 5
       properties:
         password:
@@ -1201,6 +1203,13 @@ components:
           minLength: 6
           maxLength: 10
           example: '225897'
+        otp_type:
+          type: string
+          description: The type of the One-Time Password
+          enum:
+            - totp
+            - hotp
+          example: totp
         generated_at:
           type: integer
           description: 'TOTP only: The timestamp of the generation time'
@@ -1215,6 +1224,7 @@ components:
           example: 5
       required:
         - password
+        - otp_type
     OtpauthUri:
       title: OtpauthUri schema
       type: object
