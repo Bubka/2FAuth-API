@@ -1423,7 +1423,7 @@ components:
       required: true
       schema:
         type: string
-        pattern: '^\d([\d,])+[\d]+$'
+        pattern: '^\d+(,{1}\d+)*$'
         example: '1,5,18'
       description: A comma-separated list of IDs. A maximum of 100 IDs may be provided
     name:
