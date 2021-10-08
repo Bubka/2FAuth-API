@@ -1192,7 +1192,7 @@ components:
         - password: '225897'
           otp_type: totp
           generated_at: 1631304659
-          valid_for: 30
+          period: 30
         - password: '225897'
           otp_type: hotp
           counter: 5
@@ -1214,7 +1214,7 @@ components:
           type: integer
           description: 'TOTP only: The timestamp of the generation time'
           example: 1631304659
-        valid_for:
+        period:
           type: integer
           description: 'TOTP only: The validity period of the password'
           example: 30
