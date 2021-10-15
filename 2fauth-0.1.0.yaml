@@ -1313,7 +1313,7 @@ components:
           type:
             - string
             - boolean
-            - number
+            - integer
           description: Value of the setting
           example: grid
       required:
