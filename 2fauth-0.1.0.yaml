@@ -11,10 +11,10 @@ info:
     name: AGPL-3.0
     url: 'https://www.gnu.org/licenses/agpl-3.0.en.html'
 servers:
-  - url: 'https://demo.2fauth.app/api/v1'
+  - url: 'https://demo.2fauth.app'
     description: demo site
 paths:
-  /twofaccounts:
+  /api/v1/twofaccounts:
     get:
       summary: Get all 2FA accounts
       tags:
@@ -99,7 +99,7 @@ paths:
         A `204 — No Content` response will be returned even if some resources no longer exist before delete.
       parameters:
         - $ref: '#/components/parameters/ids'
-  '/twofaccounts/{id}':
+  '/api/v1/twofaccounts/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -158,7 +158,7 @@ paths:
       tags:
         - twofaccounts
       description: Deletes a 2FA account
-  '/twofaccounts/{id}/qrcode':
+  '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -192,7 +192,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
       description: Returns a QR code that represents the 2FA account
-  '/twofaccounts/{id}/otp':
+  '/api/v1/twofaccounts/{id}/otp':
     parameters:
       - name: id
         in: path
@@ -222,7 +222,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-otp
       description: Returns a fresh One-Time Password with related parameters for the existing account matching the specified ID
-  /twofaccounts/otp:
+  /api/v1/twofaccounts/otp:
     parameters: []
     post:
       summary: Get a One-Time password
@@ -257,7 +257,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: post-twofaccounts-otp
       description: Returns a fresh One-Time password with related parameters for account defined by the provided data
-  /twofaccounts/preview:
+  /api/v1/twofaccounts/preview:
     post:
       summary: Preview 2FA account
       operationId: post-twofaccounts-preview
@@ -284,7 +284,8 @@ paths:
         description: ''
       tags:
         - twofaccounts
-  /twofaccounts/reorder:
+    parameters: []
+  /api/v1/twofaccounts/reorder:
     post:
       summary: Save order of the 2FA accounts collection
       operationId: post-twofaccounts-reorder
@@ -322,7 +323,8 @@ paths:
         description: ''
       tags:
         - twofaccounts
-  /twofaccounts/withdraw:
+    parameters: []
+  /api/v1/twofaccounts/withdraw:
     patch:
       summary: Withdraw accounts from groups
       operationId: patch-twofaccounts-withdraw
@@ -341,7 +343,7 @@ paths:
       tags:
         - twofaccounts
     parameters: []
-  /groups:
+  /api/v1/groups:
     get:
       summary: Get all groups
       tags:
@@ -380,7 +382,8 @@ paths:
       tags:
         - groups
       description: Creates a new group
-  '/groups/{id}':
+    parameters: []
+  '/api/v1/groups/{id}':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -436,7 +439,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - groups
-  '/groups/{id}/assign':
+  '/api/v1/groups/{id}/assign':
     parameters:
       - $ref: '#/components/parameters/id'
     post:
@@ -478,7 +481,7 @@ paths:
                     - 1
                     - 5
                     - 9
-  '/groups/{id}/twofaccounts':
+  '/api/v1/groups/{id}/twofaccounts':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -498,7 +501,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-groups-id-twofaccounts
       description: Finds all existing 2FA accounts assigned to a group
-  /icons:
+  /api/v1/icons:
     post:
       summary: Upload an icon
       tags:
@@ -549,7 +552,7 @@ paths:
                   icon: string
         description: ''
     parameters: []
-  '/icons/{filename}':
+  '/api/v1/icons/{filename}':
     parameters:
       - schema:
           type: string
@@ -569,7 +572,7 @@ paths:
       description: Deletes an icon from the server
       tags:
         - icons
-  /qrcode/decode:
+  /api/v1/qrcode/decode:
     post:
       summary: Decode a QR code
       operationId: post-qrcode-decode
@@ -639,7 +642,8 @@ paths:
           $ref: '#/components/responses/ValidationError'
       tags:
         - qrcode
-  /settings:
+    parameters: []
+  /api/v1/settings:
     get:
       summary: Get all settings
       tags:
@@ -678,7 +682,7 @@ paths:
               $ref: '#/components/schemas/Setting'
       tags:
         - settings
-  '/settings/{name}':
+  '/api/v1/settings/{name}':
     parameters:
       - $ref: '#/components/parameters/name'
     get:
@@ -744,7 +748,7 @@ paths:
       description: Deletes a custom setting
       tags:
         - settings
-  /user/name:
+  /api/v1/user/name:
     get:
       summary: Get user name
       tags: []
@@ -768,6 +772,7 @@ paths:
       operationId: get-user-name
       security: []
       description: 'Use this endpoint to check if a registered user exists by getting its name, false otherwise'
+    parameters: []
 components:
   schemas:
     2FAccountStore:
