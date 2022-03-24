@@ -2,8 +2,6 @@ name: ReDoc
 on:
   push:
     branches: [main]
-    paths:
-      - '2fauth-**.yaml'
 jobs:
   bundle:
     runs-on: ubuntu-latest
