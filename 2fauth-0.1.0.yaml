@@ -245,7 +245,7 @@ paths:
       tags:
         - twofaccounts
     delete:
-      summary: ''
+      summary: Delete 2FA account
       operationId: delete-twofaccounts-id
       responses:
         '204':
