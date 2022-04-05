@@ -302,7 +302,7 @@ paths:
       summary: Get a One-Time password
       tags:
         - twofaccounts
-        - One-Time Password
+        - one-time password
       responses:
         '200':
           description: OK
@@ -336,7 +336,7 @@ paths:
       summary: Get a One-Time password
       tags:
         - twofaccounts
-        - One-Time Password
+        - one-time password
       requestBody:
         content:
           application/json:
@@ -1006,7 +1006,8 @@ paths:
   /api/v1/user/name:
     get:
       summary: Get user name
-      tags: []
+      tags:
+        - user
       responses:
         '200':
           description: OK
