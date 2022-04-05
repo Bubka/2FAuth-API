@@ -1604,7 +1604,7 @@ tags:
   - name: auth
   - name: groups
   - name: icons
-  - name: One-Time Password
+  - name: one-time password
   - name: qrcode
   - name: settings
   - name: twofaccounts
