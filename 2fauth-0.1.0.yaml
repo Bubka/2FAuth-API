@@ -725,6 +725,8 @@ paths:
           $ref: '#/components/responses/NotFound'
       operationId: get-groups-id-twofaccounts
       description: Finds all existing 2FA accounts assigned to a group
+      parameters:
+        - $ref: '#/components/parameters/withSecret'
   /api/v1/icons:
     post:
       summary: Upload an icon
