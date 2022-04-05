@@ -29,7 +29,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccountCollection'
-              examples: {}
+              examples:
+                Example without secret:
+                  value:
+                    - id: 1
+                      group_id: 1
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      digits: 6
+                      algorithm: sha1
+                      period: 30
+                      counter: null
+                    - id: 2
+                      group_id: 1
+                      service: MyOtherSite
+                      account: john.doe
+                      icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+                      otp_type: hotp
+                      digits: 8
+                      algorithm: sha1
+                      period: null
+                      counter: 15
+                Example with secret:
+                  value:
+                    - id: 1
+                      group_id: 1
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      digits: 6
+                      algorithm: sha1
+                      secret: GJTGC5LUNA
+                      period: 30
+                      counter: null
+                    - id: 2
+                      group_id: 1
+                      service: MyOtherSite
+                      account: john.doe
+                      icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+                      otp_type: hotp
+                      digits: 8
+                      algorithm: sha1
+                      secret: QD5TG6UUJ89F44GV
+                      period: null
+                      counter: 15
         '401':
           $ref: '#/components/responses/Unauthorized'
       operationId: get-twofaccounts
@@ -76,7 +122,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccountRead'
-              examples: {}
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    group_id: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    secret: GJTGC5LUNA
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -116,7 +175,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccountRead'
-              examples: {}
+              examples:
+                Example without secret:
+                  value:
+                    id: 1
+                    group_id: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
+                Example with secret:
+                  value:
+                    id: 1
+                    group_id: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    secret: GJTGC5LUNA
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -147,7 +231,17 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/2FAccountUpdate'
-            examples: {}
+            examples:
+              Example:
+                value:
+                  service: MySite
+                  account: john.doe
+                  icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                  otp_type: totp
+                  digits: 6
+                  algorithm: sha1
+                  secret: GJTGC5LUNA
+                  period: 30
       tags:
         - twofaccounts
     delete:
@@ -216,7 +310,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Otp'
-              examples: {}
+              examples:
+                Example for TOTP:
+                  value:
+                    password: '225897'
+                    otp_type: totp
+                    generated_at: 1631304659
+                    period: 30
+                Example for HOTP:
+                  value:
+                    password: '225897'
+                    otp_type: hotp
+                    counter: 5
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -251,7 +356,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Otp'
-              examples: {}
+              examples:
+                Eexample for TOTP:
+                  value:
+                    password: '225897'
+                    otp_type: totp
+                    generated_at: 1631304659
+                    period: 30
+                Example for HOTP:
+                  value:
+                    password: '225897'
+                    otp_type: hotp
+                    counter: 5
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -271,7 +387,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccountRead'
-              examples: {}
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    group_id: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    secret: GJTGC5LUNA
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -284,6 +413,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/OtpauthUri'
+            examples:
+              Example:
+                value:
+                  uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite&period=30&algorithm=sha1&digits=6&image=https://www.example.com/image.png'
         description: ''
       tags:
         - twofaccounts
@@ -358,6 +491,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupCollection'
+              examples:
+                Example:
+                  value:
+                    - id: 0
+                      name: All
+                      twofaccounts_count: 9
+                    - id: 1
+                      name: Social networks
+                      twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
       operationId: get-groups
@@ -372,6 +514,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupRead'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Social networks
+                    twofaccounts_count: 0
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -381,7 +529,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GroupStore'
-            examples: {}
+            examples:
+              Example:
+                value:
+                  name: Social networks
       tags:
         - groups
       description: Creates a new group
@@ -400,7 +551,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupRead'
-              examples: {}
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Social networks
+                    twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -417,6 +573,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupRead'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Social networks
+                    twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -429,6 +591,10 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GroupStore'
+            examples:
+              Example:
+                value:
+                  name: Social networks
       tags:
         - groups
     delete:
@@ -456,6 +622,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GroupRead'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    name: Social networks
+                    twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -498,6 +670,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/2FAccountCollection'
+              examples:
+                Example without secret:
+                  value:
+                    - id: 1
+                      group_id: 1
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      digits: 6
+                      algorithm: sha1
+                      period: 30
+                      counter: null
+                    - id: 2
+                      group_id: 1
+                      service: MyOtherSite
+                      account: john.doe
+                      icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+                      otp_type: hotp
+                      digits: 8
+                      algorithm: sha1
+                      period: null
+                      counter: 15
+                Example with secret:
+                  value:
+                    - id: 1
+                      group_id: 1
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      digits: 6
+                      algorithm: sha1
+                      secret: GJTGC5LUNA
+                      period: 30
+                      counter: null
+                    - id: 2
+                      group_id: 1
+                      service: MyOtherSite
+                      account: john.doe
+                      icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+                      otp_type: hotp
+                      digits: 8
+                      algorithm: sha1
+                      secret: QD5TG6UUJ89F44GV
+                      period: null
+                      counter: 15
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -658,6 +877,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SettingCollection'
+              examples:
+                Example:
+                  value:
+                    - key: displayMode
+                      value: grid
+                    - key: showTokenAsDot
+                      value: true
+                    - key: kickUserAfter
+                      value: 5
         '401':
           $ref: '#/components/responses/Unauthorized'
       operationId: get-settings
@@ -673,6 +901,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Setting'
+              examples:
+                Example:
+                  value:
+                    key: displayMode
+                    value: grid
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -683,6 +916,11 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Setting'
+            examples:
+              Example:
+                value:
+                  key: displayMode
+                  value: grid
       tags:
         - settings
   '/api/v1/settings/{name}':
@@ -699,6 +937,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Setting'
+              examples:
+                Example:
+                  value:
+                    key: displayMode
+                    value: grid
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -715,6 +958,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Setting'
+              examples:
+                Example:
+                  value:
+                    key: displayMode
+                    value: grid
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -731,9 +979,13 @@ paths:
                 value:
                   type: string
                   description: Value of the setting
+                  example: myValue
               required:
                 - value
-            examples: {}
+            examples:
+              Example:
+                value:
+                  value: myValue
       tags:
         - settings
     delete:
@@ -771,10 +1023,16 @@ paths:
                     example: John
                 required:
                   - name
-              examples: {}
+              examples:
+                Example when a user exist:
+                  value:
+                    name: John
+                Example when no user exist:
+                  value:
+                    name: null
       operationId: get-user-name
       security: []
-      description: 'Use this endpoint to check if a registered user exists by getting its name, false otherwise'
+      description: 'Use this endpoint to check if a registered user exists by getting its name, null otherwise'
     parameters: []
 components:
   schemas:
