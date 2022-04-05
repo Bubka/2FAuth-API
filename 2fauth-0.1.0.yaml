@@ -374,6 +374,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
       operationId: post-twofaccounts-otp
       description: Returns a fresh One-Time password with related parameters for account defined by the provided data
   /api/v1/twofaccounts/preview:
