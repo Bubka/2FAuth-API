@@ -1603,7 +1603,6 @@ components:
       description: Bearer token flow
   requestBodies: {}
 tags:
-  - name: auth
   - name: groups
   - name: icons
   - name: one-time password
