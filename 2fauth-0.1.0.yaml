@@ -1597,10 +1597,10 @@ components:
                 reason:
                   param1: This request accept only one parameter
   securitySchemes:
-    bearer_auth:
+    Bearer Auth:
       type: http
       scheme: bearer
-      description: Bearer token flow
+      description: Provide your bearer token in the Authorization header when making requests to protected resources. See the 'Settings > OAuth' section of your 2FAuth instance to generate personal access tokens.
   requestBodies: {}
 tags:
   - name: groups
@@ -1611,4 +1611,4 @@ tags:
   - name: twofaccounts
   - name: user
 security:
-  - bearer_auth: []
+  - Bearer Auth: []
