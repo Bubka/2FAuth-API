@@ -5,7 +5,7 @@ info:
   description: |-
     This is the definition (following OpenAPI 3.1 specification) of the REST API of [2FAuth](https://github.com/Bubka/2FAuth), a web app to manage your Two-Factor Authentication (2FA) accounts and generate their security passwords.
 
-    The API is available once you have installed 2FAuth on your server.
+    The API is available once you installed 2FAuth on your server.
   contact:
     name: Bubka
     url: 'https://github.com/Bubka'
@@ -15,7 +15,7 @@ info:
     url: 'https://www.gnu.org/licenses/agpl-3.0.en.html'
 servers:
   - url: 'https://demo.2fauth.app'
-    description: demo site
+    description: Demo server
 paths:
   /api/v1/twofaccounts:
     get:
