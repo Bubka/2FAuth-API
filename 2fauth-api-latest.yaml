@@ -893,7 +893,10 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
       operationId: get-settings
-      description: List all settings. This includes 2FAuth native settings and possible additional user-defined settings.
+      description: |-
+        List all application settings. This includes 2FAuth native settings and possible additional admin-defined settings.
+
+        Settings endpoints are restricted to user with an `Administrator` role.
     parameters: []
     post:
       summary: Create custom setting
@@ -914,7 +917,10 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Creates a new custom setting. You are free to use this endpoint to store any data you need for your own app.
+      description: |-
+        Creates a new custom application setting. You are free to use this endpoint to store any data you need to administrate your own app.
+
+        Settings endpoints are restricted to user with an `Administrator` role.
       requestBody:
         content:
           application/json:
@@ -951,7 +957,10 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-settings-name
-      description: 'Returns a single setting, whether it is a native 2FAuth setting or a custom setting'
+      description: |-
+        Returns a single application setting, whether it is a native 2FAuth setting or a custom setting.
+
+        Settings endpoints are restricted to user with an `Administrator` role.
     put:
       summary: Update setting
       operationId: put-settings-name
@@ -973,7 +982,10 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: 'Updates a setting, whether it is a native 2FAuth setting or a custom setting. Will create the setting if it does not exist.'
+      description: |-
+        Updates an application setting, whether it is a native 2FAuth setting or a custom setting. Will create the setting if it does not exist.
+
+        Settings endpoints are restricted to user with an `Administrator` role.
       requestBody:
         content:
           application/json:
@@ -1004,7 +1016,10 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
-      description: Deletes a custom setting
+      description: |-
+        Deletes a custom application setting.
+
+        Settings endpoints are restricted to user with an `Administrator` role.
       tags:
         - settings
   /api/v1/user/name:
