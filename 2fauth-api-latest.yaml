@@ -884,12 +884,12 @@ paths:
               examples:
                 Example:
                   value:
-                    - key: displayMode
-                      value: grid
-                    - key: showTokenAsDot
+                    - key: useEncryption
+                      value: false
+                    - key: checkForUpdate
                       value: true
-                    - key: kickUserAfter
-                      value: 5
+                    - key: yourCustomSetting
+                      value: your custom value
         '401':
           $ref: '#/components/responses/Unauthorized'
       operationId: get-settings
@@ -929,8 +929,9 @@ paths:
             examples:
               Example:
                 value:
-                  key: displayMode
-                  value: grid
+                  key: useEncryption
+                  value: true
+        description: ''
       tags:
         - settings
   '/api/v1/settings/{name}':
@@ -950,8 +951,8 @@ paths:
               examples:
                 Example:
                   value:
-                    key: displayMode
-                    value: grid
+                    key: checkForUpdate
+                    value: true
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -1490,12 +1491,12 @@ components:
         $ref: '#/components/schemas/Setting'
       description: An array of settings
       examples:
-        - - key: displayMode
-            value: grid
-          - key: showTokenAsDot
+        - - key: useEncryption
+            value: false
+          - key: checkForUpdate
             value: true
-          - key: kickUserAfter
-            value: 5
+          - key: yourCustomSetting
+            value: your custom value
   parameters:
     id:
       name: id
