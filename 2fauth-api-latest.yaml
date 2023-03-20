@@ -1418,12 +1418,53 @@ components:
             twofaccounts_count: 4
       items:
         $ref: '#/components/schemas/GroupRead'
+    UserPreference:
+      title: User preference schema
+      type: object
+      examples:
+        - key: displayMode
+          value: true
+      description: A setting resource
+      x-stoplight:
+        id: b23a1d8655faa
+      properties:
+        key:
+          type: string
+          description: Name of the preference
+          example: checkForUpdate
+          maxLength: 128
+          pattern: '^[a-zA-Z]+'
+        value:
+          type:
+            - string
+            - boolean
+            - integer
+          description: Value of the preference
+          example: true
+      required:
+        - key
+        - value
+    UserPreferenceCollection:
+      title: User preference Collection schema
+      type: array
+      items:
+        $ref: '#/components/schemas/UserPreference'
+      description: An array of user preferences
+      examples:
+        - - key: displayMode
+            value: grid
+          - key: showTokenAsDot
+            value: true
+          - key: kickUserAfter
+            value: 5
+      x-stoplight:
+        id: 8a5788a19c094
     Setting:
       title: Setting schema
       type: object
       examples:
-        - key: displayMode
-          value: grid
+        - key: checkForUpdate
+          value: true
       description: A setting resource
       properties:
         key:
