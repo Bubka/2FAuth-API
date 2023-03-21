@@ -1055,6 +1055,103 @@ paths:
       security: []
       description: 'Use this endpoint to check if a registered user exists by getting its name, null otherwise'
     parameters: []
+  /api/v1/user/preferences:
+    get:
+      summary: Get all user preferences
+      tags:
+        - user preference
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferenceCollection'
+              examples:
+                Example:
+                  value:
+                    - key: displayMode
+                      value: grid
+                    - key: showTokenAsDot
+                      value: true
+                    - key: kickUserAfter
+                      value: 5
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      operationId: get-user-preferences
+      description: List all preferences of the authenticated user.
+    parameters: []
+  '/api/v1/user/preferences/{name}':
+    parameters:
+      - schema:
+          type: string
+        name: name
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags:
+        - user preference
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+              examples:
+                Example:
+                  value:
+                    key: displayMode
+                    value: grid
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-user-preferences-name
+      description: Returns a single preference of the authenticated user
+    put:
+      summary: ''
+      operationId: put-user-preferences-name
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+              examples:
+                Example:
+                  value:
+                    key: displayMode
+                    value: grid
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      tags:
+        - user preference
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+                  description: Value of the user preference
+                  example: myValue
+              required:
+                - value
+            examples:
+              Example:
+                value:
+                  value: myValue
+      description: Updates a preference of the authenticated user.
 components:
   schemas:
     2FAccountStore:
@@ -1669,5 +1766,6 @@ tags:
   - name: settings
   - name: twofaccounts
   - name: user
+  - name: user preference
 security:
   - Bearer-Auth: []
