@@ -802,6 +802,7 @@ paths:
                 icon:
                   type: string
                   description: An image file
+                  format: binary
               required:
                 - icon
             examples:
@@ -847,6 +848,7 @@ paths:
                 qrcode:
                   type: string
                   description: A QR code image file
+                  format: binary
               required:
                 - qrcode
             examples:
