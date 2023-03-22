@@ -404,21 +404,61 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/2FAccountRead'
+                type: object
+                properties:
+                  app:
+                    type: string
+                    description: The export supplier
+                  schema:
+                    type: integer
+                    example: 1
+                    description: Schema version of the migration
+                  datetime:
+                    type: string
+                    format: date-time
+                    example: '2023-03-22T11:11:33.299209Z'
+                    description: Date and time the migration has been generated
+                  data:
+                    type: array
+                    description: List of 2FA accounts
+                    items:
+                      $ref: '#/components/schemas/2FAccountExport'
+                required:
+                  - app
+                  - schema
+                  - datetime
+                  - data
               examples:
                 Example:
                   value:
-                    id: 1
-                    group_id: 1
-                    service: MySite
-                    account: john.doe
-                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-                    otp_type: totp
-                    secret: GJTGC5LUNA
-                    digits: 6
-                    algorithm: sha1
-                    period: 30
-                    counter: null
+                    app: 2fauth_v3.4.2
+                    schema: 1
+                    datetime: '2023-03-22T11:11:33.299209Z'
+                    data:
+                      - service: MySite
+                        account: john.doe
+                        icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                        icon_mime: image/png
+                        icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
+                        otp_type: totp
+                        secret: GJTGC5LUNA
+                        digits: 6
+                        algorithm: sha1
+                        period: 30
+                        counter: null
+                        legacy_uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
+                      - service: AnotherSite
+                        account: jane.doe
+                        icon: dfGdfGretDfhYUTzZEdcDtghfdgdfg.png
+                        icon_mime: image/png
+                        icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
+                        otp_type: hotp
+                        secret: GUKLZ8DCTA
+                        digits: 6
+                        algorithm: sha1
+                        period: null
+                        counter: 5
+                        legacy_uri: 'otpauth://hotp/MySite:jane.doe?secret=GUKLZ8DCTA&issuer=AnotherSite'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -1584,6 +1624,47 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/2FAccountRead'
+    2FAccountExport:
+      allOf:
+        - type: object
+          properties:
+            icon_mime:
+              type:
+                - string
+                - 'null'
+              example: image/png
+              description: Mime-type of the image
+            icon_file:
+              type:
+                - string
+                - 'null'
+              example: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
+              description: 'Content of the image, encoded in base32'
+            legacy_uri:
+              type:
+                - string
+              example: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
+              description: The original otpauth URI of the 2FA account
+          required:
+            - icon_mime
+            - icon_file
+            - legacy_uri
+        - $ref: '#/components/schemas/2FAccountStore'
+      title: Export 2FAccount schema
+      description: A single exported 2FA account
+      examples:
+        - icon_mime: image/png
+          icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
+          legacy_uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
+          service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: totp
+          secret: GJTGC5LUNA
+          digits: 6
+          algorithm: sha1
+          period: 30
+          counter: null
     Otp:
       title: Otp schema
       type: object
