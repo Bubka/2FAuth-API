@@ -1227,9 +1227,9 @@ paths:
       operationId: get-user-name
       security: []
       description: |-
-        Use this endpoint to check if a registered user exists by getting its name, null otherwise.
-
         This endpoint is deprecated since API v1.1.0
+
+        Use this endpoint to check if a registered user exists by getting its name, null otherwise.
       deprecated: true
     parameters: []
   /api/v1/user/preferences:
