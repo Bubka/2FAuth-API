@@ -400,32 +400,54 @@ paths:
       operationId: post-twofaccounts-migration
       responses:
         '200':
-          description: OK
+          description: |-
+            Ok
+
+            > 2FA accounts are always returned with an ID between -2 and 0:
+            > - `id: -2` means the returned account does not reflect the exact submited data because those data are invalid or unreadable. You should not used this account definition.
+            > - `id: -1` means the returned account already exists in the authenticated user accounts in database. It's a valid account but probably useless you should discard.
+            > - `id: 0` means the returned account is successfully migrated and is valid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/2FAccountRead'
+                type: array
+                items:
+                  $ref: '#/components/schemas/2FAccountMigrated'
               examples:
                 Example:
                   value:
-                    id: 1
-                    group_id: null
-                    service: MySite
-                    account: john.doe
-                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-                    otp_type: totp
-                    secret: GJTGC5LUNA
-                    digits: 6
-                    algorithm: sha1
-                    period: 30
-                    counter: null
+                    - id: 0
+                      group_id: null
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      secret: GJTGC5LUNA
+                      digits: 6
+                      algorithm: sha1
+                      period: 30
+                      counter: null
+                    - id: -1
+                      group_id: null
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      secret: GJTGC5LUNA
+                      digits: 6
+                      algorithm: sha1
+                      period: 30
+                      counter: null
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/ServerError'
-      description: Use this endpoint to convert exported 2FAs from another 2FA app to a list of 2FA resources you can POST using the API to create new 2FA accounts.
+      description: |-
+        Use this endpoint to convert exported 2FAs from another 2FA app to a list of 2FA resources you can POST using the API to create new 2FA accounts.
+
+        > This endpoint does not store anything in database.
       requestBody:
         content:
           application/json:
@@ -1674,6 +1696,40 @@ components:
         - icon_mime: image/png
           icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
           legacy_uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
+          service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: totp
+          secret: GJTGC5LUNA
+          digits: 6
+          algorithm: sha1
+          period: 30
+          counter: null
+    2FAccountMigrated:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 0
+              description: ID of the 2FA account
+              minimum: -2
+              maximum: 0
+            group_id:
+              type:
+                - integer
+                - 'null'
+              description: The ID of the group the 2FA account belongs to
+              minimum: 1
+              default: null
+          required:
+            - id
+            - group_id
+        - $ref: '#/components/schemas/2FAccountStore'
+      description: A single migrated 2FA account
+      examples:
+        - id: 0
+          group_id: null
           service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
