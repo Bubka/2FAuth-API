@@ -501,6 +501,27 @@ paths:
       tags:
         - twofaccounts
     parameters: []
+  /api/v1/twofaccounts/export:
+    get:
+      summary: Export 2FA accounts
+      operationId: get-twofaccounts-export
+      responses:
+        '200':
+          $ref: '#/components/responses/OK'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Exports a list of 2FA accounts of the authenticated user to a json file
+      parameters:
+        - $ref: '#/components/parameters/ids'
+      tags:
+        - twofaccounts
+    parameters: []
   /api/v1/groups:
     get:
       summary: Get all groups
