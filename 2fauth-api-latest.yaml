@@ -394,6 +394,112 @@ paths:
           $ref: '#/components/responses/ValidationError'
       operationId: post-twofaccounts-otp
       description: Returns a fresh One-Time password with related parameters for account defined by the provided data
+  /api/v1/twofaccounts/migration:
+    post:
+      summary: Convert a migration resource
+      operationId: post-twofaccounts-migration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountRead'
+              examples:
+                Example:
+                  value:
+                    id: 1
+                    group_id: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    secret: GJTGC5LUNA
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Use this endpoint to convert exported 2FAs from another 2FA app to a list of 2FA resources you can POST using the API to create new 2FA accounts.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+                  description: The migration payload
+              required:
+                - payload
+            examples:
+              Example for Google Authenticator:
+                value:
+                  payload: 'otpauth-migration://offline?data=w0SnrWITY/RFhILYWNjb3VudF9iaXMaC3NlcnZpY2VfYmlzIAEoATACEAEYASAA'
+                  withSecret: true
+              Example for a list of otpauth URIs:
+                value:
+                  payload: |-
+                    otpauth://totp/dropbox:john?secret=T5THFHVVRSDF4AWS
+                    otpauth://totp/dropbox:jane?secret=A4GRFHVVRBGY7UIW
+                  withSecret: true
+              Example for a JSON payload:
+                value:
+                  payload: |-
+                    {
+                    "version":1,
+                    "header":{
+                    "slots":null,
+                    "params":null
+                    },
+                    "db":{
+                    "version":2,
+                    "entries":[
+                    {
+                    "type":"totp",
+                    "uuid":"5be1c189-240d-5fe1-930b-a78xb669zd86",
+                    "name":"JohnDOE",
+                    "issuer":"Facebook",
+                    "note":"",
+                    "icon":null,
+                    "info":{
+                    "secret":"A4GRFTVVRBGY7UIW",
+                    "algo":"SHA1",
+                    "digits":6,
+                    "period":30,
+                    "counter":30
+                    }
+                    }
+                    ]
+                    }
+                    }
+                  withSecret: true
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The migration file
+              required:
+                - file
+            examples:
+              Example:
+                value:
+                  file: string
+        description: |-
+          This endpoint accepts 2 different body schemas:
+          - A JSON object which contain a migration payload. Typically the content of an export file or the decoded content of a QR code.
+          - A multi-part/form-data to submit an export file directly
+      tags:
+        - twofaccounts
+      parameters:
+        - $ref: '#/components/parameters/withSecret'
+    parameters: []
   /api/v1/twofaccounts/preview:
     post:
       summary: Preview 2FA account
