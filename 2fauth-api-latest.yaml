@@ -423,6 +423,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
       description: Use this endpoint to convert exported 2FAs from another 2FA app to a list of 2FA resources you can POST using the API to create new 2FA accounts.
       requestBody:
         content:
@@ -917,6 +919,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
       operationId: post-icons
       description: 'Use this endpoint to upload and store an icon (an image file: jpeg, png, bmp, gif, svg, or webp) on the server'
       requestBody:
@@ -1029,6 +1033,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '422':
           $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
       tags:
         - qrcode
     parameters: []
@@ -1946,6 +1952,23 @@ components:
                 message: bad request
                 reason:
                   param1: This request accept only one parameter
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An information message
+                example: Something failed on server side
+            required:
+              - message
+          examples:
+            Example:
+              value:
+                message: Something failed on server side
   securitySchemes:
     Bearer-Auth:
       type: http
