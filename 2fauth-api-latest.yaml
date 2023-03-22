@@ -78,8 +78,10 @@ paths:
                       counter: 15
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       operationId: get-twofaccounts
-      description: Find all existing 2FA accounts
+      description: Find all 2FA accounts of the authenticated user
       parameters:
         - $ref: '#/components/parameters/withSecret'
     parameters: []
@@ -88,7 +90,7 @@ paths:
       tags:
         - twofaccounts
       operationId: post-twofaccounts
-      description: Creates a new 2FA account
+      description: Creates a new 2FA account for the authenticated user
       requestBody:
         content:
           application/json:
@@ -151,12 +153,14 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
       tags:
         - twofaccounts
       description: |-
-        Mass deletes 2FA accounts matching the IDs passed as query parameter.
+        Mass deletes 2FA accounts of the authenticated user matching the IDs passed as query parameter.
 
         A `204 — No Content` response will be returned even if some resources no longer exist before delete.
       parameters:
@@ -203,10 +207,12 @@ paths:
                     counter: null
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id
-      description: Returns a single 2FA account
+      description: Returns a single 2FA account of the authenticated user
       parameters:
         - $ref: '#/components/parameters/withSecret'
     put:
@@ -221,11 +227,13 @@ paths:
                 $ref: '#/components/schemas/2FAccountRead'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Updates a 2FA account
+      description: Updates a 2FA account of the authenticated user
       requestBody:
         content:
           application/json:
@@ -250,11 +258,13 @@ paths:
       responses:
         '204':
           description: No Content
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
         - twofaccounts
-      description: Deletes a 2FA account
+      description: Deletes a 2FA account of the authenticated user
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -285,10 +295,12 @@ paths:
                     qrcode: 'data:image/png;base64,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'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
-      description: Returns a QR code that represents the 2FA account
+      description: Returns a QR code that represents the 2FA account of the authenticated user
   '/api/v1/twofaccounts/{id}/otp':
     parameters:
       - name: id
@@ -326,10 +338,12 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-otp
-      description: Returns a fresh One-Time Password with related parameters for the existing account matching the specified ID
+      description: Returns a fresh One-Time Password for the 2FA account of the authenticated user matching the specified ID
   /api/v1/twofaccounts/otp:
     parameters: []
     post:
@@ -372,6 +386,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '422':
@@ -432,9 +448,11 @@ paths:
           $ref: '#/components/responses/OK'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Saves the order of 2FA accounts. This allows to always serve the 2FA accounts collection sorted in a user defined order.
+      description: Saves the order of the 2FA accounts of the authenticated user. This allows to always serve the 2FA accounts collection sorted in a user defined order.
       requestBody:
         content:
           application/json:
@@ -473,9 +491,11 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Removes 2FA accounts from any group
+      description: Removes a list of 2FA accounts of the authenticated user from any group
       parameters:
         - $ref: '#/components/parameters/ids'
       tags:
@@ -504,8 +524,10 @@ paths:
                       twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       operationId: get-groups
-      description: Find all existing groups
+      description: Find all groups of the authenticated user
     post:
       summary: Create Group
       operationId: post-groups
@@ -537,7 +559,7 @@ paths:
                   name: Social networks
       tags:
         - groups
-      description: Creates a new group
+      description: Creates a new group for the authenticated user
     parameters: []
   '/api/v1/groups/{id}':
     parameters:
@@ -561,10 +583,12 @@ paths:
                     twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-groups-id
-      description: Returns a single group
+      description: Returns a single group of the authenticated user
     put:
       summary: Update group
       operationId: put-groups-id
@@ -583,11 +607,13 @@ paths:
                     twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Updates a group
+      description: Updates a group of the authenticated user
       requestBody:
         content:
           application/json:
@@ -602,10 +628,12 @@ paths:
     delete:
       summary: Delete group
       operationId: delete-groups-id
-      description: Deletes a group. This will not delete any assigned 2FA accounts.
+      description: Deletes a group of the authenticated user. This will not delete any assigned 2FA accounts.
       responses:
         '204':
           description: No Content
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
@@ -632,12 +660,14 @@ paths:
                     twofaccounts_count: 4
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
       operationId: post-groups-id-assign
-      description: Adds a list of 2FA accounts to a group. An account previously assigned to another group will be removed from its former group.
+      description: Adds a list of 2FA accounts to a group of the authenticated user. An account previously assigned to another group will be removed from its former group. The 2FA accounts must be owned by the authenticated user.
       requestBody:
         content:
           application/json:
@@ -721,10 +751,12 @@ paths:
                       counter: 15
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-groups-id-twofaccounts
-      description: Finds all existing 2FA accounts assigned to a group
+      description: Finds all existing 2FA accounts assigned to a group of the authenticated user
       parameters:
         - $ref: '#/components/parameters/withSecret'
   /api/v1/icons:
@@ -795,6 +827,8 @@ paths:
           description: No Content
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       description: Deletes an icon from the server
       tags:
         - icons
@@ -892,6 +926,8 @@ paths:
                       value: your custom value
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
       operationId: get-settings
       description: |-
         List all application settings. This includes 2FAuth native settings and possible additional admin-defined settings.
@@ -915,6 +951,8 @@ paths:
                     value: grid
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
       description: |-
@@ -955,6 +993,8 @@ paths:
                     value: true
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-settings-name
@@ -981,6 +1021,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
       description: |-
@@ -1015,6 +1057,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
       description: |-
@@ -1669,7 +1713,24 @@ components:
           examples:
             Example:
               value:
-                message: Unauthenticated.
+                message: Unauthenticated
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An information message
+                example: Forbidden
+            required:
+              - message
+          examples:
+            Example:
+              value:
+                message: Forbidden
     ValidationError:
       description: Validation errors
       content:
