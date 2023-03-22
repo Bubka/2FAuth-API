@@ -1266,13 +1266,9 @@ paths:
     parameters: []
   '/api/v1/user/preferences/{name}':
     parameters:
-      - schema:
-          type: string
-        name: name
-        in: path
-        required: true
+      - $ref: '#/components/parameters/name'
     get:
-      summary: Your GET endpoint
+      summary: Find user preference by name
       tags:
         - user preference
       responses:
@@ -1294,7 +1290,7 @@ paths:
       operationId: get-user-preferences-name
       description: Returns a single preference of the authenticated user
     put:
-      summary: ''
+      summary: Update user preference
       operationId: put-user-preferences-name
       responses:
         '200':
@@ -1705,7 +1701,7 @@ components:
       examples:
         - key: displayMode
           value: true
-      description: A setting resource
+      description: A user preference resource
       x-stoplight:
         id: b23a1d8655faa
       properties:
@@ -1812,7 +1808,7 @@ components:
         pattern: '^[a-zA-Z]+'
         maxLength: 128
         example: displayMode
-      description: Name of the setting
+      description: Name of the resource
   responses:
     NotFound:
       description: Not Found
