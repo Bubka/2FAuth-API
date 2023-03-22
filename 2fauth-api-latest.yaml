@@ -404,61 +404,21 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  app:
-                    type: string
-                    description: The export supplier
-                  schema:
-                    type: integer
-                    example: 1
-                    description: Schema version of the migration
-                  datetime:
-                    type: string
-                    format: date-time
-                    example: '2023-03-22T11:11:33.299209Z'
-                    description: Date and time the migration has been generated
-                  data:
-                    type: array
-                    description: List of 2FA accounts
-                    items:
-                      $ref: '#/components/schemas/2FAccountExport'
-                required:
-                  - app
-                  - schema
-                  - datetime
-                  - data
+                $ref: '#/components/schemas/2FAccountRead'
               examples:
                 Example:
                   value:
-                    app: 2fauth_v3.4.2
-                    schema: 1
-                    datetime: '2023-03-22T11:11:33.299209Z'
-                    data:
-                      - service: MySite
-                        account: john.doe
-                        icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-                        icon_mime: image/png
-                        icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
-                        otp_type: totp
-                        secret: GJTGC5LUNA
-                        digits: 6
-                        algorithm: sha1
-                        period: 30
-                        counter: null
-                        legacy_uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
-                      - service: AnotherSite
-                        account: jane.doe
-                        icon: dfGdfGretDfhYUTzZEdcDtghfdgdfg.png
-                        icon_mime: image/png
-                        icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
-                        otp_type: hotp
-                        secret: GUKLZ8DCTA
-                        digits: 6
-                        algorithm: sha1
-                        period: null
-                        counter: 5
-                        legacy_uri: 'otpauth://hotp/MySite:jane.doe?secret=GUKLZ8DCTA&issuer=AnotherSite'
+                    id: 1
+                    group_id: null
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    secret: GJTGC5LUNA
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
@@ -655,7 +615,65 @@ paths:
       operationId: get-twofaccounts-export
       responses:
         '200':
-          $ref: '#/components/responses/OK'
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  app:
+                    type: string
+                    description: The export supplier
+                  schema:
+                    type: integer
+                    example: 1
+                    description: Schema version of the migration
+                  datetime:
+                    type: string
+                    format: date-time
+                    example: '2023-03-22T11:11:33.299209Z'
+                    description: Date and time the migration has been generated
+                  data:
+                    type: array
+                    description: List of 2FA accounts
+                    items:
+                      $ref: '#/components/schemas/2FAccountExport'
+                required:
+                  - app
+                  - schema
+                  - datetime
+                  - data
+              examples:
+                Example:
+                  value:
+                    app: 2fauth_v3.4.2
+                    schema: 1
+                    datetime: '2023-03-22T11:11:33.299209Z'
+                    data:
+                      - service: MySite
+                        account: john.doe
+                        icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                        icon_mime: image/png
+                        icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
+                        otp_type: totp
+                        secret: GJTGC5LUNA
+                        digits: 6
+                        algorithm: sha1
+                        period: 30
+                        counter: null
+                        legacy_uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
+                      - service: AnotherSite
+                        account: jane.doe
+                        icon: dfGdfGretDfhYUTzZEdcDtghfdgdfg.png
+                        icon_mime: image/png
+                        icon_file: iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMATSSZLxZNZ7LxhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMMcYYY4wxxhhjjDHGGGOMKW//A0lifIQSJgQuAAAAAElFTkSuQmCC
+                        otp_type: hotp
+                        secret: GUKLZ8DCTA
+                        digits: 6
+                        algorithm: sha1
+                        period: null
+                        counter: 5
+                        legacy_uri: 'otpauth://hotp/MySite:jane.doe?secret=GUKLZ8DCTA&issuer=AnotherSite'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
