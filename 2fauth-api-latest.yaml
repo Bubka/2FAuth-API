@@ -1149,7 +1149,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
     parameters: []
     post:
       summary: Create custom setting
@@ -1191,7 +1191,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
   '/api/v1/settings/{name}':
     parameters:
       - $ref: '#/components/parameters/name'
@@ -1224,7 +1224,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
     put:
       summary: Update setting
       operationId: put-settings-name
@@ -1272,7 +1272,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
     delete:
       summary: Delete custom setting
       operationId: delete-settings-name
@@ -1295,7 +1295,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
   /api/v1/user/name:
     get:
       summary: Get user name
