@@ -1118,8 +1118,6 @@ paths:
   /api/v1/settings:
     get:
       summary: Get all settings
-      tags:
-        - settings
       responses:
         '200':
           description: OK
@@ -1145,6 +1143,11 @@ paths:
         List all application settings. This includes 2FAuth native settings and possible additional admin-defined settings.
 
         Settings endpoints are restricted to user with an `Administrator` role.
+      tags:
+        - settings
+      x-badges:
+        - color: orange
+          label: admin
     parameters: []
     post:
       summary: Create custom setting
@@ -1184,13 +1187,14 @@ paths:
         description: ''
       tags:
         - settings
+      x-badges:
+        - color: orange
+          label: admin
   '/api/v1/settings/{name}':
     parameters:
       - $ref: '#/components/parameters/name'
     get:
       summary: Find setting by name
-      tags:
-        - settings
       responses:
         '200':
           description: OK
@@ -1214,6 +1218,11 @@ paths:
         Returns a single application setting, whether it is a native 2FAuth setting or a custom setting.
 
         Settings endpoints are restricted to user with an `Administrator` role.
+      tags:
+        - settings
+      x-badges:
+        - color: orange
+          label: admin
     put:
       summary: Update setting
       operationId: put-settings-name
@@ -1259,6 +1268,9 @@ paths:
                   value: myValue
       tags:
         - settings
+      x-badges:
+        - color: orange
+          label: admin
     delete:
       summary: Delete custom setting
       operationId: delete-settings-name
@@ -1279,6 +1291,9 @@ paths:
         Settings endpoints are restricted to user with an `Administrator` role.
       tags:
         - settings
+      x-badges:
+        - color: orange
+          label: admin
   /api/v1/user/name:
     get:
       summary: Get user name
