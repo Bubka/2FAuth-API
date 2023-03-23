@@ -269,7 +269,7 @@ paths:
     parameters:
       - $ref: '#/components/parameters/id'
     get:
-      summary: Get a QR code of a 2FA account
+      summary: Encode a 2FA account in a QR code
       tags:
         - qrcode
       responses:
@@ -300,7 +300,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
-      description: Returns a QR code that represents a 2FA account of the authenticated user
+      description: Returns a QR code that represents a 2FA account owned by the authenticated user
   '/api/v1/twofaccounts/{id}/otp':
     parameters:
       - name: id
@@ -1045,7 +1045,9 @@ paths:
     post:
       summary: Decode a QR code
       operationId: post-qrcode-decode
-      description: 'Use this endpoint to decode a QR code (an image file: jpeg, png, bmp, gif, svg, or webp)'
+      description: |-
+        Use this endpoint to decode a QR code (an image file: jpeg, png, bmp, gif, svg, or webp).
+        The QR code is expected to be a 2FA resource but any QR code will be decoded.
       requestBody:
         content:
           multipart/form-data:
