@@ -2125,13 +2125,13 @@ components:
       description: Provide your bearer token in the Authorization header when making requests to protected resources. See the 'Settings > OAuth' section of your 2FAuth instance to generate personal access tokens.
   requestBodies: {}
 tags:
+  - name: twofaccounts
+  - name: one-time password
   - name: groups
   - name: icons
-  - name: one-time password
   - name: qrcode
-  - name: settings
-  - name: twofaccounts
-  - name: user
   - name: user preference
+  - name: settings
+  - name: user
 security:
   - Bearer-Auth: []
