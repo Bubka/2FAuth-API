@@ -902,6 +902,7 @@ paths:
       summary: Get all 2FA accounts of a group
       tags:
         - groups
+        - twofaccounts
       responses:
         '200':
           description: OK
