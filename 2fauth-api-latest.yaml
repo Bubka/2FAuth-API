@@ -76,6 +76,31 @@ paths:
                       secret: QD5TG6UUJ89F44GV
                       period: null
                       counter: 15
+                Example with otp object:
+                  value:
+                    - id: 1
+                      group_id: 1
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      digits: 6
+                      algorithm: sha1
+                      period: 30
+                      counter: null
+                      otp:
+                        password: '045698'
+                        generated_at: 1701788671
+                    - id: 2
+                      group_id: 1
+                      service: MyOtherSite
+                      account: john.doe
+                      icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+                      otp_type: hotp
+                      digits: 8
+                      algorithm: sha1
+                      period: null
+                      counter: 15
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -84,6 +109,17 @@ paths:
       description: Find all 2FA accounts of the authenticated user
       parameters:
         - $ref: '#/components/parameters/withSecret'
+        - schema:
+            type: string
+            example: '1,20,9,456'
+          in: query
+          name: ids
+          description: Comma-separated list of ids to filter returned 2FA accounts
+        - schema:
+            type: boolean
+          in: query
+          name: withOtp
+          description: Set to true (or 1) to append an OTP object to the returned 2FA accounts of type TOTP
     parameters: []
     post:
       summary: Create 2FA account
