@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: 2FAuth API
-  version: 1.2.0
+  version: 1.1.0
   description: |-
     This is the definition (following OpenAPI 3.1 specification) of the REST API of [2FAuth](https://github.com/Bubka/2FAuth), a web app to manage your Two-Factor Authentication (2FA) accounts and generate their security passwords.
 
