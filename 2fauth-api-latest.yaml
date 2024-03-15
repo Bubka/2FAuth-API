@@ -1343,36 +1343,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: The user Id
-                  name:
-                    type: string
-                    description: The username
-                    example: John
-                  email:
-                    type: string
-                    format: email
-                    description: The user email
-                  preferences:
-                    description: The user preferences
-                    type: object
-                    properties:
-                      preference_name_1:
-                        type: string
-                        description: A user preference that is a string
-                      preference_name_2:
-                        type: integer
-                        description: A user preference that is a number
-                      preference_name_3:
-                        type: boolean
-                        description: A user preference that is a boolean
-                  is_admin:
-                    type: boolean
-                    default: false
-                    description: The user has administrator rights or not
+                $ref: '#/components/schemas/UserRead'
               examples:
                 Example:
                   value:
