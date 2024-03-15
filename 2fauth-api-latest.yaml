@@ -1765,13 +1765,6 @@ paths:
         `/users` endpoints are restricted to user with an `Administrator` role.
       tags:
         - users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-            examples: {}
-        description: ''
       x-badges:
         - color: orange
           label: 'admin'
