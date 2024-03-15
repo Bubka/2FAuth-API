@@ -1530,7 +1530,7 @@ paths:
       description: |-
         Find all registered users.
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       parameters: []
       tags:
         - users
@@ -1544,7 +1544,7 @@ paths:
       description: |-
         Registers a new user.
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       responses:
         '201':
           description: Created
@@ -1629,7 +1629,7 @@ paths:
       description: |-
         Returns a single registered user.
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       parameters: []
       tags:
         - users
@@ -1649,7 +1649,7 @@ paths:
       description: |-
         Deletes a registered user.
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       x-badges:
         - color: orange
           label: 'admin'
@@ -1694,7 +1694,7 @@ paths:
       description: |-
         Grants (or denies) administrator permissions to a user.
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       tags:
         - users
       requestBody:
@@ -1762,7 +1762,7 @@ paths:
       description: |-
         Resets a user password. 
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       tags:
         - users
       requestBody:
@@ -1800,7 +1800,7 @@ paths:
       description: |-
         Revokes all personal access tokens of a user. 
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       tags:
         - users
       x-badges:
@@ -1831,7 +1831,7 @@ paths:
       description: |-
         Revokes all webauthn credentials of a user. 
 
-        Users endpoints are restricted to user with an `Administrator` role.
+        `/users` endpoints are restricted to user with an `Administrator` role.
       tags:
         - users
       x-badges:
