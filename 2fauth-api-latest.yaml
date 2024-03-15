@@ -2036,6 +2036,136 @@ components:
             value: true
           - key: yourCustomSetting
             value: your custom value
+    UserRead:
+      title: UserRead
+      x-stoplight:
+        id: d62wz6a826u78
+      type: object
+      examples:
+        - id: 0
+          name: John
+          email: user@example.com
+          oauth_provider: string
+          preferences:
+            preference_name_1: string
+            preference_name_2: 0
+            preference_name_3: true
+          is_admin: false
+      description: A single user resource
+      properties:
+        id:
+          type: integer
+          description: The user Id
+        name:
+          type: string
+          description: The username
+          example: John
+        email:
+          type: string
+          format: email
+          description: The user email
+        oauth_provider:
+          type:
+            - string
+            - 'null'
+          description: 'The OAUTH provider for SSO, if relevant'
+        preferences:
+          description: 'An object which list user preferences values. The number of preferences can vary, as can the name of the preferences.'
+          type: object
+          properties:
+            preference_name_1:
+              type: string
+              description: A user preference that is a string
+            preference_name_2:
+              type: integer
+              description: A user preference that is a number
+            preference_name_3:
+              type: boolean
+              description: A user preference that is a boolean
+        is_admin:
+          type: boolean
+          default: false
+          description: The user has administrator rights or not
+      required:
+        - id
+        - name
+        - email
+        - oauth_provider
+        - preferences
+        - is_admin
+    UserStore:
+      title: Store User schema
+      x-stoplight:
+        id: b36cpd4jsyjoz
+      type: object
+      description: Expected informations to register a user
+      examples:
+        - name: john doe
+          email: johndoe@example.com
+          password: P4sSw0rD
+          password_confirmation: P4sSw0rD
+          is_admin: true
+      properties:
+        name:
+          type: string
+          description: The name of the user
+        email:
+          type: string
+          description: The email address of the user
+        password:
+          type: string
+          description: The password of the user
+        password_confirmation:
+          type: string
+          description: The password of the user
+        is_admin:
+          type: boolean
+          description: Grant or deny administrator permissions to the user
+      required:
+        - name
+        - email
+        - password
+        - password_confirmation
+        - is_admin
+    UserManagerRead:
+      allOf:
+        - $ref: '#/components/schemas/UserRead'
+        - type: object
+          properties:
+            twofaccounts_count:
+              type: integer
+              description: Number of 2FA accounts registered
+            last_seen_at:
+              type: string
+              description: Last time the user was seen
+            created_at:
+              type: string
+              description: Time of user registration
+          required:
+            - twofaccounts_count
+            - last_seen_at
+            - created_at
+      examples:
+        - id: 0
+          name: John
+          email: user@example.com
+          oauth_provider: string
+          preferences:
+            preference_name_1: string
+            preference_name_2: 0
+            preference_name_3: true
+          is_admin: false
+          twofaccounts_count: 10
+          last_seen_at: 1 weeks ago
+          created_at: 3 weeks ago
+    UserManagerCollection:
+      title: UserManagerCollection
+      x-stoplight:
+        id: 01f2nm1ra2hqf
+      type: array
+      description: An array of managed users
+      items:
+        $ref: '#/components/schemas/UserManagerRead'
   parameters:
     id:
       name: id
