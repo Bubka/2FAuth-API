@@ -1536,7 +1536,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
     parameters: []
     post:
       summary: Create user
@@ -1576,7 +1576,7 @@ paths:
       parameters: []
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
       tags:
         - users
       requestBody:
@@ -1635,7 +1635,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
     delete:
       summary: Delete user
       operationId: delete-users-id
@@ -1652,7 +1652,7 @@ paths:
         Users endpoints are restricted to user with an `Administrator` role.
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
       tags:
         - users
   '/api/v1/users/{id}/promote':
@@ -1715,7 +1715,7 @@ paths:
         description: ''
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
   '/api/v1/users/{id}/password/reset':
     parameters:
       - name: id
@@ -1774,7 +1774,7 @@ paths:
         description: ''
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
   '/api/v1/users/{id}/pats':
     parameters:
       - name: id
@@ -1805,7 +1805,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
   '/api/v1/users/{id}/credentials':
     parameters:
       - name: id
@@ -1836,7 +1836,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: admin
+          label: 'admin'
 components:
   schemas:
     2FAccountStore:
