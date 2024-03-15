@@ -1379,6 +1379,7 @@ paths:
                     id: 0
                     name: John
                     email: user@example.com
+                    oauth_provider: string
                     preferences:
                       preference_name_1: string
                       preference_name_2: 0
