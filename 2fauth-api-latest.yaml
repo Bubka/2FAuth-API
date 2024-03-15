@@ -339,13 +339,7 @@ paths:
       description: Returns a QR code that represents a 2FA account owned by the authenticated user
   '/api/v1/twofaccounts/{id}/otp':
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          example: 1
-        description: The ID of the resource
+      - $ref: '#/components/parameters/id'
     get:
       summary: Get a One-Time password
       tags:
