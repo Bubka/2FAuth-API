@@ -1485,6 +1485,358 @@ paths:
                 value:
                   value: myValue
       description: Updates a preference of the authenticated user.
+  /api/v1/users:
+    get:
+      summary: Get all registered users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserManagerCollection'
+              examples:
+                Example:
+                  value:
+                    - id: 0
+                      name: John
+                      email: user@example.com
+                      oauth_provider: string
+                      preferences:
+                        preference_name_1: string
+                        preference_name_2: 0
+                        preference_name_3: true
+                      is_admin: false
+                      twofaccounts_count: 5
+                      last_seen_at: Yesterday
+                      created_at: string
+                    - id: 1
+                      name: Jane
+                      email: jane@example.com
+                      oauth_provider: null
+                      preferences:
+                        preference_name_1: string
+                        preference_name_2: 0
+                        preference_name_3: true
+                      is_admin: true
+                      twofaccounts_count: 10
+                      last_seen_at: Today
+                      created_at: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      operationId: get-users
+      description: |-
+        Find all registered users.
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      parameters: []
+      tags:
+        - users
+      x-badges:
+        - color: orange
+          label: admin
+    parameters: []
+    post:
+      summary: Create user
+      operationId: post-users
+      description: |-
+        Registers a new user.
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserManagerRead'
+              examples:
+                Example:
+                  value:
+                    id: 0
+                    name: John
+                    email: johndoe@example.com
+                    oauth_provider: null
+                    preferences:
+                      preference_name_1: string
+                      preference_name_2: 0
+                      preference_name_3: true
+                    is_admin: true
+                    twofaccounts_count: 0
+                    last_seen_at: string
+                    created_at: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      parameters: []
+      x-badges:
+        - color: orange
+          label: admin
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStore'
+            examples:
+              Example:
+                value:
+                  name: john doe
+                  email: johndoe@example.com
+                  password: P4sSw0rD
+                  password_confirmation: P4sSw0rD
+                  is_admin: true
+  '/api/v1/users/{id}':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Find user by ID
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserManagerRead'
+              examples:
+                Example:
+                  value:
+                    id: 0
+                    name: John
+                    email: user@example.com
+                    oauth_provider: string
+                    preferences:
+                      preference_name_1: string
+                      preference_name_2: 0
+                      preference_name_3: true
+                    is_admin: false
+                    twofaccounts_count: 0
+                    last_seen_at: string
+                    created_at: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-users-id
+      description: |-
+        Returns a single registered user.
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      parameters: []
+      tags:
+        - users
+      x-badges:
+        - color: orange
+          label: admin
+    delete:
+      summary: Delete user
+      operationId: delete-users-id
+      responses:
+        '204':
+          description: No Content
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: |-
+        Deletes a registered user.
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      x-badges:
+        - color: orange
+          label: admin
+      tags:
+        - users
+  '/api/v1/users/{id}/promote':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    patch:
+      summary: Promote user as administrator
+      operationId: patch-users-id-promote
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserManagerRead'
+              examples:
+                Example:
+                  value:
+                    id: 0
+                    name: John
+                    email: user@example.com
+                    oauth_provider: string
+                    preferences:
+                      preference_name_1: string
+                      preference_name_2: 0
+                      preference_name_3: true
+                    is_admin: true
+                    twofaccounts_count: 0
+                    last_seen_at: string
+                    created_at: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: |-
+        Grants (or denies) administrator permissions to a user.
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_admin:
+                  type: boolean
+                  description: The user has administrator rights or not
+              required:
+                - is_admin
+            examples:
+              Example:
+                value:
+                  is_admin: true
+        description: ''
+      x-badges:
+        - color: orange
+          label: admin
+  '/api/v1/users/{id}/password/reset':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+          minimum: 1
+        description: The ID of the resource
+    patch:
+      summary: Reset user password
+      operationId: patch-users-id-password-reset
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserManagerRead'
+              examples:
+                Example:
+                  value:
+                    id: 0
+                    name: John
+                    email: user@example.com
+                    oauth_provider: string
+                    preferences:
+                      preference_name_1: string
+                      preference_name_2: 0
+                      preference_name_3: true
+                    is_admin: true
+                    twofaccounts_count: 0
+                    last_seen_at: string
+                    created_at: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: |-
+        Resets a user password. 
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+            examples: {}
+        description: ''
+      x-badges:
+        - color: orange
+          label: admin
+  '/api/v1/users/{id}/pats':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+          minimum: 1
+        description: The ID of the resource
+    delete:
+      summary: Revoke user's personal access tokens
+      operationId: delete-users-id-pats
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: |-
+        Revokes all personal access tokens of a user. 
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      tags:
+        - users
+      x-badges:
+        - color: orange
+          label: admin
+  '/api/v1/users/{id}/credentials':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+          minimum: 1
+        description: The ID of the resource
+    delete:
+      summary: Revoke user's webauthn credentials
+      operationId: delete-users-id-credentials
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: |-
+        Revokes all webauthn credentials of a user. 
+
+        Users endpoints are restricted to user with an `Administrator` role.
+      tags:
+        - users
+      x-badges:
+        - color: orange
+          label: admin
 components:
   schemas:
     2FAccountStore:
