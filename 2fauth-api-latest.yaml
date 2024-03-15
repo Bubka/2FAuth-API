@@ -1760,7 +1760,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       description: |-
-        Resets a user password. 
+        Resets a user password. The user's password will be reset to a new, randomly generated password. The user will then receive an email prompting him to change its password.
 
         `/users` endpoints are restricted to user with an `Administrator` role.
       tags:
