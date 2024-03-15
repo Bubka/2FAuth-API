@@ -1,5 +1,12 @@
 # Change log
 
+## [1.3.0] - 2024-03-15
+
+### Added
+
+- `/api/v1/users` paths
+- `oauth_provider` property to the response body of `/api/v1/user` GET path
+
 ## [1.2.0] - 2023-12-22
 
 ### Added
