@@ -1,5 +1,11 @@
 # Change log
 
+## [1.4.0] - 2024-05-14
+
+### Added
+
+- `/api/v1/users/{id}/authentications` GET path
+
 ## [1.3.0] - 2024-03-15
 
 ### Added
