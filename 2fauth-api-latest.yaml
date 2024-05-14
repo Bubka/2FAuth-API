@@ -1799,6 +1799,90 @@ paths:
       x-badges:
         - color: orange
           label: 'admin'
+  '/api/v1/users/{id}/authentications':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+          minimum: 1
+        description: The ID of the resource
+    get:
+      summary: Get user's authentications log
+      operationId: get-users-id-authentications
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationLogCollection'
+              examples:
+                Example:
+                  value:
+                    - id: 19
+                      ip_address: 127.0.0.1
+                      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+                      browser: Firefox
+                      platform: Windows
+                      device: desktop
+                      login_at: 'Thu, May 2, 2024 6:29 AM'
+                      logout_at: null
+                      login_successful: false
+                      duration: null
+                      login_method: password
+                    - id: 20
+                      ip_address: 127.0.0.1
+                      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+                      browser: Firefox
+                      platform: Windows
+                      device: desktop
+                      login_at: 'Thu, May 2, 2024 6:32 AM'
+                      logout_at: 'Thu, May 2, 2024 6:34 AM'
+                      login_successful: true
+                      duration: 2 minutes
+                      login_method: password
+                    - id: 21
+                      ip_address: 127.0.0.1
+                      user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+                      browser: Firefox
+                      platform: Windows
+                      device: desktop
+                      login_at: 'Thu, May 2, 2024 6:39 AM'
+                      logout_at: null
+                      login_successful: true
+                      duration: null
+                      login_method: password
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: |-
+        Lists user's authentications log records.
+
+        `/users` endpoints are restricted to user with an `Administrator` role.
+      tags:
+        - users
+      parameters:
+        - schema:
+            type: number
+            example: 5
+          in: query
+          name: limit
+          description: Maximum number of log records to return
+        - schema:
+            type: number
+            example: 2
+          in: query
+          name: period
+          description: Length of the time span (in months) over which log records to return have occurred
+      x-badges:
+        - color: orange
+          label: admin
   '/api/v1/users/{id}/credentials':
     parameters:
       - name: id
@@ -2477,6 +2561,94 @@ components:
       description: An array of managed users
       items:
         $ref: '#/components/schemas/UserManagerRead'
+    AuthenticationLog:
+      type: object
+      x-examples:
+        Example 1:
+          id: 20
+          ip_address: 127.0.0.1
+          user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+          browser: Firefox
+          platform: Windows
+          device: desktop
+          login_at: 'Thu, May 2, 2024 6:32 AM'
+          logout_at: 'Thu, May 2, 2024 6:32 AM'
+          login_successful: true
+          duration: 8 seconds
+          login_method: password
+      examples:
+        - id: 20
+          ip_address: 127.0.0.1
+          user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+          browser: Firefox
+          platform: Windows
+          device: desktop
+          login_at: 'Thu, May 2, 2024 6:32 AM'
+          logout_at: 'Thu, May 2, 2024 6:32 AM'
+          login_successful: true
+          duration: 8 seconds
+          login_method: password
+      properties:
+        id:
+          type: integer
+          description: The authentication Id
+        ip_address:
+          type: string
+          description: IP Address that performed the authentication
+        user_agent:
+          type: string
+          description: User agent of the browser that performed the authentication
+        browser:
+          type: string
+          description: Browser that performed the authentication
+        platform:
+          type: string
+          description: Platform of the browser that performed the authentication
+        device:
+          type: string
+          description: Device that performed the authentication
+        login_at:
+          type:
+            - string
+            - 'null'
+          description: Date and time of the login
+        logout_at:
+          type:
+            - string
+            - 'null'
+          description: Date and time of the logout
+        login_successful:
+          type: boolean
+          description: Whether the login was successful or not
+        duration:
+          type:
+            - string
+            - 'null'
+          description: Elapsed time between login and logout
+        login_method:
+          type: string
+          description: Method used to login
+      description: A single authentications log record
+    AuthenticationLogCollection:
+      title: AuthenticationLogCollection
+      x-stoplight:
+        id: og9vhx68csubr
+      type: array
+      items:
+        $ref: '#/components/schemas/AuthenticationLog'
+      description: An array of authentication log records
+      examples:
+        - - id: 20
+            ip_address: 127.0.0.1
+            user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0'
+            browser: Firefox
+            platform: Windows
+            device: desktop
+            login_at: 'Thu, May 2, 2024 6:32 AM'
+            logout_at: 'Thu, May 2, 2024 6:32 AM'
+            login_successful: true
+            duration: 8 seconds
+            login_method: password
   parameters:
     id:
       name: id
