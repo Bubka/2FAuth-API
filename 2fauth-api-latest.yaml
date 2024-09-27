@@ -1930,6 +1930,7 @@ components:
           algorithm: sha1
           period: 30
           counter: null
+          group_id: 1
         - service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
@@ -1939,6 +1940,7 @@ components:
           algorithm: sha1
           period: null
           counter: 0
+          group_id: null
         - account: john.doe
           otp_type: totp
       properties:
@@ -2005,38 +2007,16 @@ components:
           example: 15
           description: 'for HOTP only: The value of the counter used to synchronize the account with its verification servers'
           default: 0
+        group_id:
+          type:
+            - integer
+            - 'null'
+          description: The ID of the group the 2FA account belongs to
+          minimum: 0
       required:
         - account
         - otp_type
     2FAccountRead:
-      description: A single 2-Factor-Auth (2FA) account
-      x-examples:
-        example-1:
-          service: MySite
-          account: john.doe
-          otp_type: totp
-          uri: ''
-          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          secret: GJTGC5LUNA
-          secretIsBase32Encoded: 1
-          algorithm: sha1
-          digits: 6
-          hotpCounter: null
-          totpPeriod: 30
-          imageLink: 'https://www.example.com/image.png'
-      examples:
-        - id: 1
-          group_id: 1
-          service: MySite
-          account: john.doe
-          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
-          otp_type: totp
-          secret: GJTGC5LUNA
-          digits: 6
-          algorithm: sha1
-          period: 30
-          counter: null
-      title: Read 2FA Account schema
       allOf:
         - type: object
           properties:
@@ -2047,16 +2027,8 @@ components:
               example: 1
               description: ID of the 2FA account
               minimum: 1
-            group_id:
-              type:
-                - integer
-                - 'null'
-              example: 1
-              description: The ID of the group the 2FA account belongs to
-              minimum: 1
           required:
             - id
-            - group_id
         - $ref: '#/components/schemas/2FAccountStore'
     2FAccountUpdate:
       title: Update 2FA Account schema
@@ -2071,6 +2043,7 @@ components:
           digits: 6
           algorithm: sha1
           period: 30
+          group_id: 1
         - service: MySite
           account: john.doe
           icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
@@ -2079,6 +2052,7 @@ components:
           digits: 6
           algorithm: sha1
           counter: 0
+          group_id: null
       properties:
         service:
           type:
@@ -2130,6 +2104,12 @@ components:
           type: integer
           example: 15
           description: 'Required for HOTP only: The value of the counter used to synchronize the account with its verification servers'
+        group_id:
+          type:
+            - integer
+            - 'null'
+          description: The ID of the group the 2FA account belongs to
+          minimum: 0
       required:
         - service
         - account
