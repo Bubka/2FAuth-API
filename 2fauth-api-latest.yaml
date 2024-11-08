@@ -675,24 +675,25 @@ paths:
                   schema:
                     type: integer
                     example: 1
-                    description: Schema version of the migration
+                    description: Schema version of the migration. Only available when data are exported using the 2FAuth format.
                   datetime:
                     type: string
                     format: date-time
                     example: '2023-03-22T11:11:33.299209Z'
                     description: Date and time the migration has been generated
                   data:
+                    anyOf:
+                      - items:
+                          $ref: '#/components/schemas/2FAccountExport'
+                      - items:
+                          $ref: '#/components/schemas/2FAccountExportOtpauthURI'
                     type: array
-                    description: List of 2FA accounts
-                    items:
-                      $ref: '#/components/schemas/2FAccountExport'
                 required:
                   - app
-                  - schema
                   - datetime
                   - data
               examples:
-                Example:
+                Example (2FAuth format):
                   value:
                     app: 2fauth_v3.4.2
                     schema: 1
@@ -722,6 +723,12 @@ paths:
                         period: null
                         counter: 5
                         legacy_uri: 'otpauth://hotp/MySite:jane.doe?secret=GUKLZ8DCTA&issuer=AnotherSite'
+                Example (otpauth URIs):
+                  value:
+                    app: 2fauth_v3.4.2
+                    datetime: '2023-03-22T11:11:33.299209Z'
+                    data:
+                      - uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -730,9 +737,14 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Exports a list of 2FA accounts of the authenticated user to a json file
+      description: Exports a list of 2FA accounts owned by the authenticated user.
       parameters:
         - $ref: '#/components/parameters/ids'
+        - schema:
+            type: boolean
+          in: query
+          name: otpauth
+          description: Force data to be exported as a list of otpauth URIs instead of the 2FAuth json format
       tags:
         - twofaccounts
     parameters: []
@@ -1179,7 +1191,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
     parameters: []
     post:
       summary: Create custom setting
@@ -1221,7 +1233,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
   '/api/v1/settings/{name}':
     parameters:
       - $ref: '#/components/parameters/name'
@@ -1254,7 +1266,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
     put:
       summary: Update setting
       operationId: put-settings-name
@@ -1302,7 +1314,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
     delete:
       summary: Delete custom setting
       operationId: delete-settings-name
@@ -1325,7 +1337,7 @@ paths:
         - settings
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
   /api/v1/user:
     get:
       summary: Get user
@@ -1536,7 +1548,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
     parameters: []
     post:
       summary: Create user
@@ -1576,7 +1588,7 @@ paths:
       parameters: []
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
       tags:
         - users
       requestBody:
@@ -1635,7 +1647,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
     delete:
       summary: Delete user
       operationId: delete-users-id
@@ -1652,7 +1664,7 @@ paths:
         `/users` endpoints are restricted to user with an `Administrator` role.
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
       tags:
         - users
   '/api/v1/users/{id}/promote':
@@ -1715,7 +1727,7 @@ paths:
         description: ''
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
   '/api/v1/users/{id}/password/reset':
     parameters:
       - name: id
@@ -1767,7 +1779,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
   '/api/v1/users/{id}/pats':
     parameters:
       - name: id
@@ -1798,7 +1810,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
   '/api/v1/users/{id}/authentications':
     parameters:
       - name: id
@@ -1913,7 +1925,7 @@ paths:
         - users
       x-badges:
         - color: orange
-          label: 'admin'
+          label: admin
 components:
   schemas:
     2FAccountStore:
@@ -2188,6 +2200,20 @@ components:
           algorithm: sha1
           period: 30
           counter: null
+    2FAccountExportOtpauthURI:
+      title: 2FAccountExportOtpauthURI
+      x-stoplight:
+        id: irovw8l062py0
+      type: object
+      description: A single 2FA account exported as otpauth URI
+      properties:
+        uri:
+          type: string
+          description: The otpauth URI describing the 2FA account
+      required:
+        - uri
+      examples:
+        - uri: 'otpauth://totp/MySite:john.doe?secret=GJTGC5LUNA&issuer=MySite'
     2FAccountMigrated:
       allOf:
         - type: object
