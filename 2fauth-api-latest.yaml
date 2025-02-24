@@ -911,6 +911,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
       operationId: post-groups-id-assign
@@ -2727,6 +2729,23 @@ components:
             Example:
               value:
                 message: Unauthenticated
+    Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: An information message
+                example: Conflict
+            required:
+              - message
+          examples:
+            Example:
+              value:
+                message: Conflict
     Forbidden:
       description: Forbidden
       content:
