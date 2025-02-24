@@ -1,5 +1,23 @@
 # Change log
 
+## [1.7.0] - 2025-02-24
+
+### Added
+
+- New `409` response for the POST operation of path `/api/v1/groups/{id}/assign`
+
+## [1.6.0] - 2024-11-08
+
+### Added
+
+- New `otpauth` query parameter for the GET operation of path `/api/v1/twofaccounts/export` to force data export as otpauth URIs instead of the 2FAuth json format.
+
+## [1.5.0] - 2024-09-27
+
+### Added
+
+- New `group_id` property for POST and PUT operations of the `/api/v1/twofaccounts` path
+
 ## [1.4.0] - 2024-05-14
 
 ### Added
