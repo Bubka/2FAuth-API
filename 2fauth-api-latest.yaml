@@ -1185,15 +1185,9 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
       operationId: get-settings
-      description: |-
-        List all application settings. This includes 2FAuth native settings and possible additional admin-defined settings.
-
-        Settings endpoints are restricted to user with an `Administrator` role.
+      description: Lists all application settings. This includes 2FAuth native settings and possible additional custom settings.
       tags:
         - settings
-      x-badges:
-        - color: orange
-          label: admin
     parameters: []
     post:
       summary: Create custom setting
@@ -1219,7 +1213,7 @@ paths:
       description: |-
         Creates a new custom application setting. You are free to use this endpoint to store any data you need to administrate your own app.
 
-        Settings endpoints are restricted to user with an `Administrator` role.
+        This endpoint is restricted to user with an `Administrator` role.
       requestBody:
         content:
           application/json:
@@ -1260,15 +1254,9 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-settings-name
-      description: |-
-        Returns a single application setting, whether it is a native 2FAuth setting or a custom setting.
-
-        Settings endpoints are restricted to user with an `Administrator` role.
+      description: 'Returns a single application setting, whether it is a native 2FAuth setting or a custom setting.'
       tags:
         - settings
-      x-badges:
-        - color: orange
-          label: admin
     put:
       summary: Update setting
       operationId: put-settings-name
@@ -1295,7 +1283,7 @@ paths:
       description: |-
         Updates an application setting, whether it is a native 2FAuth setting or a custom setting. Will create the setting if it does not exist.
 
-        Settings endpoints are restricted to user with an `Administrator` role.
+        This endpoint is restricted to user with an `Administrator` role.
       requestBody:
         content:
           application/json:
@@ -1334,7 +1322,7 @@ paths:
       description: |-
         Deletes a custom application setting.
 
-        Settings endpoints are restricted to user with an `Administrator` role.
+        This endpoint is restricted to user with an `Administrator` role.
       tags:
         - settings
       x-badges:
