@@ -1423,10 +1423,13 @@ paths:
                   value:
                     - key: displayMode
                       value: grid
+                      locked: true
                     - key: showTokenAsDot
                       value: true
+                      locked: false
                     - key: kickUserAfter
                       value: 5
+                      locked: true
         '401':
           $ref: '#/components/responses/Unauthorized'
       operationId: get-user-preferences
@@ -1451,6 +1454,7 @@ paths:
                   value:
                     key: displayMode
                     value: grid
+                    locked: false
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
@@ -1472,6 +1476,7 @@ paths:
                   value:
                     key: displayMode
                     value: grid
+                    locked: false
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -2367,6 +2372,7 @@ components:
       examples:
         - key: displayMode
           value: true
+          locked: true
       description: A user preference resource
       x-stoplight:
         id: b23a1d8655faa
@@ -2384,9 +2390,13 @@ components:
             - integer
           description: Value of the preference
           example: true
+        locked:
+          type: boolean
+          description: Whether or not the preference is locked by administrator against change
       required:
         - key
         - value
+        - locked
     UserPreferenceCollection:
       title: User preference Collection schema
       type: array
