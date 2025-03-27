@@ -1,10 +1,12 @@
 # Change log
 
-## [1.7.0] - 2025-02-24
+## [1.7.0] - 2025-03-27
 
 ### Added
 
-- New `409` response for the POST operation of path `/api/v1/groups/{id}/assign`
+- `403` response for the PUT operation of path `/api/v1/user/preferences/{name}`
+- `409` response for the POST operation of path `/api/v1/groups/{id}/assign`
+- `locked` property in the `userPreference` model
 
 ## [1.6.0] - 2024-11-08
 
