@@ -1063,6 +1063,74 @@ paths:
                   icon: string
         description: ''
     parameters: []
+  /api/v1/icons/default:
+    post:
+      summary: Query an official icon
+      tags:
+        - icons
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    filename: wspRWRSCo62kY76JFquzqq8Y2jJO1iEowZ3JsMCw.png
+                properties:
+                  filename:
+                    type: string
+                    example: wspRWRSCo62kY76JFquzqq8Y2jJO1iEowZ3JsMCw.png
+                    description: The name of the icon file stored on the server
+                required:
+                  - filename
+              examples:
+                Example:
+                  value:
+                    filename: wspRWRSCo62kY76JFquzqq8Y2jJO1iEowZ3JsMCw.png
+        '204':
+          description: No Content (returned when the requested icon does not exist on the external source)
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      operationId: post-official-icons
+      description: |-
+        Use this endpoint to get the official icon of a given "service": A website, an app, a brand.
+
+        When this endpoint is requested, 2FAuth makes a single request to an external icons collection to get the icon of the posted service. If the icon is available, 2FAuth fetches and stores the file in its public icons directory `/storage/icons/`.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  type: string
+                  description: The name of the service whose icon we want to fetch
+                iconCollection:
+                  type:
+                    - string
+                    - 'null'
+                  description: 'The name of the icon collection to query. If omitted, defaults to the icon collection defined in the user preferences.'
+                  enum:
+                    - tfa
+                    - selfh
+                    - dashboardicons
+              required:
+                - service
+            examples:
+              Example for selfh.st:
+                value:
+                  service: 1password
+                  iconCollection: selfh
+              Example for dashboardicons.com:
+                value:
+                  service: 1password
+                  iconCollection: dashboardicons
+        description: ''
+    parameters: []
   '/api/v1/icons/{filename}':
     parameters:
       - schema:
