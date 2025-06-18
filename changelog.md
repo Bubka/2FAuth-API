@@ -1,5 +1,11 @@
 # Change log
 
+## [1.8.0] - 2025-06-18
+
+### Added
+
+- `/api/v1/icons/default` POST path
+
 ## [1.7.0] - 2025-03-27
 
 ### Added
