@@ -1009,6 +1009,46 @@ paths:
       description: Finds all existing 2FA accounts assigned to a group of the authenticated user
       parameters:
         - $ref: '#/components/parameters/withSecret'
+  /api/v1/groups/reorder:
+    post:
+      summary: Save order of the groups collection
+      operationId: post-groups-reorder
+      responses:
+        '200':
+          $ref: '#/components/responses/OrderedIds'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: Saves the order of the authenticated user's groups. This allows to always serve the groups collection sorted in a user defined order.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderedIds:
+                  type: array
+                  uniqueItems: true
+                  description: An array of group IDs ordered in the wished order
+                  items:
+                    type: integer
+              required:
+                - orderedIds
+            examples:
+              Example:
+                value:
+                  orderedIds:
+                    - 3
+                    - 1
+                    - 4
+                    - 2
+        description: ''
+      tags:
+        - groups
+    parameters: []
   /api/v1/icons:
     post:
       summary: Upload an icon
