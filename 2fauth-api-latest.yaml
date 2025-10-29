@@ -601,7 +601,7 @@ paths:
       operationId: post-twofaccounts-reorder
       responses:
         '200':
-          $ref: '#/components/responses/OK'
+          $ref: '#/components/responses/OrderedIds'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
