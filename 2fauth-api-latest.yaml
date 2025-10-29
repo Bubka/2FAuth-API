@@ -2946,6 +2946,41 @@ components:
             Example:
               value:
                 message: Something failed on server side
+    OrderedIds:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                x-stoplight:
+                  id: 8q85m006zd5vz
+                description: An information message
+              orderedIds:
+                type: array
+                x-stoplight:
+                  id: i6vuanfnnlvfp
+                description: Ordered list of IDs as saved
+                items:
+                  x-stoplight:
+                    id: mmp17iz1jdl47
+                  type: integer
+            required:
+              - message
+              - orderedIds
+          examples:
+            Example:
+              value:
+                message: order saved
+                orderedIds:
+                  - 0
+                  - 5
+                  - 3
+                  - 2
+                  - 4
+                  - 1
   securitySchemes:
     Bearer-Auth:
       type: http
