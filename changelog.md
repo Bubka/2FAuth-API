@@ -1,5 +1,12 @@
 # Change log
 
+## [1.9.0] - 2025-MM-DD
+
+### Added
+
+- `/api/v1/icons/packs` GET path
+- `/api/v1/groups/reorder` POST path
+
 ## [1.8.0] - 2025-06-18
 
 ### Added
