@@ -1144,31 +1144,64 @@ paths:
         content:
           application/json:
             schema:
+              oneOf:
+                - description: Request body for fetching an icon collection
+                  properties:
+                    service:
+                      type: string
+                      description: The name of the service whose icon we want to fetch
+                    iconCollection:
+                      type:
+                        - string
+                        - 'null'
+                      description: 'The name of the icon collection to query. If omitted, defaults to the icon collection defined in the user preferences.'
+                      enum:
+                        - tfa
+                        - selfh
+                        - dashboardicons
+                    variant:
+                      type: string
+                      x-stoplight:
+                        id: ardbd0lzneksn
+                      description: The icon flavor to fetch at first
+                      enum:
+                        - regular
+                        - light
+                        - dark
+                  required:
+                    - service
+                - x-stoplight:
+                    id: umc06x5az0xj4
+                  description: Request body for fetching an icon pack
+                  properties:
+                    service:
+                      type: string
+                      x-stoplight:
+                        id: 99jr6c5hw5fjm
+                      description: The name of the service whose icon we want to fetch
+                    iconPack:
+                      type: string
+                      x-stoplight:
+                        id: vdtcs1bv4nqmk
+                      description: 'The name of the icon pack to query. If omitted, defaults to the icon pack defined in the user preferences.'
+                  required:
+                    - service
               type: object
-              properties:
-                service:
-                  type: string
-                  description: The name of the service whose icon we want to fetch
-                iconCollection:
-                  type:
-                    - string
-                    - 'null'
-                  description: 'The name of the icon collection to query. If omitted, defaults to the icon collection defined in the user preferences.'
-                  enum:
-                    - tfa
-                    - selfh
-                    - dashboardicons
-              required:
-                - service
             examples:
               Example for selfh.st:
                 value:
                   service: 1password
                   iconCollection: selfh
+                  variant: light
               Example for dashboardicons.com:
                 value:
                   service: 1password
                   iconCollection: dashboardicons
+                  variant: dark
+              Example for an icon pack:
+                value:
+                  service: 1password
+                  iconPack: myIconPack
         description: ''
     parameters: []
   /api/v1/icons/packs:
