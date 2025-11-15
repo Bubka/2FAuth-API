@@ -1171,6 +1171,37 @@ paths:
                   iconCollection: dashboardicons
         description: ''
     parameters: []
+  /api/v1/icons/packs:
+    parameters: []
+    get:
+      summary: Get all icon packs
+      operationId: get-icons-packs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Array of available icon packs
+                items:
+                  x-stoplight:
+                    id: nfoo6bbosr3if
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      x-stoplight:
+                        id: 0wyofcpe38myv
+                      description: name of the icon pack
+                  required:
+                    - name
+              examples:
+                Example:
+                  value:
+                    - name: icon_pack
+                    - name: other_icon_pack
+      description: Find all available icon packs hosted on the server that can be used to set the `iconPack` user preference
   '/api/v1/icons/{filename}':
     parameters:
       - schema:
