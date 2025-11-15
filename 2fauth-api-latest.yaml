@@ -1202,6 +1202,8 @@ paths:
                     - name: icon_pack
                     - name: other_icon_pack
       description: Find all available icon packs hosted on the server that can be used to set the `iconPack` user preference
+      tags:
+        - icons
   '/api/v1/icons/{filename}':
     parameters:
       - schema:
