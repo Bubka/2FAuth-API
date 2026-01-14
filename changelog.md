@@ -7,6 +7,10 @@
 - `/api/v1/icons/packs` GET path
 - `/api/v1/groups/reorder` POST path
 
+### Fixed
+
+- Missing `orderedIds` property in `/api/v1/twofaccounts/reorder` POST response
+
 ## [1.8.0] - 2025-06-18
 
 ### Added
