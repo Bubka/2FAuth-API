@@ -126,7 +126,7 @@ paths:
       tags:
         - twofaccounts
       operationId: post-twofaccounts
-      description: Creates a new 2FA account for the authenticated user
+      description: Creates a new 2FA account for the authenticated user.
       requestBody:
         content:
           application/json:
@@ -269,7 +269,7 @@ paths:
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
-      description: Updates a 2FA account of the authenticated user
+      description: Updates a 2FA account of the authenticated user.
       requestBody:
         content:
           application/json:
@@ -2136,8 +2136,6 @@ components:
           period: null
           counter: 0
           group_id: null
-        - account: john.doe
-          otp_type: totp
       properties:
         service:
           type:
@@ -2200,7 +2198,7 @@ components:
             - integer
             - 'null'
           example: 15
-          description: 'for HOTP only: The value of the counter used to synchronize the account with its verification servers'
+          description: 'For HOTP only: The value of the counter used to synchronize the account with its verification servers'
           default: 0
         group_id:
           type:
@@ -2459,15 +2457,15 @@ components:
           example: totp
         generated_at:
           type: integer
-          description: 'TOTP only: The timestamp of the generation time'
+          description: 'For TOTP only: The timestamp of the generation time'
           example: 1631304659
         period:
           type: integer
-          description: 'TOTP only: The validity period of the password'
+          description: 'For TOTP only: The validity period of the password'
           example: 30
         counter:
           type: integer
-          description: 'HOTP only: The number of password computing iterations'
+          description: 'For HOTP only: The number of password computing iterations'
           example: 5
       required:
         - password
