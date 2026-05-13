@@ -90,6 +90,7 @@ paths:
                       counter: null
                       otp:
                         password: '045698'
+                        next_password: '255745'
                         generated_at: 1701788671
                     - id: 2
                       group_id: 1
@@ -2435,6 +2436,7 @@ components:
       description: One-Time password
       examples:
         - password: '225897'
+          next_password: '958857'
           otp_type: totp
           generated_at: 1631304659
           period: 30
@@ -2444,10 +2446,17 @@ components:
       properties:
         password:
           type: string
-          description: the One-Time Password
+          description: The current One-Time Password
           minLength: 6
           maxLength: 10
           example: '225897'
+        next_password:
+          type: string
+          x-stoplight:
+            id: xr5f78tepa6p2
+          description: 'For TOTP Only: The next One-Time Password'
+          minLength: 6
+          maxLength: 10
         otp_type:
           type: string
           description: The type of the One-Time Password
