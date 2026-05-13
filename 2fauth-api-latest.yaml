@@ -107,7 +107,10 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
       operationId: get-twofaccounts
-      description: Find all 2FA accounts of the authenticated user
+      description: |-
+        Find all 2FA accounts.
+
+        The accounts can be either those owned by the authenticated user or accounts shared with him (when sharing is enabled).
       parameters:
         - $ref: '#/components/parameters/withSecret'
         - schema:
@@ -115,12 +118,12 @@ paths:
             example: '1,20,9,456'
           in: query
           name: ids
-          description: Comma-separated list of ids to filter returned 2FA accounts
+          description: Comma-separated list of IDs used to filter 2FA accounts returned in the response
         - schema:
             type: boolean
           in: query
           name: withOtp
-          description: Set to true (or 1) to append an OTP object to the returned 2FA accounts of type TOTP
+          description: Set to true (or 1) to append an OTP object to each 2FA account of type `TOTP` returned in the response
     parameters: []
     post:
       summary: Create 2FA account
@@ -249,7 +252,10 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id
-      description: Returns a single 2FA account of the authenticated user
+      description: |-
+        Returns a single 2FA account.
+
+        The account can be an account owned by the authenticated user or an account shared with him (when Sharing is enabled).
       parameters:
         - $ref: '#/components/parameters/withSecret'
     put:
@@ -301,7 +307,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - twofaccounts
-      description: Deletes a 2FA account of the authenticated user
+      description: Deletes a 2FA account of the authenticated user.
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -337,8 +343,8 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
-      description: Returns a QR code that represents a 2FA account owned by the authenticated user
   '/api/v1/twofaccounts/{id}/otp':
+      description: Returns a QR code that represents a 2FA account owned by the authenticated user.
     parameters:
       - $ref: '#/components/parameters/id'
     get:
@@ -2949,7 +2955,7 @@ components:
       required: false
       schema:
         type: boolean
-      description: Set to true (or 1) to append the Secret property to the returned 2FA account
+      description: Set to true (or 1) to append the `Secret` property to the each 2FA account returned in the response. Has no effect when requested 2FA account is not owned.
     ids:
       name: ids
       in: query
