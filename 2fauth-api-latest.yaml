@@ -2879,6 +2879,15 @@ components:
         maxLength: 128
         example: displayMode
       description: Name of the resource
+    userid:
+      name: userid
+      in: path
+      required: true
+      schema:
+        type: integer
+        example: 1
+        minimum: 1
+      description: The ID of a user resource
   responses:
     NotFound:
       description: Not Found
