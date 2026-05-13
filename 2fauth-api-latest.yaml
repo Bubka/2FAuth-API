@@ -2430,6 +2430,89 @@ components:
           algorithm: sha1
           period: 30
           counter: null
+    2FAccountShares:
+      title: 2FAccountShares
+      x-stoplight:
+        id: jhd6h9gfroi04
+      description: Sharing informations for a given 2FA account
+      examples:
+        - twofaccount_id: 1
+          is_shared_with_all: true
+        - twofaccount_id: 1
+          is_shared_with_all: false
+          specific_users:
+            - id: 2
+              name: John DOE
+              is_shared_with: true
+              is_shared_since: 'Thu, May 2, 2025 6:32 AM'
+            - id: 3
+              name: Jane DOE
+              is_shared_with: true
+              is_shared_since: 'Thu, May 3, 2026 3:54 AM'
+      type: object
+      properties:
+        twofaccount_id:
+          type: integer
+          x-stoplight:
+            id: 51lmii6lp485m
+          minimum: 1
+          description: ID of the shared 2FA account
+        is_shared_with_all:
+          type: boolean
+          x-stoplight:
+            id: tl3nbjl19jf83
+          description: Indicates if the 2FA account is shared using the `All users` scope
+        specific_users:
+          type: array
+          x-stoplight:
+            id: sdwkttculjn5o
+          description: |-
+            **Present only if the account is shared with specific users**  
+            The list of users with whom the 2FA account has been shared explicitly
+          items:
+            $ref: '#/components/schemas/2FAccountShareRecipient'
+            x-stoplight:
+              id: il8nno7b8s5qb
+      required:
+        - twofaccount_id
+        - is_shared_with_all
+    2FAccountShareRecipient:
+      title: 2FAccountShareRecipient
+      x-stoplight:
+        id: bwcujrhom9885
+      type: object
+      description: A single sharing recipient
+      examples:
+        - id: 1
+          name: John
+          is_shared_with: true
+          is_shared_since: 'Thu, May 2, 2024 6:32 AM'
+      properties:
+        id:
+          type: integer
+          x-stoplight:
+            id: ov8vmf0dlzbwk
+          description: ID of the user
+          minimum: 1
+        name:
+          type: string
+          x-stoplight:
+            id: ajih3fv5q9q62
+          description: Name of the user
+        is_shared_with:
+          type: boolean
+          x-stoplight:
+            id: qsv10fr8458pm
+          description: Indicates if the 2FA account is shared with this user
+        is_shared_since:
+          type: string
+          x-stoplight:
+            id: kd2pcs27147an
+          description: Date the 2FA account was shared with this user
+      required:
+        - id
+        - name
+        - is_shared_with
     Otp:
       title: Otp schema
       type: object
