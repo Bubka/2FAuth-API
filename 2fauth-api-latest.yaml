@@ -3099,6 +3099,7 @@ tags:
   - name: one-time password
   - name: qrcode
   - name: settings
+  - name: sharing
   - name: twofaccounts
   - name: user
   - name: user preference
