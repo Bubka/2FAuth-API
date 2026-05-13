@@ -102,6 +102,56 @@ paths:
                       algorithm: sha1
                       period: null
                       counter: 15
+                Example with account shared with me:
+                  value:
+                    - id: 25
+                      group_id: 8
+                      service: AnotherSite
+                      account: jane.doe
+                      icon: p0TmC8xswemEgQe3YRT8g0ohBxT7hHpvp0TmC8xswe.png
+                      otp_type: totp
+                      digits: 6
+                      algorithm: sha1
+                      period: 30
+                      counter: null
+                      is_borrowed: true
+                      shared_by: Jane
+                    - id: 2
+                      group_id: 1
+                      service: MyOtherSite
+                      account: john.doe
+                      icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+                      otp_type: hotp
+                      digits: 8
+                      algorithm: sha1
+                      period: null
+                      counter: 15
+                Example with account I share:
+                  value:
+                    - id: 1
+                      group_id: 1
+                      service: MySite
+                      account: john.doe
+                      icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                      otp_type: totp
+                      digits: 6
+                      algorithm: sha1
+                      secret: GJTGC5LUNA
+                      period: 30
+                      counter: null
+                      is_shared: true
+                      is_shared_with_all: true
+                    - id: 2
+                      group_id: 1
+                      service: MyOtherSite
+                      account: john.doe
+                      icon: 1pawLLuMx4bOQkrZxM5CIQyFtVq25dtgMkU3rtST.png
+                      otp_type: hotp
+                      digits: 8
+                      algorithm: sha1
+                      secret: QD5TG6UUJ89F44GV
+                      period: null
+                      counter: 15
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -245,6 +295,36 @@ paths:
                     algorithm: sha1
                     period: 30
                     counter: null
+                Example for account shared with me:
+                  value:
+                    id: 1
+                    service: MySite
+                    account: jane.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    secret: VHIGC5PLKM
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
+                    group_id: 5
+                    is_borrowed: true
+                    shared_by: Jane
+                Example for account shared by me:
+                  value:
+                    id: 1
+                    service: MySite
+                    account: john.doe
+                    icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+                    otp_type: totp
+                    secret: GJTGC5LUNA
+                    digits: 6
+                    algorithm: sha1
+                    period: 30
+                    counter: null
+                    group_id: 1
+                    is_shared: true
+                    is_shared_with_all: true
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -2230,6 +2310,82 @@ components:
           required:
             - id
         - $ref: '#/components/schemas/2FAccountStore'
+        - type: object
+          x-stoplight:
+            id: sx1ttjsrwfhr9
+          properties:
+            is_borrowed:
+              type: boolean
+              x-stoplight:
+                id: y3a14e50hotzl
+              description: Indicates if the account is shared with you by another user
+            shared_by:
+              type: string
+              x-stoplight:
+                id: t7fqjm0mi44h0
+              description: Name of the user who share the account with you
+            is_shared:
+              type: boolean
+              x-stoplight:
+                id: hikxw95fgnhjt
+              description: Indicates if the account is shared by you
+            is_shared_with_all:
+              type: boolean
+              x-stoplight:
+                id: 3i03x81dlmt85
+              description: Indicates if you share this account with all users
+            otp:
+              type: array
+              x-stoplight:
+                id: gezoshwpr7rhp
+              items:
+                $ref: '#/components/schemas/Otp'
+                x-stoplight:
+                  id: ufvekrixybk2u
+      examples:
+        - id: 1
+          service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: totp
+          secret: GJTGC5LUNA
+          digits: 6
+          algorithm: sha1
+          period: 30
+          counter: null
+          group_id: 1
+          is_borrowed: true
+          shared_by: Jane
+        - id: 1
+          service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: totp
+          secret: GJTGC5LUNA
+          digits: 6
+          algorithm: sha1
+          period: 30
+          counter: null
+          group_id: 1
+          is_shared: true
+          is_shared_with_all: true
+        - id: 1
+          service: MySite
+          account: john.doe
+          icon: ZMlzmrPsrWSWVt4fZouFVrt2w38D0PnXiyZQvDcY.png
+          otp_type: totp
+          secret: GJTGC5LUNA
+          digits: 6
+          algorithm: sha1
+          period: 30
+          counter: null
+          group_id: 1
+          otp:
+            - password: '225897'
+              next_password: '958857'
+              otp_type: totp
+              generated_at: 1631304659
+              period: 30
     2FAccountUpdate:
       title: Update 2FA Account schema
       type: object
