@@ -388,6 +388,125 @@ paths:
       tags:
         - twofaccounts
       description: Deletes a 2FA account of the authenticated user.
+  '/api/v1/twofaccounts/{id}/otp':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Get a One-Time password
+      tags:
+        - one-time password
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Otp'
+              examples:
+                Example for TOTP:
+                  value:
+                    password: '225897'
+                    otp_type: totp
+                    generated_at: 1631304659
+                    period: 30
+                Example for HOTP:
+                  value:
+                    password: '225897'
+                    otp_type: hotp
+                    counter: 5
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-twofaccounts-id-otp
+      description: |-
+        Returns a fresh One-Time Password for the 2FA account matching the specified ID.
+
+        The account can be an account owned by the authenticated user or an account shared with him (when Sharing is enabled).
+  '/api/v1/twofaccounts/{id}/owner':
+    patch:
+      summary: Transfer ownership
+      operationId: patch-twofaccounts-id-owner
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  twofaccount_id:
+                    type: integer
+                    x-stoplight:
+                      id: 2ryavv4mib7o8
+                    minimum: 1
+                    description: ID of the patched 2FA account
+                  owner_id:
+                    type: integer
+                    x-stoplight:
+                      id: 0kndoov4k1f1q
+                    minimum: 1
+                    description: User ID of the new owner
+                required:
+                  - twofaccount_id
+                  - owner_id
+              examples:
+                Example:
+                  value:
+                    twofaccount_id: 1
+                    owner_id: 1
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      description: |-
+        Transfers the ownership of a 2FA account to another user of the 2FAuth instance.
+
+        > #### Important
+        > This endpoint can only be used if the app setting `enableSharing` is enabled. It will return a `403 Forbidden` response otherwise.
+      parameters: []
+      tags:
+        - twofaccounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                new_owner_id:
+                  type: integer
+                  x-stoplight:
+                    id: ic99lni10sedl
+                  minimum: 1
+                  description: ID of the new owner
+                  example: 5
+                confirm_password:
+                  type: string
+                  x-stoplight:
+                    id: bgbmfb55n5udm
+                  description: Password of the authenticated user that make the request
+                  example: P4s$w0rD
+              required:
+                - new_owner_id
+                - confirm_password
+            examples:
+              Example:
+                value:
+                  new_owner_id: 5
+                  confirm_password: P4s$w0rD
+        description: ''
+    parameters:
+      - $ref: '#/components/parameters/id'
   '/api/v1/twofaccounts/{id}/qrcode':
     parameters:
       - $ref: '#/components/parameters/id'
@@ -423,43 +542,267 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-qrcode
-  '/api/v1/twofaccounts/{id}/otp':
       description: Returns a QR code that represents a 2FA account owned by the authenticated user.
+  '/api/v1/twofaccounts/{id}/recipients':
     parameters:
       - $ref: '#/components/parameters/id'
     get:
-      summary: Get a One-Time password
-      tags:
-        - one-time password
+      summary: Get users with whom to share a 2FA account
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Otp'
+                type: array
+                items:
+                  $ref: '#/components/schemas/2FAccountShareRecipient'
+                  x-stoplight:
+                    id: 95aw8enerpwau
               examples:
-                Example for TOTP:
+                Example:
                   value:
-                    password: '225897'
-                    otp_type: totp
-                    generated_at: 1631304659
-                    period: 30
-                Example for HOTP:
-                  value:
-                    password: '225897'
-                    otp_type: hotp
-                    counter: 5
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                    - id: 1
+                      name: John DOE
+                      is_shared_with: true
+                      is_shared_since: 'Thu, May 2, 2024 6:32 AM'
+                    - id: 1
+                      name: Jane DOE
+                      is_shared_with: false
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
-      operationId: get-twofaccounts-id-otp
-      description: Returns a fresh One-Time Password for the 2FA account of the authenticated user matching the specified ID
+      operationId: get-twofaccounts-id-recipients
+      description: 'Find users who could be set as recipients for the future sharing of a 2FA account. Only users that match the provided query filter term, even partially, are retreived.'
+      parameters:
+        - schema:
+            type: string
+            example: '?filter[name]=do'
+          in: query
+          name: 'filter[name]'
+          description: String used to retrieve users by name
+          required: true
+      tags:
+        - twofaccounts
+        - sharing
+  '/api/v1/twofaccounts/{id}/shares':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    get:
+      summary: Get sharing details
+      tags:
+        - twofaccounts
+        - sharing
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountShares'
+              examples:
+                Example for account shared with all users:
+                  value:
+                    twofaccount_id: 1
+                    is_shared_with_all: true
+                Example for account shared with specific users:
+                  value:
+                    twofaccount_id: 1
+                    is_shared_with_all: false
+                    specific_users:
+                      - id: 2
+                        name: John DOE
+                        is_shared_with: true
+                        is_shared_since: 'Thu, May 2, 2025 6:32 AM'
+                      - id: 3
+                        name: Jane DOE
+                        is_shared_with: true
+                        is_shared_since: 'Thu, May 3, 2026 3:54 AM'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      operationId: get-twofaccounts-id-shares
+      description: Find all sharings for a 2FA account owned by the authenticated user.
+    post:
+      summary: Share a 2FA account
+      operationId: post-twofaccounts-id-shares
+      responses:
+        '200':
+          description: Received when the 2FA account was already shared with each provided user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountShares'
+              examples:
+                Example:
+                  value:
+                    twofaccount_id: 1
+                    is_shared_with_all: false
+                    specific_users:
+                      - id: 2
+                        name: John DOE
+                        is_shared_with: true
+                        is_shared_since: 'Thu, May 2, 2025 6:32 AM'
+                      - id: 3
+                        name: Jane DOE
+                        is_shared_with: true
+                        is_shared_since: 'Thu, May 3, 2026 3:54 AM'
+        '201':
+          description: Received when the 2FA account was not already shared with at least one of the provided users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountShares'
+              examples:
+                Example:
+                  value:
+                    twofaccount_id: 1
+                    is_shared_with_all: false
+                    specific_users:
+                      - id: 2
+                        name: John DOE
+                        is_shared_with: true
+                        is_shared_since: 'Thu, May 2, 2025 6:32 AM'
+                      - id: 3
+                        name: Jane DOE
+                        is_shared_with: true
+                        is_shared_since: 'Thu, May 3, 2026 3:54 AM'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_ids:
+                  x-stoplight:
+                    id: u9iipzmarg1lm
+                  type: array
+                  description: List of user IDs with whom the 2FA account must be shared
+                  minItems: 1
+                  items:
+                    x-stoplight:
+                      id: l4q842uaszaxv
+                    type: integer
+              required:
+                - user_ids
+            examples:
+              Example:
+                value:
+                  user_ids:
+                    - 2
+                    - 3
+        description: ''
+      description: |-
+        Shares a 2FA account owned by the authenticated user with specific users of the 2FAuth instance. This endpoint creates new shares for given users with whom the 2FA account is not already shared.
+
+        > The user list provided in the request body is not the comprehensive list of users with whom the 2FA account must be shared.
+
+        You can't share an account with specific users if the account has already been shared with all users. You will receive a `409 Conflict` response.
+      tags:
+        - twofaccounts
+        - sharing
+    delete:
+      summary: Stop sharing a 2FA account
+      operationId: delete-twofaccounts-id-shares
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      description: 'Revokes any sharing of a 2FA account owned by the authenticated user, whether it''s shared with all users (`All users` scope) or specific users.'
+      tags:
+        - twofaccounts
+        - sharing
+  '/api/v1/twofaccounts/{id}/shares/all':
+    parameters:
+      - $ref: '#/components/parameters/id'
+    post:
+      summary: Share a 2FA account with all users
+      operationId: post-twofaccounts-id-shares-all
+      responses:
+        '200':
+          description: Received when the 2FA account was already shared with all user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountShares'
+              examples:
+                Example:
+                  value:
+                    twofaccount_id: 1
+                    is_shared_with_all: true
+        '201':
+          description: Received when the 2FA account was not already shared with all users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/2FAccountShares'
+              examples:
+                Example:
+                  value:
+                    twofaccount_id: 1
+                    is_shared_with_all: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      requestBody:
+        content: {}
+        description: ''
+      description: |-
+        Shares a 2FA account owned by the authenticated user with all current and future users of the 2FAuth instance, aka the `All users` scope.
+
+        Any specific user shares will be canceled.
+      tags:
+        - twofaccounts
+        - sharing
+  '/api/v1/twofaccounts/{id}/shares/{userid}':
+    parameters:
+      - $ref: '#/components/parameters/id'
+      - $ref: '#/components/parameters/userid'
+    delete:
+      summary: Stop sharing a 2FA account with a specific user
+      operationId: delete-twofaccounts-id-shares-userid
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      description: |-
+        Revokes a specific user share of a 2FA account owned by the authenticated user.
+
+        You can't stop sharing an account with specific user if the account is currently shared with all users (`All users` scope). You will receive a `409 Conflict` response.
+      tags:
+        - twofaccounts
+        - sharing
   /api/v1/twofaccounts/otp:
     parameters: []
     post:
