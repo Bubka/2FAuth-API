@@ -1178,6 +1178,35 @@ paths:
       tags:
         - twofaccounts
     parameters: []
+  /api/v1/features:
+    get:
+      summary: Get all 2FAuth features
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feature'
+                  x-stoplight:
+                    id: ynvqrgnso5bff
+              examples:
+                Example:
+                  value:
+                    - name: sharing
+                      state: enabled
+                    - name: iconPack
+                      state: enabled
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      operationId: get-features
+      description: |-
+        Lists all the application features that may be available on the 2FAuth instance.
+
+        The main purpose is to determine the capabilities of the running 2FAuth server in order to adapt the behavior of its clients (web app, web extension, mobile app, etc.).
   /api/v1/groups:
     get:
       summary: Get all groups
@@ -3438,6 +3467,36 @@ components:
             login_successful: true
             duration: 8 seconds
             login_method: password
+    Feature:
+      title: Feature
+      x-stoplight:
+        id: vc1izk6m37dxb
+      type: object
+      description: An app feature resource
+      examples:
+        - name: sharing
+          state: enabled
+      properties:
+        name:
+          type: string
+          x-stoplight:
+            id: 9861phusmzlwd
+          description: Name of the feature
+          enum:
+            - iconPack
+            - sharing
+            - showNextOtp
+        state:
+          type: string
+          x-stoplight:
+            id: 9mzbk7ofdckef
+          enum:
+            - enabled
+            - disabled
+          description: Availability of the feature
+      required:
+        - name
+        - state
   parameters:
     id:
       name: id
@@ -3698,6 +3757,7 @@ components:
       description: Provide your bearer token in the Authorization header when making requests to protected resources. See the 'Settings > OAuth' section of your 2FAuth instance to generate personal access tokens.
   requestBodies: {}
 tags:
+  - name: feature
   - name: groups
   - name: icons
   - name: one-time password
