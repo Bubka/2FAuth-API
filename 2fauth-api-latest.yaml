@@ -576,14 +576,19 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       operationId: get-twofaccounts-id-recipients
-      description: 'Find users who could be set as recipients for the future sharing of a 2FA account. Only users that match the provided query filter term, even partially, are retreived.'
+      description: |-
+        Find users who can be set as recipients for a new 2FA account sharing.
+
+        This endpoint only returns something if:
+        - the user email address matches the query parameter value exactly
+        - the username matches the query parameter value partially.
       parameters:
         - schema:
             type: string
             example: '?filter[name]=do'
           in: query
-          name: 'filter[name]'
-          description: String used to retrieve users by name
+          name: 'filter[nameOrEmail]'
+          description: String used to retrieve user by name or by email
           required: true
       tags:
         - twofaccounts
