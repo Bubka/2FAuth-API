@@ -1186,7 +1186,8 @@ paths:
   /api/v1/features:
     get:
       summary: Get all 2FAuth features
-      tags: []
+      tags:
+        - feature
       responses:
         '200':
           description: OK
@@ -1209,7 +1210,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       operationId: get-features
       description: |-
-        Lists all the application features that may be available on the 2FAuth instance.
+        Lists specific application features that may be available on the 2FAuth instance.
 
         The main purpose is to determine the capabilities of the running 2FAuth server in order to adapt the behavior of its clients (web app, web extension, mobile app, etc.).
   /api/v1/groups:
