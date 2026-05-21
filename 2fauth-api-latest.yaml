@@ -160,7 +160,14 @@ paths:
       description: |-
         Find all 2FA accounts.
 
-        The accounts can be either those owned by the authenticated user or accounts shared with him (when sharing is enabled).
+        The returned accounts can be either those owned by the authenticated user or accounts shared with him (when sharing is enabled).
+
+        Specific properties are presents in the response payload depending on the context (see available examples bellow):
+
+        - The `secret` property is present when `withSecret` query param is set to `true`.
+        - The `otp` array is present when `withOtp` query param is set to `true`.
+        - The `is_borrowed` and `shared_by` properties are presents when the account is shared with the authenticated user (the Sharing feature must be globally enabled).
+        - The `is_shared` and `is_shared_with_all` properties are presents when the account is shared by the authenticated user (the Sharing feature must be globally enabled).
       parameters:
         - $ref: '#/components/parameters/withSecret'
         - schema:
@@ -331,7 +338,14 @@ paths:
       description: |-
         Returns a single 2FA account.
 
-        The account can be an account owned by the authenticated user or an account shared with him (when Sharing is enabled).
+        The returned account can be an account owned by the authenticated user or an account shared with him (when Sharing is enabled).
+
+        Specific properties are presents in the response payload depending on the context (see available examples bellow):
+
+        - The `secret` property is present when `withSecret` query param is set to `true`.
+        - The `otp` array is present when `withOtp` query param is set to `true`.
+        - The `is_borrowed` and `shared_by` properties are presents when the account is shared with the authenticated user (the Sharing feature must be globally enabled).
+        - The `is_shared` and `is_shared_with_all` properties are presents when the account is shared by the authenticated user (the Sharing feature must be globally enabled).
       parameters:
         - $ref: '#/components/parameters/withSecret'
         - $ref: '#/components/parameters/withOtp'
@@ -3516,7 +3530,7 @@ components:
       required: false
       schema:
         type: boolean
-      description: Set to true (or 1) to append the `Secret` property to the each 2FA account returned in the response. Has no effect when requested 2FA account is not owned.
+      description: Set to true (or 1) to append the `secret` property to 2FA account returned in the response. Has no effect when requested 2FA account is not owned.
     ids:
       name: ids
       in: query
