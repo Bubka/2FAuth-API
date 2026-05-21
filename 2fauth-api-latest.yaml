@@ -169,11 +169,7 @@ paths:
           in: query
           name: ids
           description: Comma-separated list of IDs used to filter 2FA accounts returned in the response
-        - schema:
-            type: boolean
-          in: query
-          name: withOtp
-          description: Set to true (or 1) to append an OTP object to each 2FA account of type `TOTP` returned in the response
+        - $ref: '#/components/parameters/withOtp'
     parameters: []
     post:
       summary: Create 2FA account
@@ -338,6 +334,7 @@ paths:
         The account can be an account owned by the authenticated user or an account shared with him (when Sharing is enabled).
       parameters:
         - $ref: '#/components/parameters/withSecret'
+        - $ref: '#/components/parameters/withOtp'
     put:
       summary: Update 2FA account
       operationId: put-twofaccounts-id
@@ -3548,6 +3545,13 @@ components:
         example: 1
         minimum: 1
       description: The ID of a user resource
+    withOtp:
+      name: withOtp
+      in: query
+      required: false
+      schema:
+        type: boolean
+      description: Set to true (or 1) to append an OTP object to 2FA account of type `TOTP` returned in the response.
   responses:
     NotFound:
       description: Not Found
